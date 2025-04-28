@@ -1,0 +1,152 @@
+import os
+import logging
+import json
+import base64
+import hashlib
+import time
+from flask import Flask, render_template, request, jsonify, session
+from openai import OpenAI
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Initialize Flask app
+app = Flask(__name__)
+app.secret_key = os.environ.get("SESSION_SECRET")
+
+# Initialize OpenAI client (safely to handle missing API key)
+# the newest OpenAI model is "gpt-4o" which was released May 13, 2024.
+# do not change this unless explicitly requested by the user
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+openai_client = None
+if OPENAI_API_KEY:
+    openai_client = OpenAI(api_key=OPENAI_API_KEY)
+else:
+    logging.warning("OPENAI_API_KEY not set. Some features will be limited.")
+
+# Copyright information
+COPYRIGHT_INFO = {
+    "owner": "Ervin Remus Radosavlevici",
+    "year": 2024,
+    "description": "Natural Language to Linux Command Translator"
+}
+
+@app.route('/')
+def index():
+    # Pass OpenAI API key status and copyright info to template
+    return render_template('index.html', 
+                          copyright=COPYRIGHT_INFO,
+                          config={'OPENAI_API_KEY': OPENAI_API_KEY})
+
+@app.route('/translate', methods=['POST'])
+def translate():
+    try:
+        data = request.json
+        natural_language_query = data.get('query', '')
+        
+        if not natural_language_query:
+            return jsonify({"error": "Query cannot be empty"}), 400
+        
+        # Generate a watermark based on query and timestamp
+        timestamp = time.time()
+        watermark = generate_watermark(natural_language_query, timestamp)
+        
+        # Get Linux command from OpenAI
+        result = get_linux_command(natural_language_query)
+        
+        # Add watermark and copyright to the result
+        result['watermark'] = watermark
+        result['copyright'] = COPYRIGHT_INFO
+        result['timestamp'] = timestamp
+        
+        return jsonify(result)
+    
+    except Exception as e:
+        logging.error(f"Error processing request: {str(e)}")
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+def get_linux_command(query):
+    """
+    Use OpenAI to translate natural language to Linux command
+    """
+    # Check if OpenAI API key is available
+    if not openai_client:
+        # Return a message indicating API key is required
+        return {
+            "command": "API_KEY_REQUIRED",
+            "explanation": "An OpenAI API key is required to translate natural language to Linux commands.",
+            "breakdown": {
+                "How to fix": "Please provide an OpenAI API key to use this feature."
+            },
+            "safety_warning": "This application requires an OpenAI API key to function properly."
+        }
+        
+    try:
+        system_prompt = """
+        You are a Linux command translator. Convert natural language requests into appropriate Linux shell commands.
+        For each request, provide:
+        1. The exact Linux command to execute
+        2. A brief explanation of what the command does
+        3. A breakdown of the command's components
+        
+        Respond with valid JSON in this format:
+        {
+            "command": "the_linux_command",
+            "explanation": "Brief explanation of what the command does",
+            "breakdown": {
+                "component1": "explanation",
+                "component2": "explanation",
+                ...
+            },
+            "safety_warning": "Any safety concerns if applicable, otherwise null"
+        }
+        """
+        
+        response = openai_client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": query}
+            ],
+            response_format={"type": "json_object"}
+        )
+        
+        # Parse the response
+        result = json.loads(response.choices[0].message.content)
+        return result
+        
+    except Exception as e:
+        logging.error(f"OpenAI API error: {str(e)}")
+        raise Exception(f"Failed to process your request: {str(e)}")
+
+def generate_watermark(content, timestamp):
+    """
+    Generate a unique watermark based on content and timestamp
+    - This is a simplified "DNA-based" security concept
+    """
+    # Convert timestamp to string for hashing
+    timestamp_str = str(timestamp)
+    
+    # Create a unique identifier by combining content and timestamp
+    content_bytes = content.encode('utf-8')
+    timestamp_bytes = timestamp_str.encode('utf-8')
+    
+    # Generate DNA-like sequence (simplified concept)
+    hash1 = hashlib.sha256(content_bytes).hexdigest()[:16]
+    hash2 = hashlib.sha256(timestamp_bytes).hexdigest()[:16]
+    
+    # Combine to create "DNA watermark"
+    dna_watermark = f"{hash1}-{hash2}"
+    
+    # Create base64 representation for visual watermark
+    watermark_bytes = f"{COPYRIGHT_INFO['owner']}:{content}:{timestamp_str}".encode('utf-8')
+    visual_watermark = base64.b64encode(watermark_bytes).decode('utf-8')[:24]
+    
+    return {
+        "dna_signature": dna_watermark,
+        "visual_code": visual_watermark,
+        "authenticated_by": COPYRIGHT_INFO['owner']
+    }
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)

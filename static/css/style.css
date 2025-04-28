@@ -1,0 +1,90 @@
+/* Custom styles for Linux Command Translator */
+
+/* Code block styling */
+.code-block {
+    position: relative;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.copy-btn:hover {
+    opacity: 1;
+}
+
+/* Watermark styling */
+.watermark-section {
+    font-size: 0.85rem;
+}
+
+#dnaSignature,
+#visualWatermark {
+    letter-spacing: 0.5px;
+}
+
+/* Custom badge for copyright */
+.copyright-badge {
+    margin-top: 10px;
+}
+
+.copyright-badge .badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.7rem;
+}
+
+/* Styling for command breakdown */
+#breakdownResult dt {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+
+#breakdownResult dd {
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}
+
+/* Subtle animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#resultsCard {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Improved focus states for accessibility */
+textarea:focus, 
+button:focus {
+    outline: 2px solid var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .watermark-section .text-md-end {
+        text-align: left !important;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Custom styles for the terminal icon in header */
+.fa-terminal {
+    color: var(--bs-primary);
+}
+
+/* Custom background for the page */
+body {
+    background-color: var(--bs-body-bg);
+    background-image: radial-gradient(circle at 50% 50%, rgba(var(--bs-primary-rgb), 0.03) 0%, rgba(var(--bs-primary-rgb), 0) 70%);
+    background-size: 100% 100%;
+    background-attachment: fixed;
+}
