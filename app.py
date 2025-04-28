@@ -144,7 +144,8 @@ def execute_command():
 
 def get_linux_command(query):
     """
-    Use OpenAI to translate natural language to Linux command
+    Use OpenAI to translate natural language to Linux command with improved formatting
+    Copyright (c) 2024 Ervin Remus Radosavlevici
     """
     # Check if OpenAI API key is available
     if not openai_client:
