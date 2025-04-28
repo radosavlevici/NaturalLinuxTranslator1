@@ -265,19 +265,33 @@ document.addEventListener('DOMContentLoaded', function() {
             commandResult.classList.add('text-success');
         }
         
-        explanationResult.textContent = data.explanation;
+        // Format explanation text for better readability
+        if (data.explanation) {
+            explanationResult.textContent = data.explanation;
+            explanationResult.style.fontWeight = 'normal';
+        } else {
+            explanationResult.textContent = 'No explanation available.';
+            explanationResult.style.fontStyle = 'italic';
+            explanationResult.style.color = 'var(--bs-secondary)';
+        }
         
-        // Handle command breakdown
+        // Handle command breakdown with improved styling
         breakdownResult.innerHTML = '';
         if (data.breakdown && typeof data.breakdown === 'object') {
             const dl = document.createElement('dl');
+            dl.className = 'mb-0'; // Remove bottom margin
             
             for (const [component, explanation] of Object.entries(data.breakdown)) {
                 const dt = document.createElement('dt');
                 dt.textContent = component;
+                dt.className = 'text-primary fw-bold mb-1'; // Blue color with bold text
                 
                 const dd = document.createElement('dd');
                 dd.textContent = explanation;
+                dd.className = 'ms-3 mb-3 pb-2'; // Add left margin and spacing
+                if (Object.entries(data.breakdown).length > 1) {
+                    dd.className += ' border-bottom border-secondary border-opacity-25'; // Add separator if multiple items
+                }
                 
                 dl.appendChild(dt);
                 dl.appendChild(dd);
@@ -286,6 +300,8 @@ document.addEventListener('DOMContentLoaded', function() {
             breakdownResult.appendChild(dl);
         } else {
             breakdownResult.textContent = 'No breakdown available';
+            breakdownResult.style.fontStyle = 'italic';
+            breakdownResult.style.color = 'var(--bs-secondary)';
         }
         
         // Display safety warning if present
