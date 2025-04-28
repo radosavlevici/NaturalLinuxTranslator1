@@ -254,7 +254,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const isApiKeyRequired = data.command === "API_KEY_REQUIRED";
         
         // Set command and explanation with proper formatting
-        commandResult.textContent = isApiKeyRequired ? "API Key Required" : data.command.trim();
+        if (isApiKeyRequired) {
+            commandResult.textContent = "API Key Required";
+        } else {
+            // Format command with proper spacing and trimming
+            const formattedCommand = data.command.trim();
+            commandResult.textContent = formattedCommand;
+            
+            // Add syntax highlighting class if available
+            commandResult.classList.add('text-success');
+        }
+        
         explanationResult.textContent = data.explanation;
         
         // Handle command breakdown
