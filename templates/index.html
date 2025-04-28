@@ -118,9 +118,14 @@
                                 <label class="text-muted mb-2">Command:</label>
                                 <div class="code-block p-3 rounded bg-dark">
                                     <code id="commandResult" class="text-success"></code>
-                                    <button class="btn btn-sm btn-outline-light copy-btn" id="copyCommand">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
+                                    <div class="btn-group ms-2">
+                                        <button class="btn btn-sm btn-outline-light copy-btn" id="copyCommand" title="Copy command">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" id="executeCommand" title="Execute command">
+                                            <i class="fas fa-play"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -139,6 +144,26 @@
                                 <label class="text-muted mb-2">Command Simulation:</label>
                                 <div class="code-block p-3 rounded bg-dark">
                                     <pre id="simulationResult" class="text-light mb-0 overflow-auto" style="max-height: 200px; white-space: pre-wrap;"></pre>
+                                </div>
+                            </div>
+                            
+                            <!-- Real Execution Results (initially hidden) -->
+                            <div class="execution-section mb-4 d-none" id="executionSection">
+                                <label class="text-muted mb-2">
+                                    <i class="fas fa-terminal me-1"></i>
+                                    Execution Results:
+                                </label>
+                                <div class="card border-0">
+                                    <div class="card-header bg-dark text-light d-flex justify-content-between">
+                                        <span>Output</span>
+                                        <small id="executionStatus" class="badge bg-secondary">Not executed</small>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <pre id="executionOutput" class="p-3 m-0 bg-dark text-light overflow-auto" style="max-height: 300px; white-space: pre-wrap; border-radius: 0;"></pre>
+                                    </div>
+                                    <div class="card-footer bg-dark-subtle" id="executionInfo">
+                                        <small class="text-muted">Exit code: <span id="executionExitCode">N/A</span></small>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -234,6 +259,16 @@
             <div class="d-flex">
                 <div class="toast-body">
                     <i class="fas fa-check-circle me-2"></i>Command copied to clipboard
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        
+        <!-- Execution Toast -->
+        <div id="executeToast" class="toast align-items-center text-bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-terminal me-2"></i>Command executed successfully
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>

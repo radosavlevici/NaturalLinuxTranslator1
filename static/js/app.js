@@ -18,8 +18,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const breakdownResult = document.getElementById('breakdownResult');
     const simulationResult = document.getElementById('simulationResult');
     const copyButton = document.getElementById('copyCommand');
+    const executeButton = document.getElementById('executeCommand');
     const safetyWarningContainer = document.getElementById('safetyWarningContainer');
     const safetyWarningText = document.getElementById('safetyWarningText');
+    
+    // Execution elements
+    const executionSection = document.getElementById('executionSection');
+    const executionOutput = document.getElementById('executionOutput');
+    const executionStatus = document.getElementById('executionStatus');
+    const executionExitCode = document.getElementById('executionExitCode');
     
     // Watermark elements
     const dnaSignature = document.getElementById('dnaSignature');
@@ -115,6 +122,110 @@ document.addEventListener('DOMContentLoaded', function() {
                     copyButton.classList.add('btn-outline-light');
                 }, 1500);
             });
+    });
+    
+    // Execute button handler
+    executeButton.addEventListener('click', function() {
+        const commandText = commandResult.textContent;
+        
+        // If API key is required, show warning
+        if (commandText === "API Key Required") {
+            showError("Please provide an OpenAI API key to use this feature.");
+            return;
+        }
+        
+        // Show loading state
+        executeButton.disabled = true;
+        const originalHtml = executeButton.innerHTML;
+        executeButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+        
+        // Clear previous execution results
+        executionOutput.textContent = 'Executing command...';
+        executionStatus.textContent = 'Running';
+        executionStatus.className = 'badge bg-primary';
+        executionExitCode.textContent = 'N/A';
+        
+        // Show execution section
+        executionSection.classList.remove('d-none');
+        
+        // Send request to execute command
+        fetch('/execute', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ command: commandText }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => {
+                    throw new Error(data.error || 'Failed to execute command');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Reset button state
+            executeButton.disabled = false;
+            executeButton.innerHTML = originalHtml;
+            
+            // Combine stdout and stderr, prioritizing stderr
+            let output = '';
+            
+            if (data.stderr && data.stderr.trim()) {
+                output = data.stderr;
+                executionStatus.textContent = 'Completed with errors';
+                executionStatus.className = 'badge bg-warning text-dark';
+            } else if (data.stdout) {
+                output = data.stdout;
+                executionStatus.textContent = 'Completed successfully';
+                executionStatus.className = 'badge bg-success';
+            } else if (data.error) {
+                output = data.error;
+                executionStatus.textContent = 'Error';
+                executionStatus.className = 'badge bg-danger';
+            } else {
+                output = 'Command executed with no output';
+                executionStatus.textContent = 'Completed';
+                executionStatus.className = 'badge bg-secondary';
+            }
+            
+            // Display execution results
+            executionOutput.textContent = output;
+            executionExitCode.textContent = data.exit_code !== undefined ? data.exit_code : 'N/A';
+            
+            // Show toast notification
+            const toast = document.getElementById('executeToast');
+            if (toast) {
+                // Update toast content based on execution result
+                const toastBody = toast.querySelector('.toast-body');
+                if (data.exit_code === 0) {
+                    toastBody.innerHTML = '<i class="fas fa-check-circle me-2"></i>Command executed successfully';
+                    toast.classList.remove('text-bg-danger');
+                    toast.classList.add('text-bg-dark');
+                } else {
+                    toastBody.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>Command executed with exit code ' + data.exit_code;
+                    toast.classList.remove('text-bg-dark');
+                    toast.classList.add('text-bg-danger');
+                }
+                
+                const toastInstance = new bootstrap.Toast(toast);
+                toastInstance.show();
+            }
+        })
+        .catch(error => {
+            // Reset button state
+            executeButton.disabled = false;
+            executeButton.innerHTML = originalHtml;
+            
+            // Show error in execution result
+            executionOutput.textContent = 'Error: ' + error.message;
+            executionStatus.textContent = 'Failed';
+            executionStatus.className = 'badge bg-danger';
+            executionExitCode.textContent = 'N/A';
+            
+            console.error('Failed to execute command: ', error);
+        });
     });
     
     // Function to display results
