@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Execute button handler
+    if (executeButton) {
     executeButton.addEventListener('click', function() {
         const commandText = commandResult.textContent;
         
@@ -227,6 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Failed to execute command: ', error);
         });
     });
+    }
     
     // Function to display results
     function displayResults(data, originalQuery) {

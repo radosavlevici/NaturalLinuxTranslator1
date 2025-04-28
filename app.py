@@ -76,7 +76,7 @@ def execute_command():
         from utils import validate_linux_command, log_command_request
         
         data = request.json
-        command = data.get('command', '')
+        command = data.get('command', '').strip()
         
         if not command:
             return jsonify({"error": "No command provided"}), 400
