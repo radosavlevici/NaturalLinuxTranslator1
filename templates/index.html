@@ -122,15 +122,16 @@
                         <div class="card-body">
                             <div class="command-section mb-4">
                                 <label class="text-muted mb-2">Command:</label>
-                                <div class="code-block p-3 rounded bg-dark position-relative">
-                                    <!-- Using a simplified structure for better mobile display -->
-                                    <div id="commandResult" class="text-success font-monospace mb-2" style="white-space: pre-wrap; word-break: break-word; line-height: 1.5;"></div>
-                                    <div class="btn-group d-flex justify-content-end">
-                                        <button class="btn btn-sm btn-outline-light copy-btn me-2" id="copyCommand" title="Copy command">
-                                            <i class="fas fa-copy"></i> Copy
+                                <div class="code-block p-3 rounded bg-dark">
+                                    <!-- Enhanced command display with maximum visibility -->
+                                    <h3 class="text-light mb-2" style="font-size: 1rem; opacity: 0.7;">Shell Command:</h3>
+                                    <div id="commandResult" class="text-success font-monospace"></div>
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button class="btn btn-sm btn-outline-light me-2" id="copyCommand" title="Copy command to clipboard">
+                                            <i class="fas fa-copy me-1"></i>Copy
                                         </button>
-                                        <button class="btn btn-sm btn-outline-success" id="executeCommand" title="Execute command">
-                                            <i class="fas fa-play"></i> Execute
+                                        <button class="btn btn-sm btn-success" id="executeCommand" title="Run this command now">
+                                            <i class="fas fa-play me-1"></i>Execute
                                         </button>
                                     </div>
                                 </div>
