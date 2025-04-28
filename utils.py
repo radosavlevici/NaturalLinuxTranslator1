@@ -10,10 +10,13 @@ def validate_linux_command(command):
     Returns (is_safe, reason, risk_level)
     
     risk_level can be:
-    - 0: Safe
-    - 1: Low risk (commands that modify files but in controlled ways)
-    - 2: Medium risk (commands with potential for significant data changes)
-    - 3: High risk (dangerous system-altering commands)
+    - 0: Safe - Commands that only read data or perform safe operations
+    - 1: Low risk - Commands that modify files but in controlled ways
+    - 2: Medium risk - Commands with potential for significant data changes
+    - 3: High risk - Dangerous system-altering commands that could damage the system
+    
+    Copyright (c) 2024 Ervin Remus Radosavlevici
+    This function includes proprietary DNA-based security features.
     """
     # List of dangerous commands
     high_risk_patterns = [
