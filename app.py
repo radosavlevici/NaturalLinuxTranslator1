@@ -82,12 +82,18 @@ def get_linux_command(query):
         }
         
     try:
+        # Import here to avoid circular imports
+        from utils import validate_linux_command, log_command_request
+        
         system_prompt = """
         You are a Linux command translator. Convert natural language requests into appropriate Linux shell commands.
         For each request, provide:
         1. The exact Linux command to execute
         2. A brief explanation of what the command does
         3. A breakdown of the command's components
+        
+        IMPORTANT: Be careful not to generate dangerous commands like 'rm -rf /' or similar destructive operations.
+        Always use common sense and favor safety when translating ambiguous requests.
         
         Respond with valid JSON in this format:
         {
@@ -113,6 +119,34 @@ def get_linux_command(query):
         
         # Parse the response
         result = json.loads(response.choices[0].message.content)
+        
+        # Validate the command for safety
+        command = result.get("command", "")
+        is_safe, reason, risk_level = validate_linux_command(command)
+        
+        # Add risk level indicator
+        result["risk_level"] = risk_level
+        
+        # Log the command request
+        log_command_request(query, command)
+        
+        # Handle dangerous commands
+        if not is_safe:
+            # For high risk commands, add strong warning
+            result["safety_warning"] = f"⚠️ WARNING: {reason}. This command could cause serious system damage and should not be executed."
+        elif risk_level > 0:
+            # For medium or low risk, add appropriate warning if not already present
+            warning_levels = {
+                1: "Low risk: ",
+                2: "Medium risk: "
+            }
+            
+            if result.get("safety_warning"):
+                if not result["safety_warning"].startswith(warning_levels[risk_level]):
+                    result["safety_warning"] = f"{warning_levels[risk_level]}{result['safety_warning']}"
+            else:
+                result["safety_warning"] = f"{warning_levels[risk_level]}{reason}"
+                
         return result
         
     except Exception as e:
