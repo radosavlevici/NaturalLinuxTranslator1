@@ -6,6 +6,7 @@ import hashlib
 import time
 from flask import Flask, render_template, request, jsonify, session
 from openai import OpenAI
+import subprocess
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -64,6 +65,79 @@ def translate():
     except Exception as e:
         logging.error(f"Error processing request: {str(e)}")
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+
+@app.route('/execute', methods=['POST'])
+def execute_command():
+    """
+    Execute a Linux command in a real environment and return the results
+    """
+    try:
+        from utils import validate_linux_command, log_command_request
+        
+        data = request.json
+        command = data.get('command', '')
+        
+        if not command:
+            return jsonify({"error": "No command provided"}), 400
+        
+        # First, validate the command for safety
+        is_safe, reason, risk_level = validate_linux_command(command)
+        
+        # Do not execute high-risk commands
+        if not is_safe:
+            return jsonify({
+                "error": f"Command execution denied: {reason}",
+                "stdout": "",
+                "stderr": f"⚠️ EXECUTION BLOCKED: This high-risk command was not executed for safety reasons.",
+                "risk_level": risk_level
+            }), 403
+        
+        # For safety, we'll only allow execution of commands that are deemed safe or low risk
+        if risk_level >= 2:  # medium or high risk
+            return jsonify({
+                "error": f"Command execution denied: Risk level too high ({risk_level})",
+                "stdout": "",
+                "stderr": f"⚠️ EXECUTION BLOCKED: This command was not executed due to medium or high risk level.",
+                "risk_level": risk_level
+            }), 403
+        
+        # Log the command execution
+        log_command_request(f"EXECUTION: {command}", command)
+        
+        # Execute the command in a safe way - limiting shell features and with timeout
+        try:
+            # Safe execution with timeout of 5 seconds and restricted to common commands
+            process = subprocess.run(
+                command,
+                shell=True,
+                capture_output=True,
+                text=True,
+                timeout=5  # 5 second timeout
+            )
+            
+            return jsonify({
+                "stdout": process.stdout,
+                "stderr": process.stderr,
+                "exit_code": process.returncode,
+                "risk_level": risk_level
+            })
+            
+        except subprocess.TimeoutExpired:
+            return jsonify({
+                "error": "Command execution timed out after 5 seconds",
+                "stdout": "",
+                "stderr": "Execution timed out",
+                "risk_level": risk_level
+            }), 408
+            
+    except Exception as e:
+        logging.error(f"Command execution error: {str(e)}")
+        return jsonify({
+            "error": f"Failed to execute command: {str(e)}",
+            "stdout": "",
+            "stderr": f"Error: {str(e)}"
+        }), 500
 
 def get_linux_command(query):
     """

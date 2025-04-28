@@ -18,8 +18,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const breakdownResult = document.getElementById('breakdownResult');
     const simulationResult = document.getElementById('simulationResult');
     const copyButton = document.getElementById('copyCommand');
+    const executeButton = document.getElementById('executeCommand');
     const safetyWarningContainer = document.getElementById('safetyWarningContainer');
     const safetyWarningText = document.getElementById('safetyWarningText');
+    
+    // Execution elements
+    const executionSection = document.getElementById('executionSection');
+    const executionOutput = document.getElementById('executionOutput');
+    const executionStatus = document.getElementById('executionStatus');
+    const executionExitCode = document.getElementById('executionExitCode');
     
     // Watermark elements
     const dnaSignature = document.getElementById('dnaSignature');
