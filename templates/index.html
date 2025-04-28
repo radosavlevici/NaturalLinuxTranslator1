@@ -123,7 +123,7 @@
                             <div class="command-section mb-4">
                                 <label class="text-muted mb-2">Command:</label>
                                 <div class="code-block p-3 rounded bg-dark position-relative">
-                                    <pre><code id="commandResult" class="text-success font-monospace" style="white-space: pre-wrap; word-break: break-all; line-height: 1.5;"></code></pre>
+                                    <pre id="commandResult" class="text-success font-monospace mb-0" style="white-space: pre-wrap; word-break: break-word; line-height: 1.5; overflow-x: auto; padding-right: 80px;"></pre>
                                     <div class="btn-group position-absolute top-0 end-0 m-2">
                                         <button class="btn btn-sm btn-outline-light copy-btn" id="copyCommand" title="Copy command">
                                             <i class="fas fa-copy"></i>
@@ -151,7 +151,7 @@
                             <div class="simulation-section mb-4">
                                 <label class="text-muted mb-2">Command Simulation:</label>
                                 <div class="code-block p-3 rounded bg-dark">
-                                    <pre id="simulationResult" class="text-light mb-0 overflow-auto font-monospace" style="max-height: 200px; white-space: pre-wrap; line-height: 1.5;"></pre>
+                                    <pre id="simulationResult" class="text-light mb-0 overflow-auto font-monospace" style="max-height: 200px; white-space: pre-wrap; word-break: break-word; line-height: 1.5;"></pre>
                                 </div>
                             </div>
                             
@@ -167,7 +167,7 @@
                                         <small id="executionStatus" class="badge bg-secondary">Not executed</small>
                                     </div>
                                     <div class="card-body p-0">
-                                        <pre id="executionOutput" class="p-3 m-0 bg-dark text-light overflow-auto font-monospace" style="max-height: 300px; white-space: pre-wrap; word-break: break-all; border-radius: 0; line-height: 1.5; font-size: 0.9rem;"></pre>
+                                        <pre id="executionOutput" class="p-3 m-0 bg-dark text-light overflow-auto font-monospace" style="max-height: 300px; white-space: pre-wrap; word-break: break-word; border-radius: 0; line-height: 1.5; font-size: 0.9rem;"></pre>
                                     </div>
                                     <div class="card-footer bg-dark-subtle" id="executionInfo">
                                         <small class="text-muted">Exit code: <span id="executionExitCode">N/A</span></small>
