@@ -191,9 +191,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 executionStatus.className = 'badge bg-secondary';
             }
             
-            // Display execution results
+            // Display execution results with improved formatting
             executionOutput.textContent = output;
+            
+            // Enhance the display of execution results
+            if (output.trim() === '') {
+                executionOutput.textContent = '(No output from command)';
+                executionOutput.classList.add('text-muted');
+            } else {
+                executionOutput.classList.remove('text-muted');
+            }
+            
             executionExitCode.textContent = data.exit_code !== undefined ? data.exit_code : 'N/A';
+            
+            // Color code exit code for better visibility
+            if (data.exit_code === 0) {
+                executionExitCode.classList.add('text-success');
+                executionExitCode.classList.remove('text-danger');
+            } else if (data.exit_code > 0) {
+                executionExitCode.classList.add('text-danger');
+                executionExitCode.classList.remove('text-success');
+            }
             
             // Show toast notification
             const toast = document.getElementById('executeToast');
