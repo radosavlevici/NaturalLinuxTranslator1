@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Execute button handler
     if (executeButton) {
     executeButton.addEventListener('click', function() {
-        const commandText = commandResult.textContent;
+        const commandText = commandResult.textContent.trim();
         
         // If API key is required, show warning
         if (commandText === "API Key Required") {
@@ -235,8 +235,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if this is an API key required message
         const isApiKeyRequired = data.command === "API_KEY_REQUIRED";
         
-        // Set command and explanation
-        commandResult.textContent = isApiKeyRequired ? "API Key Required" : data.command;
+        // Set command and explanation with proper formatting
+        commandResult.textContent = isApiKeyRequired ? "API Key Required" : data.command.trim();
         explanationResult.textContent = data.explanation;
         
         // Handle command breakdown
