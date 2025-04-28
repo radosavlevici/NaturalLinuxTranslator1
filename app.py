@@ -91,6 +91,7 @@ def get_linux_command(query):
         1. The exact Linux command to execute
         2. A brief explanation of what the command does
         3. A breakdown of the command's components
+        4. A simulation of what would happen if the command is executed in a standard Linux environment
         
         IMPORTANT: Be careful not to generate dangerous commands like 'rm -rf /' or similar destructive operations.
         Always use common sense and favor safety when translating ambiguous requests.
@@ -104,6 +105,7 @@ def get_linux_command(query):
                 "component2": "explanation",
                 ...
             },
+            "simulation": "A text simulation of what the command would output when executed",
             "safety_warning": "Any safety concerns if applicable, otherwise null"
         }
         """
