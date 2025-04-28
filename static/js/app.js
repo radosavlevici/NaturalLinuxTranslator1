@@ -258,16 +258,13 @@ document.addEventListener('DOMContentLoaded', function() {
             commandResult.textContent = "API Key Required";
             commandResult.classList.add('text-danger');
         } else {
-            // Format command with proper spacing and trimming
+            // Format command with proper spacing and trimming for better display
             const formattedCommand = data.command.trim();
             commandResult.textContent = formattedCommand;
             
-            // Add syntax highlighting and improved formatting
+            // Apply enhanced styling for better visibility
             commandResult.classList.add('text-success');
-            commandResult.style.fontFamily = 'monospace';
-            commandResult.style.wordBreak = 'break-word';
-            commandResult.style.whiteSpace = 'pre-wrap';
-            commandResult.style.lineHeight = '1.5';
+            // Let CSS handle the styling
         }
         
         // Format explanation text for better readability
