@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const commandResult = document.getElementById('commandResult');
     const explanationResult = document.getElementById('explanationResult');
     const breakdownResult = document.getElementById('breakdownResult');
+    const simulationResult = document.getElementById('simulationResult');
     const copyButton = document.getElementById('copyCommand');
     const safetyWarningContainer = document.getElementById('safetyWarningContainer');
     const safetyWarningText = document.getElementById('safetyWarningText');
@@ -185,6 +186,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } else {
             safetyWarningContainer.classList.add('d-none');
+        }
+        
+        // Display simulation results if present
+        if (simulationResult) {
+            if (data.simulation) {
+                simulationResult.textContent = data.simulation;
+                simulationResult.parentElement.parentElement.classList.remove('d-none');
+            } else {
+                simulationResult.textContent = 'No simulation available';
+                simulationResult.parentElement.parentElement.classList.add('d-none');
+            }
         }
         
         // Set watermark information
