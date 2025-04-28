@@ -123,7 +123,7 @@
                             <div class="command-section mb-4">
                                 <label class="text-muted mb-2">Command:</label>
                                 <div class="code-block p-3 rounded bg-dark position-relative">
-                                    <pre><code id="commandResult" class="text-success font-monospace"></code></pre>
+                                    <pre><code id="commandResult" class="text-success font-monospace" style="white-space: pre-wrap; word-break: break-all; line-height: 1.5;"></code></pre>
                                     <div class="btn-group position-absolute top-0 end-0 m-2">
                                         <button class="btn btn-sm btn-outline-light copy-btn" id="copyCommand" title="Copy command">
                                             <i class="fas fa-copy"></i>
@@ -165,7 +165,7 @@
                                         <small id="executionStatus" class="badge bg-secondary">Not executed</small>
                                     </div>
                                     <div class="card-body p-0">
-                                        <pre id="executionOutput" class="p-3 m-0 bg-dark text-light overflow-auto font-monospace" style="max-height: 300px; white-space: pre-wrap; border-radius: 0; line-height: 1.5;"></pre>
+                                        <pre id="executionOutput" class="p-3 m-0 bg-dark text-light overflow-auto font-monospace" style="max-height: 300px; white-space: pre-wrap; word-break: break-all; border-radius: 0; line-height: 1.5; font-size: 0.9rem;"></pre>
                                     </div>
                                     <div class="card-footer bg-dark-subtle" id="executionInfo">
                                         <small class="text-muted">Exit code: <span id="executionExitCode">N/A</span></small>
