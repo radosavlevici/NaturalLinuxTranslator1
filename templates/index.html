@@ -123,13 +123,14 @@
                             <div class="command-section mb-4">
                                 <label class="text-muted mb-2">Command:</label>
                                 <div class="code-block p-3 rounded bg-dark position-relative">
-                                    <pre id="commandResult" class="text-success font-monospace mb-0" style="white-space: pre-wrap; word-break: break-word; line-height: 1.5; overflow-x: auto; padding-right: 80px;"></pre>
-                                    <div class="btn-group position-absolute top-0 end-0 m-2">
-                                        <button class="btn btn-sm btn-outline-light copy-btn" id="copyCommand" title="Copy command">
-                                            <i class="fas fa-copy"></i>
+                                    <!-- Using a simplified structure for better mobile display -->
+                                    <div id="commandResult" class="text-success font-monospace mb-2" style="white-space: pre-wrap; word-break: break-word; line-height: 1.5;"></div>
+                                    <div class="btn-group d-flex justify-content-end">
+                                        <button class="btn btn-sm btn-outline-light copy-btn me-2" id="copyCommand" title="Copy command">
+                                            <i class="fas fa-copy"></i> Copy
                                         </button>
                                         <button class="btn btn-sm btn-outline-success" id="executeCommand" title="Execute command">
-                                            <i class="fas fa-play"></i>
+                                            <i class="fas fa-play"></i> Execute
                                         </button>
                                     </div>
                                 </div>
