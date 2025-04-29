@@ -166,10 +166,10 @@ def home():
                 <div class="row">
                     <div class="col-md-6">
                         <p><i class="fas fa-code me-2"></i>Command Translator</p>
-                        <p class="small">Copyright &copy; 2024 Ervin Remus Radosavlevici</p>
+                        <p class="small">Copyright &copy; 2024 Command Translator</p>
                     </div>
                     <div class="col-md-6 text-md-end">
-                        <p class="small watermark-label">Security DNA: {watermark}</p>
+                        <p class="small watermark-label">Security Token: {watermark}</p>
                     </div>
                 </div>
             </div>
@@ -348,10 +348,10 @@ def translate():
                 <div class="row">
                     <div class="col-md-6">
                         <p><i class="fas fa-code me-2"></i>Command Translator</p>
-                        <p class="small">Copyright &copy; 2024 Ervin Remus Radosavlevici</p>
+                        <p class="small">Copyright &copy; 2024 Command Translator</p>
                     </div>
                     <div class="col-md-6 text-md-end">
-                        <p class="small watermark-label">Security DNA: {watermark}</p>
+                        <p class="small watermark-label">Security Token: {watermark}</p>
                     </div>
                 </div>
             </div>
@@ -550,10 +550,10 @@ def api_translate():
                 <div class="row">
                     <div class="col-md-6">
                         <p><i class="fas fa-code me-2"></i>Command Translator</p>
-                        <p class="small">Copyright &copy; 2024 Ervin Remus Radosavlevici</p>
+                        <p class="small">Copyright &copy; 2024 Command Translator</p>
                     </div>
                     <div class="col-md-6 text-md-end">
-                        <p class="small watermark-label">Security DNA: {watermark}</p>
+                        <p class="small watermark-label">Security Token: {watermark}</p>
                     </div>
                 </div>
             </div>
@@ -588,7 +588,7 @@ def get_linux_command(query):
             "explanation": "Brief explanation of what the command does and how it works"
         }
         
-        Copyright (c) 2024 Ervin Remus Radosavlevici
+        Copyright (c) 2024 Command Translator
         """
         
         response = openai_client.chat.completions.create(
@@ -633,7 +633,7 @@ def get_powershell_command(query):
             "explanation": "Brief explanation of what the command does and how it works"
         }
         
-        Copyright (c) 2024 Ervin Remus Radosavlevici
+        Copyright (c) 2024 Command Translator
         """
         
         response = openai_client.chat.completions.create(
