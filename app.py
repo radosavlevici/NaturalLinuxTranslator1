@@ -60,6 +60,13 @@ def standalone_powershell():
     Render the standalone PowerShell translator with minimal dependencies
     """
     return render_template('standalone_powershell.html')
+    
+@app.route('/micro')
+def micro_powershell():
+    """
+    Render the micro PowerShell translator with extremely simplified JavaScript
+    """
+    return render_template('micro_powershell.html')
 
 @app.route('/powershell')
 def powershell():
