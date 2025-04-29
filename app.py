@@ -46,6 +46,20 @@ def index():
     return render_template('index.html', 
                           copyright=COPYRIGHT_INFO,
                           config={'OPENAI_API_KEY': OPENAI_API_KEY})
+                          
+@app.route('/directory')
+def directory():
+    """
+    Render the directory page with links to all interfaces
+    """
+    return render_template('directory.html')
+    
+@app.route('/standalone')
+def standalone_powershell():
+    """
+    Render the standalone PowerShell translator with minimal dependencies
+    """
+    return render_template('standalone_powershell.html')
 
 @app.route('/powershell')
 def powershell():
