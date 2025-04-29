@@ -242,6 +242,186 @@ def simple():
     """Render the simple home page with both Linux and PowerShell options"""
     return render_template('simple.html')
 
+@app.route('/remote-setup')
+def remote_setup():
+    """Render the remote server setup page"""
+    # Check if user is logged in
+    if session.get('user_id') is None:
+        flash('Please log in to access this page', 'warning')
+        return redirect(url_for('login', next=request.url))
+        
+    return render_template('remote_setup.html', 
+                           linux_config=REMOTE_SERVERS['linux'],
+                           powershell_config=REMOTE_SERVERS['powershell'])
+
+@app.route('/remote-setup/save', methods=['POST'])
+def save_remote_setup():
+    """Save remote server configuration"""
+    # Check if user is logged in
+    if session.get('user_id') is None:
+        return jsonify({
+            "success": False,
+            "message": "Please log in to access this functionality"
+        })
+        
+    server_type = request.form.get('server_type')
+    test_only = request.form.get('test_only') == 'true'
+    
+    if server_type not in ['linux', 'powershell']:
+        return jsonify({
+            "success": False,
+            "message": "Invalid server type"
+        })
+    
+    # Only administrators can modify server configuration
+    username = session.get('user_id', '')
+    if username != 'admin':
+        return jsonify({
+            "success": False,
+            "message": "Only administrators can modify server configuration"
+        })
+    
+    # Get form data
+    enabled = request.form.get('enabled') == 'on'
+    host = request.form.get('host', '')
+    port = request.form.get('port', '')
+    username = request.form.get('username', '')
+    password = request.form.get('password', '')
+    
+    # Update server configuration in memory
+    REMOTE_SERVERS[server_type]['enabled'] = enabled and bool(host)
+    REMOTE_SERVERS[server_type]['host'] = host
+    REMOTE_SERVERS[server_type]['port'] = int(port) if port.isdigit() else (22 if server_type == 'linux' else 5985)
+    REMOTE_SERVERS[server_type]['username'] = username
+    
+    # Only update password if provided
+    if password:
+        REMOTE_SERVERS[server_type]['password'] = password
+    
+    # Handle server-specific configuration
+    if server_type == 'linux':
+        auth_method = request.form.get('auth_method')
+        if auth_method == 'key':
+            key_file = request.form.get('key_file', '')
+            REMOTE_SERVERS[server_type]['key_file'] = key_file
+        else:
+            REMOTE_SERVERS[server_type]['key_file'] = ''
+    elif server_type == 'powershell':
+        use_ssl = request.form.get('use_ssl') == 'true'
+        REMOTE_SERVERS[server_type]['use_ssl'] = use_ssl
+    
+    # If this is just a test, don't save to environment variables
+    if test_only:
+        # Test the connection
+        if server_type == 'linux':
+            try:
+                if not host or not username:
+                    return jsonify({
+                        "success": False,
+                        "message": "Host and username are required"
+                    })
+                
+                # Try to establish SSH connection
+                ssh = paramiko.SSHClient()
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                
+                if REMOTE_SERVERS['linux']['key_file']:
+                    # Use key file authentication
+                    ssh.connect(
+                        host,
+                        port=REMOTE_SERVERS['linux']['port'],
+                        username=REMOTE_SERVERS['linux']['username'],
+                        key_filename=REMOTE_SERVERS['linux']['key_file'],
+                        timeout=5
+                    )
+                else:
+                    # Use password authentication
+                    ssh.connect(
+                        host,
+                        port=REMOTE_SERVERS['linux']['port'],
+                        username=REMOTE_SERVERS['linux']['username'],
+                        password=REMOTE_SERVERS['linux']['password'],
+                        timeout=5
+                    )
+                
+                # Execute a simple command to test
+                stdin, stdout, stderr = ssh.exec_command("uname -a", timeout=3)
+                output = stdout.read().decode('utf-8').strip()
+                
+                # Close the connection
+                ssh.close()
+                
+                return jsonify({
+                    "success": True,
+                    "message": f"Successfully connected to Linux server: {output}"
+                })
+            except Exception as e:
+                return jsonify({
+                    "success": False,
+                    "message": f"Failed to connect to Linux server: {str(e)}"
+                })
+        else:  # PowerShell
+            try:
+                if not host or not username:
+                    return jsonify({
+                        "success": False,
+                        "message": "Host and username are required"
+                    })
+                
+                # First try a simple socket connection
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.settimeout(3)
+                s.connect((host, REMOTE_SERVERS['powershell']['port']))
+                s.close()
+                
+                # Try to use WinRM if available
+                try:
+                    import winrm
+                    
+                    # Create WinRM session
+                    session = winrm.Session(
+                        host,
+                        auth=(REMOTE_SERVERS['powershell']['username'], REMOTE_SERVERS['powershell']['password']),
+                        transport='ssl' if REMOTE_SERVERS['powershell']['use_ssl'] else 'ntlm',
+                        server_cert_validation='ignore'
+                    )
+                    
+                    # Try to execute a simple command
+                    result = session.run_ps("$PSVersionTable.PSVersion.ToString()")
+                    
+                    if result.status_code == 0:
+                        return jsonify({
+                            "success": True,
+                            "message": f"Successfully connected to Windows server: PowerShell {result.std_out.decode('utf-8').strip()}"
+                        })
+                    else:
+                        return jsonify({
+                            "success": False,
+                            "message": f"Connected to server but PowerShell command failed: {result.std_err.decode('utf-8')}"
+                        })
+                except ImportError:
+                    return jsonify({
+                        "success": True,
+                        "message": "Connected to Windows server (basic connection only, WinRM package not available)"
+                    })
+            except Exception as e:
+                return jsonify({
+                    "success": False,
+                    "message": f"Failed to connect to Windows server: {str(e)}"
+                })
+    else:
+        # TODO: In a production environment, we would save these to environment variables
+        # or a secure configuration store, but for this demo we'll just keep them in memory
+        
+        flash(f"{server_type.capitalize()} server configuration updated", 'success')
+        return redirect(url_for('remote_setup'))
+    
+    # This should never be reached
+    return jsonify({
+        "success": False,
+        "message": "Unknown error"
+    })
+
 @app.route('/form-linux')
 def form_linux():
     """Render the form-based Linux translator"""
