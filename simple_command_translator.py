@@ -989,5 +989,67 @@ def get_powershell_command(query):
         logger.error(f"Error generating PowerShell command: {str(e)}")
         return f"Error generating PowerShell command. Please try again later. ({str(e)[:50]}...)"
 
+@app.route('/remote-sessions')
+@login_required
+def remote_sessions():
+    """Display and filter remote sessions"""
+    from models import RemoteSession
+    
+    # Get filters from query parameters
+    session_type = request.args.get('session_type', '')
+    host = request.args.get('host', '')
+    date = request.args.get('date', '')
+    
+    # Build base query
+    query = RemoteSession.query
+    
+    # Apply filters
+    if session_type:
+        query = query.filter(RemoteSession.session_type == session_type)
+    if host:
+        query = query.filter(RemoteSession.host.like(f'%{host}%'))
+    if date:
+        import datetime
+        filter_date = datetime.datetime.strptime(date, '%Y-%m-%d')
+        next_day = filter_date + datetime.timedelta(days=1)
+        query = query.filter(RemoteSession.start_time >= filter_date, 
+                             RemoteSession.start_time < next_day)
+    
+    # Get the user's sessions only
+    user_id = session.get('user_id')
+    query = query.filter(RemoteSession.user_id == user_id)
+    
+    # Order by most recent first
+    query = query.order_by(RemoteSession.start_time.desc())
+    
+    # Pagination
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    sessions = pagination.items
+    
+    return render_template('remote_sessions.html', sessions=sessions, pagination=pagination, request=request)
+
+
+@app.route('/remote-session-details/<int:session_id>')
+@login_required
+def remote_session_details(session_id):
+    """Display details of a specific remote session"""
+    from models import RemoteSession, CommandHistory
+    
+    # Get the session
+    remote_session = RemoteSession.query.get_or_404(session_id)
+    
+    # Security check: ensure the user owns this session
+    if remote_session.user_id != session.get('user_id'):
+        flash('You do not have permission to view this session.', 'danger')
+        return redirect(url_for('remote_sessions'))
+    
+    # Get commands for this session
+    commands = CommandHistory.query.filter_by(remote_session_id=session_id).order_by(CommandHistory.created_at).all()
+    
+    return render_template('remote_session_details.html', session=remote_session, commands=commands)
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
