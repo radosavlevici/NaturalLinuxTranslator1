@@ -239,7 +239,7 @@ def create_security_signature(content):
     # Create base hash
     base_hash = hashlib.sha256(content.encode()).hexdigest()
     
-    # DNA components (A-T, G-C pairs)
+    # Security token components
     components = {
         '0': 'A', '1': 'T',
         '2': 'G', '3': 'C',
@@ -251,18 +251,18 @@ def create_security_signature(content):
         'e': 'A', 'f': 'T'
     }
     
-    # Generate DNA sequence from hash
-    dna_sequence = ''
+    # Generate token sequence from hash
+    token_sequence = ''
     for char in base_hash[:24]:  # Use first 24 chars for reasonable length
-        dna_sequence += components.get(char, 'N')
+        token_sequence += components.get(char, 'N')
     
-    # Add structural elements (like DNA's phosphate backbone)
-    structured_dna = ''
-    for i, nucleotide in enumerate(dna_sequence):
+    # Add structural elements 
+    structured_token = ''
+    for i, element in enumerate(token_sequence):
         if i % 4 == 0:
-            structured_dna += 'P-'
-        structured_dna += nucleotide
-        if i % 4 == 3 and i < len(dna_sequence) - 1:
-            structured_dna += '-P-'
+            structured_token += 'P-'
+        structured_token += element
+        if i % 4 == 3 and i < len(token_sequence) - 1:
+            structured_token += '-P-'
     
-    return structured_dna
+    return structured_token

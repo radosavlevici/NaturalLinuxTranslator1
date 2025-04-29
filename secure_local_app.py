@@ -5,7 +5,7 @@ import shlex
 import hashlib
 from datetime import datetime
 from flask import Flask, request, render_template, session, redirect, url_for, flash
-from utils import validate_linux_command, sanitize_input, log_command_request, create_dna_signature
+from utils import validate_linux_command, sanitize_input, log_command_request, create_security_signature
 
 # Create a Flask app
 app = Flask(__name__)
@@ -40,7 +40,7 @@ def is_safe_linux_command(command):
 
 @app.route('/')
 def home():
-    watermark = create_dna_signature("Command Translator")
+    watermark = create_security_signature("Command Translator")
     return f"""
     <!DOCTYPE html>
     <html lang="en" data-bs-theme="dark">
@@ -201,7 +201,7 @@ def translate():
     explanation = result.get('explanation', '')
     
     # Create security watermark
-    watermark = create_dna_signature(f"{clean_query}|{command}|{datetime.utcnow().isoformat()}")
+    watermark = create_security_signature(f"{clean_query}|{command}|{datetime.utcnow().isoformat()}")
     
     # Log the request
     log_command_request(clean_query, command, request.remote_addr, mode)
@@ -449,7 +449,7 @@ def api_translate():
     }
     
     # Generate security watermark
-    watermark = create_dna_signature(f"{command}|{output}|{datetime.utcnow().isoformat()}")
+    watermark = create_security_signature(f"{command}|{output}|{datetime.utcnow().isoformat()}")
     response_data["security_signature"] = watermark
     
     # Return the JSON response

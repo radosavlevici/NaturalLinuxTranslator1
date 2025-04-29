@@ -1,5 +1,5 @@
 # PowerShell Command Translator Prototype
-# Copyright (c) 2024 Ervin Remus Radosavlevici
+# Copyright (c) 2024 Command Translator
 # This script demonstrates the core functionality of the PowerShell Command Translator
 
 # Module imports
@@ -105,7 +105,7 @@ function New-CommandWatermark {
         DnaSignature = $dnaWatermark
         Timestamp = $timestampStr
         CommandHash = [Convert]::ToBase64String([SHA256]::Create().ComputeHash($contentBytes))
-        Author = "Ervin Remus Radosavlevici"
+        Author = "Command Translator"
         VisualCode = [Convert]::ToBase64String([Encoding]::UTF8.GetBytes("$($CONFIG.WatermarkKey):$Command:$timestampStr")).Substring(0, 24)
     }
 }
