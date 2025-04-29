@@ -185,39 +185,38 @@ This document outlines the strategic plan for expanding the Linux Command Transl
    - Microsoft MVP engagement
    - Windows admin conference presence
 
-### Pricing Strategy
+### Version Strategy
 1. **Basic Version**
-   - $59.99 one-time or $5.99/month
    - Either Linux or PowerShell (user choice)
+   - Basic feature set
 
 2. **Professional Version**
-   - $119.99 one-time or $11.99/month
    - Both Linux and PowerShell included
+   - Advanced features
 
 3. **Enterprise Version**
-   - Starting at $20/user/month
-   - Volume discounts available
    - Custom deployment options
+   - Support for multiple teams
 
-## Revenue Projections
+## Usage Projections
 
 ### Year 1 Targets
-- **New Customers**: 5,000
+- **New Users**: 5,000
 - **Conversion from Linux-only**: 35% of existing base
-- **Average Revenue Per User**: $8.50/month
-- **Total Annual Revenue**: $1.2M from PowerShell expansion
+- **Active Monthly Users**: 3,500
+- **Community Contributors**: 50+
 
 ### Year 2 Targets
-- **New Customers**: 12,000
+- **New Users**: 12,000
 - **Conversion from Linux-only**: 60% of existing base
-- **Average Revenue Per User**: $9.75/month
-- **Total Annual Revenue**: $3.5M from PowerShell expansion
+- **Active Monthly Users**: 8,000
+- **Community Contributors**: 100+
 
 ### Year 3 Targets
-- **New Customers**: 25,000
+- **New Users**: 25,000
 - **Conversion from Linux-only**: 80% of existing base
-- **Average Revenue Per User**: $12.25/month
-- **Total Annual Revenue**: $8.2M from PowerShell expansion
+- **Active Monthly Users**: 15,000
+- **Community Contributors**: 200+
 
 ## Partnership Opportunities
 
@@ -295,11 +294,11 @@ This document outlines the strategic plan for expanding the Linux Command Transl
 - User learning progression analytics
 
 ### Business Metrics
-- New customer acquisition cost
+- User acquisition rate
 - Conversion rate from Linux-only
-- Average revenue per user
+- Monthly active users
 - Enterprise adoption rate
-- Partner channel contribution
+- Community contribution statistics
 
 ### Customer Metrics
 - Time saved per PowerShell command
