@@ -1,291 +1,127 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Linux Command Translator: Transform natural language into Linux commands with precision. Created by Ervin Remus Radosavlevici.">
-    <meta name="author" content="Ervin Remus Radosavlevici">
-    <meta name="keywords" content="linux, command, translator, terminal, bash, shell, natural language, AI">
-    <title>Linux Command Translator | {{ copyright.owner }}</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
-    
-    <!-- Bootstrap CSS (Replit dark theme) -->
-    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <div class="container py-4">
-        <!-- Header with branding and copyright -->
-        <header class="mb-5 text-center">
-            <div class="row align-items-center">
-                <div class="col-md-12">
-                    <h1 class="display-4">
-                        <i class="fas fa-terminal me-2"></i>
-                        Linux Command Translator
-                    </h1>
-                    <p class="lead">Transform natural language into Linux commands with precision</p>
-                    <div class="copyright-badge">
-                        <span class="badge bg-secondary">
-                            <i class="fas fa-copyright me-1"></i>
-                            {{ copyright.year }} {{ copyright.owner }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </header>
-        
-        <!-- Main content -->
-        <main>
-            <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <!-- History Toggle Button -->
-                    <div class="mb-3 d-flex justify-content-end">
-                        <button id="historyToggleBtn" class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-history me-2"></i>Show History
-                        </button>
-                    </div>
-                    
-                    <!-- Command History Container (initially hidden) -->
-                    <div id="historyContainer" class="card mb-4 border-0 shadow d-none">
-                        <div class="card-header bg-dark-subtle d-flex justify-content-between align-items-center">
-                            <h3 class="h5 mb-0">
-                                <i class="fas fa-history me-2"></i>
-                                Command History
-                            </h3>
-                            <button id="clearHistoryBtn" class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-trash-alt me-1"></i> Clear
-                            </button>
-                        </div>
-                        <div class="card-body p-0">
-                            <ul id="historyList" class="list-group list-group-flush">
-                                <li class="list-group-item text-center text-muted">
-                                    <i class="fas fa-info-circle me-2"></i>No command history yet
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- API Key Notice -->
-                    {% if not config.get('OPENAI_API_KEY') %}
-                    <div class="alert alert-info mb-4" role="alert">
-                        <h4 class="alert-heading"><i class="fas fa-info-circle me-2"></i>API Key Required</h4>
-                        <p>This application requires an OpenAI API key to translate natural language to Linux commands.</p>
-                        <hr>
-                        <p class="mb-0">The application will still work, but will display a notification when you try to translate a query.</p>
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Input card -->
-                    <div class="card mb-4 border-0 shadow">
-                        <div class="card-header bg-dark-subtle">
-                            <h2 class="h5 mb-0">
-                                <i class="fas fa-comment-alt me-2"></i>
-                                Natural Language Query
-                            </h2>
-                        </div>
-                        <div class="card-body">
-                            <form id="queryForm">
-                                <div class="mb-3">
-                                    <label for="queryInput" class="form-label">What would you like to do?</label>
-                                    <textarea 
-                                        class="form-control" 
-                                        id="queryInput" 
-                                        rows="3" 
-                                        placeholder="Example: Create a new folder called 'documents' and list its contents"
-                                        required
-                                    ></textarea>
-                                </div>
-                                <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-primary" id="submitButton">
-                                        <i class="fas fa-magic me-2"></i>
-                                        Translate to Command
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    
-                    <!-- Results card (initially hidden) -->
-                    <div class="card mb-4 border-0 shadow d-none" id="resultsCard">
-                        <div class="card-header bg-success-subtle">
-                            <h2 class="h5 mb-0">
-                                <i class="fas fa-code me-2"></i>
-                                Linux Command
-                            </h2>
-                        </div>
-                        <div class="card-body">
-                            <div class="command-section mb-4">
-                                <label class="text-muted mb-2">Command:</label>
-                                <div class="code-block p-3 rounded bg-dark">
-                                    <!-- Enhanced command display with maximum visibility -->
-                                    <h3 class="text-light mb-2" style="font-size: 1rem; opacity: 0.7;">Shell Command:</h3>
-                                    <div id="commandResult" class="text-success font-monospace"></div>
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <button class="btn btn-sm btn-outline-light me-2" id="copyCommand" title="Copy command to clipboard">
-                                            <i class="fas fa-copy me-1"></i>Copy
-                                        </button>
-                                        <button class="btn btn-sm btn-success" id="executeCommand" title="Run this command now">
-                                            <i class="fas fa-play me-1"></i>Execute
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="explanation-section mb-4">
-                                <label class="text-muted mb-2">Explanation:</label>
-                                <div id="explanationResult" class="bg-dark-subtle p-3 rounded" style="line-height: 1.5; word-wrap: break-word;"></div>
-                            </div>
-                            
-                            <div class="breakdown-section mb-4">
-                                <label class="text-muted mb-2">Command Breakdown:</label>
-                                <div id="breakdownResult" class="bg-dark-subtle p-3 rounded" style="line-height: 1.5; word-wrap: break-word;">
-                                    <!-- Breakdown content will be inserted here dynamically -->
-                                </div>
-                            </div>
-                            
-                            <!-- Simulation section (initially empty) -->
-                            <div class="simulation-section mb-4">
-                                <label class="text-muted mb-2">Command Simulation:</label>
-                                <div class="code-block p-3 rounded bg-dark">
-                                    <pre id="simulationResult" class="text-light mb-0 overflow-auto font-monospace" style="max-height: 200px; white-space: pre-wrap; word-break: break-word; line-height: 1.5;"></pre>
-                                </div>
-                            </div>
-                            
-                            <!-- Real Execution Results (initially hidden) -->
-                            <div class="execution-section mb-4 d-none" id="executionSection">
-                                <label class="text-muted mb-2">
-                                    <i class="fas fa-terminal me-1"></i>
-                                    Execution Results:
-                                </label>
-                                <div class="card border-0">
-                                    <div class="card-header bg-dark text-light d-flex justify-content-between">
-                                        <span>Output</span>
-                                        <small id="executionStatus" class="badge bg-secondary">Not executed</small>
-                                    </div>
-                                    <div class="card-body p-0">
-                                        <pre id="executionOutput" class="p-3 m-0 bg-dark text-light overflow-auto font-monospace" style="max-height: 300px; white-space: pre-wrap; word-break: break-word; border-radius: 0; line-height: 1.5; font-size: 0.9rem;"></pre>
-                                    </div>
-                                    <div class="card-footer bg-dark-subtle" id="executionInfo">
-                                        <small class="text-muted">Exit code: <span id="executionExitCode">N/A</span></small>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div id="safetyWarningContainer" class="alert alert-warning d-none">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                <span id="safetyWarningText"></span>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="watermark-section small text-muted">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p class="mb-1">
-                                            <i class="fas fa-fingerprint me-1"></i>
-                                            DNA Signature: <span id="dnaSignature" class="font-monospace"></span>
-                                        </p>
-                                    </div>
-                                    <div class="col-md-6 text-md-end">
-                                        <p class="mb-1">
-                                            <i class="fas fa-shield-alt me-1"></i>
-                                            Authenticated by: <span id="authenticatedBy"></span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Loading spinner (initially hidden) -->
-                    <div class="text-center py-5 d-none" id="loadingSpinner">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2">Translating your query...</p>
-                    </div>
-                    
-                    <!-- Error message (initially hidden) -->
-                    <div class="alert alert-danger d-none" id="errorMessage">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        <span id="errorText"></span>
-                    </div>
-                </div>
-            </div>
-        </main>
-        
-        <!-- Footer with additional information -->
-        <footer class="mt-5 pt-4 border-top">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>About This Tool</h5>
-                    <p>
-                        This Linux Command Translator converts natural language queries into Linux terminal commands,
-                        helping users who are unfamiliar with command-line syntax.
-                    </p>
-                </div>
-                <div class="col-md-6">
-                    <h5>Copyright Information</h5>
-                    <p>
-                        © {{ copyright.year }} {{ copyright.owner }}. All rights reserved.
-                        This software includes proprietary watermarking and DNA-based security features.
-                        Unauthorized reproduction or distribution is prohibited.
-                    </p>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-12 text-center">
-                    <p class="text-muted small">
-                        <i class="fas fa-lock me-1"></i>
-                        Secured with advanced watermarking technology
-                    </p>
-                </div>
-            </div>
-        </footer>
+{% extends "layout.html" %}
+
+{% block title %}Command Translator - Home{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 text-center mb-4">
+            <h1>Command Translator</h1>
+            <p class="lead">Transform natural language into precise terminal commands</p>
+        </div>
     </div>
-    
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Toast Notifications -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <!-- History Cleared Toast -->
-        <div id="historyToast" class="toast align-items-center text-bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <i class="fas fa-check-circle me-2"></i>Command history cleared
+
+    <div class="row mb-5">
+        <div class="col-md-8 offset-md-2">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <h3 class="card-title">What would you like to do?</h3>
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 bg-dark border-primary">
+                                <div class="card-body text-center">
+                                    <h4 class="card-title text-primary">Linux Commands</h4>
+                                    <p class="card-text">Translate natural language to Linux terminal commands</p>
+                                    <a href="/form-linux" class="btn btn-primary">Linux Translator</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 bg-dark border-info">
+                                <div class="card-body text-center">
+                                    <h4 class="card-title text-info">PowerShell Commands</h4>
+                                    <p class="card-text">Translate natural language to PowerShell commands</p>
+                                    <a href="/form-powershell" class="btn btn-info">PowerShell Translator</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 bg-dark border-secondary">
+                                <div class="card-body text-center">
+                                    <h4 class="card-title">Simple Mode</h4>
+                                    <p class="card-text">Use the simplified interface for quick translations</p>
+                                    <a href="/simple" class="btn btn-secondary">Simple Mode</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 bg-dark border-secondary">
+                                <div class="card-body text-center">
+                                    <h4 class="card-title">Interface Directory</h4>
+                                    <p class="card-text">View all available interfaces and options</p>
+                                    <a href="/directory" class="btn btn-secondary">View Directory</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-        
-        <!-- Command Copied Toast -->
-        <div id="copyToast" class="toast align-items-center text-bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <i class="fas fa-check-circle me-2"></i>Command copied to clipboard
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-        
-        <!-- Execution Toast -->
-        <div id="executeToast" class="toast align-items-center text-bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <i class="fas fa-terminal me-2"></i>Command executed successfully
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
     </div>
-    
-    <!-- Custom JavaScript -->
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-</body>
-</html>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center mb-4">Features</h2>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark">
+                <div class="card-body">
+                    <h4 class="card-title">Natural Language Processing</h4>
+                    <p class="card-text">Simply describe what you want to do in plain English, and let our AI generate the exact command you need.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark">
+                <div class="card-body">
+                    <h4 class="card-title">Cross-Platform Support</h4>
+                    <p class="card-text">Generate commands for both Linux and Windows PowerShell environments from the same intuitive interface.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark">
+                <div class="card-body">
+                    <h4 class="card-title">Command Execution</h4>
+                    <p class="card-text">Execute commands directly within the interface with built-in safety validation to prevent dangerous operations.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark">
+                <div class="card-body">
+                    <h4 class="card-title">History Tracking</h4>
+                    <p class="card-text">Save your command history for future reference and easily reuse common commands.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark">
+                <div class="card-body">
+                    <h4 class="card-title">Custom Command Libraries</h4>
+                    <p class="card-text">Create and share custom command templates for specific workflows and environments.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark">
+                <div class="card-body">
+                    <h4 class="card-title">Enterprise-Ready</h4>
+                    <p class="card-text">Robust security features, audit logging, and integration options for organizational deployment.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12 text-center">
+            <div class="alert alert-secondary" role="alert">
+                <h4>Ready to get started?</h4>
+                <p>Choose one of the interfaces above or <a href="/register" class="alert-link">create an account</a> to save your command history.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

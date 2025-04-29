@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}Linux Command Translator{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 text-center mb-4">
+            <h1>Linux Command Translator</h1>
+            <p class="lead">Describe what you want to do, and I'll generate the Linux command for you</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <form action="/form-translate-linux" method="post">
+                        <div class="mb-3">
+                            <label for="query" class="form-label">What would you like to do?</label>
+                            <textarea class="form-control bg-dark text-light" id="query" name="query" rows="3" placeholder="Example: List all files in the current directory sorted by size" required></textarea>
+                        </div>
+                        {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                        {% endif %}
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Generate Linux Command</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-8 offset-md-2">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h4>Example Queries</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush bg-dark">
+                        <li class="list-group-item bg-dark text-light">Find all text files modified in the last 7 days</li>
+                        <li class="list-group-item bg-dark text-light">Show disk usage for each directory, sorted by size</li>
+                        <li class="list-group-item bg-dark text-light">Count the number of lines in all Python files recursively</li>
+                        <li class="list-group-item bg-dark text-light">Find all processes using more than 100MB of memory</li>
+                        <li class="list-group-item bg-dark text-light">Copy all jpg files from downloads to pictures folder</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-8 offset-md-2">
+            <div class="alert alert-info">
+                <h5>About Linux Command Translation</h5>
+                <p>This tool uses advanced AI to convert natural language descriptions into executable Linux commands. It supports a wide range of command-line tasks including file operations, system monitoring, text processing, and more.</p>
+                <p>For security reasons, some high-risk commands may be restricted from execution, but all commands will be translated.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
