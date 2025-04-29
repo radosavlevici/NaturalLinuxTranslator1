@@ -37,7 +37,7 @@ To build a collaborative network of partners who enhance, extend, and evangelize
 #### Value-Added Resellers (VARs)
 - **Target Partners**: Regional and industry-specific technology resellers
 - **Value Proposition**:
-  - Free complementary tool for their customers
+  - New revenue stream with competitive margins
   - Complementary offering to existing infrastructure solutions
   - Training and certification opportunities
 
@@ -51,9 +51,9 @@ To build a collaborative network of partners who enhance, extend, and evangelize
 #### Online Marketplaces
 - **Target Partners**: AWS Marketplace, Microsoft AppSource, Google Cloud Marketplace
 - **Value Proposition**:
-  - Simplified access
-  - Free usage for all users
-  - Integrated with existing cloud services
+  - Simplified procurement
+  - Usage-based billing options
+  - Integrated billing with existing cloud services
 
 ### 3. Solution Integration Partnerships
 
@@ -159,7 +159,7 @@ To build a collaborative network of partners who enhance, extend, and evangelize
 
 3. **Partnership Development**
    - Define partnership structure
-   - Establish free distribution terms
+   - Establish commercial terms
    - Develop joint business plan
 
 4. **Enablement**
@@ -239,10 +239,10 @@ To build a collaborative network of partners who enhance, extend, and evangelize
   - Integration guides
   - Technical training curriculum
 
-- **Marketing Resources**
-  - Partner-ready distribution materials
+- **Sales & Marketing Resources**
+  - Partner-ready sales materials
   - Co-branded marketing templates
-  - Community development resources
+  - Market development funds
 
 - **Legal & Administrative Resources**
   - Partnership agreement templates
