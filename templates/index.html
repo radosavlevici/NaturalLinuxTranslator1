@@ -1,138 +1,103 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
+
+{% block title %}Command Translator - Natural Language to Terminal Commands{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-12">
-        <div class="text-center mb-5">
-            <h1 class="display-4">
-                <i class="fas fa-terminal me-3 text-primary"></i>
-                Linux Command Translator
-            </h1>
-            <p class="lead">Translate natural language to Linux commands easily</p>
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12 text-center">
+            <h1 class="display-4 mb-4">Command Translator</h1>
+            <p class="lead">Transform natural language into precise terminal commands with advanced cross-platform capabilities.</p>
+            <div class="mt-4">
+                <a href="/form-linux" class="btn btn-primary mx-2">Linux Translator</a>
+                <a href="/form-powershell" class="btn btn-info mx-2">PowerShell Translator</a>
+                <a href="/simple" class="btn btn-secondary mx-2">Simple Interface</a>
+            </div>
         </div>
     </div>
-</div>
-
-<!-- Translation Section -->
-<div id="translation-section" class="{% if show_about %}d-none{% endif %}">
+    
     <div class="row">
-        <div class="col-lg-10 mx-auto">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-language me-2"></i>
-                        Natural Language to Linux Command
-                    </h5>
-                </div>
+        <div class="col-md-4">
+            <div class="card bg-dark">
                 <div class="card-body">
-                    <form id="translation-form">
-                        <div class="mb-3">
-                            <label for="query-input" class="form-label">What would you like to do?</label>
-                            <textarea class="form-control" id="query-input" rows="3" 
-                                      placeholder="E.g., Create a new folder called Documents, List all files in the current directory, Find all text files containing the word 'important'..."
-                                      required></textarea>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-cogs me-2"></i>
-                                Translate to Linux Command
-                            </button>
-                        </div>
-                    </form>
+                    <h3 class="card-title"><i class="fas fa-terminal"></i> Natural Language Processing</h3>
+                    <p class="card-text">Describe what you want to do in plain English, and get the precise command you need.</p>
                 </div>
             </div>
-
-            <!-- Loading Indicator -->
-            <div id="loading-indicator" class="loading-indicator">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="fas fa-exchange-alt"></i> Cross-Platform Support</h3>
+                    <p class="card-text">Get commands for both Linux and PowerShell environments with the same natural query.</p>
                 </div>
-                <p class="mt-2">Translating your request...</p>
             </div>
-
-            <!-- Results Container -->
-            <div id="results-container" class="mt-4"></div>
-
-            <!-- Welcome Information -->
-            <div class="welcome-prompt mt-5">
-                <h3>How Does It Work?</h3>
-                <p>
-                    Simply describe what you want to do in plain English, and the translator will convert your natural language 
-                    into the appropriate Linux command with an explanation of how it works.
-                </p>
-                <h5 class="mt-4">Example Queries:</h5>
-                <ul>
-                    <li>"Show me all files in the current directory"</li>
-                    <li>"Create a new text file called notes.txt"</li>
-                    <li>"Find all files modified in the last 7 days"</li>
-                    <li>"Check how much disk space I have left"</li>
-                    <li>"Compress all PDF files into a single archive"</li>
-                </ul>
-                <div class="alert alert-info mt-3">
-                    <i class="fas fa-info-circle me-2"></i>
-                    The more specific your request, the more accurate the translation will be.
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="fas fa-shield-alt"></i> Secure Execution</h3>
+                    <p class="card-text">Execute commands with comprehensive safety validation and detailed explanations.</p>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<!-- About Section -->
-<div id="about-section" class="{% if not show_about %}d-none{% endif %}">
-    <div class="row">
-        <div class="col-lg-10 mx-auto">
-            <div class="card shadow">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-info-circle me-2"></i>
-                        About Linux Command Translator
-                    </h5>
+    
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h2>How It Works</h2>
                 </div>
                 <div class="card-body">
-                    <h3>Linux Command Translator</h3>
-                    <p>
-                        The Linux Command Translator is a tool designed to bridge the gap between natural language 
-                        and Linux terminal commands. It helps users who may not be familiar with Linux command syntax 
-                        to accomplish tasks without needing to memorize complex commands.
-                    </p>
-                    
-                    <h4 class="mt-4">Features</h4>
-                    <ul>
-                        <li>Translate natural language instructions into Linux commands</li>
-                        <li>Provide detailed explanations of what each command does</li>
-                        <li>Support for a wide range of common Linux operations</li>
-                        <li>Security-focused design with command validation</li>
-                        <li>Proprietary watermarking and digital DNA technology</li>
-                    </ul>
-                    
-                    <h4 class="mt-4">Technology</h4>
-                    <p>
-                        This application uses advanced natural language processing to understand user intent and
-                        generate appropriate Linux commands. Each command includes an explanation to help users 
-                        learn as they use the tool.
-                    </p>
-                    
-                    <h4 class="mt-4">Security</h4>
-                    <p>
-                        All content generated by this application is secured with proprietary digital watermarking 
-                        technology and includes copyright information. The application also includes command validation
-                        to prevent potentially harmful operations.
-                    </p>
-                    
-                    <div class="alert alert-warning mt-4">
-                        <strong>Disclaimer:</strong> Always review commands before executing them in your terminal,
-                        especially if they modify system files or require elevated privileges.
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="p-3">
+                                <i class="fas fa-keyboard fa-3x mb-3"></i>
+                                <h4>1. Enter Your Request</h4>
+                                <p>Type what you want to do in plain language</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3">
+                                <i class="fas fa-cogs fa-3x mb-3"></i>
+                                <h4>2. Advanced Processing</h4>
+                                <p>Our AI translates your request to a precise command</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3">
+                                <i class="fas fa-check-circle fa-3x mb-3"></i>
+                                <h4>3. Verified Result</h4>
+                                <p>Get a command you can use right away</p>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <h4 class="mt-4">About the Creator</h4>
-                    <p>
-                        Linux Command Translator was created by Ervin Remus Radosavlevici, a developer focused on 
-                        making technology more accessible through intuitive tools and educational resources.
-                    </p>
-                    
-                    <div class="text-center mt-4">
-                        <p class="watermark">© 2024 Ervin Remus Radosavlevici - All Rights Reserved</p>
-                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h3>Example: Linux Command</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Natural Language:</strong> "Find all PDF files modified in the last 7 days"</p>
+                    <div class="command-output">find . -name "*.pdf" -type f -mtime -7</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h3>Example: PowerShell Command</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Natural Language:</strong> "Find all PDF files modified in the last 7 days"</p>
+                    <div class="command-output">Get-ChildItem -Path . -Filter *.pdf -Recurse | Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-7) }</div>
                 </div>
             </div>
         </div>

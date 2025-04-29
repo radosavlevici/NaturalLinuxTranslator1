@@ -1,0 +1,134 @@
+/* Custom styles for Linux Command Translator */
+
+/* Code block styling */
+.code-block {
+    position: relative;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Command result styling - fix for mobile display */
+#commandResult {
+    font-family: 'Courier New', monospace !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+    font-size: 1.25rem !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    color: #4ade80 !important;
+    line-height: 1.8 !important;
+    padding: 0.5rem !important;
+    margin: 0.5rem 0 !important;
+    background-color: transparent;
+    display: block;
+    width: 100%;
+    min-height: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.copy-btn:hover {
+    opacity: 1;
+}
+
+/* Watermark styling */
+.watermark-section {
+    font-size: 0.85rem;
+}
+
+#dnaSignature,
+#visualWatermark {
+    letter-spacing: 0.5px;
+}
+
+/* Custom badge for copyright */
+.copyright-badge {
+    margin-top: 10px;
+}
+
+.copyright-badge .badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.7rem;
+}
+
+/* Styling for command breakdown */
+#breakdownResult dt {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+
+#breakdownResult dd {
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}
+
+/* Subtle animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#resultsCard {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Improved focus states for accessibility */
+textarea:focus, 
+button:focus {
+    outline: 2px solid var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .watermark-section .text-md-end {
+        text-align: left !important;
+        margin-top: 0.5rem;
+    }
+    
+    /* Improved mobile display for commands */
+    #commandResult {
+        font-size: 1.2rem !important;
+        padding: 0.5rem !important;
+        letter-spacing: 0.3px !important;
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        min-height: 60px !important;
+        border: 2px solid rgba(255, 255, 255, 0.2) !important;
+        margin: 0.75rem 0 !important;
+    }
+    
+    .code-block {
+        padding: 0.75rem !important;
+    }
+    
+    /* Ensure buttons don't overlap with command text */
+    .code-block .btn-group {
+        position: static !important;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Custom styles for the terminal icon in header */
+.fa-terminal {
+    color: var(--bs-primary);
+}
+
+/* Custom background for the page */
+body {
+    background-color: var(--bs-body-bg);
+    background-image: radial-gradient(circle at 50% 50%, rgba(var(--bs-primary-rgb), 0.03) 0%, rgba(var(--bs-primary-rgb), 0) 70%);
+    background-size: 100% 100%;
+    background-attachment: fixed;
+}
