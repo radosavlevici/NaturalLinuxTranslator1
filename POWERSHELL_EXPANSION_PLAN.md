@@ -241,7 +241,7 @@ This document outlines the strategic plan for expanding the Linux Command Transl
    - Multi-tenant capabilities
 
 2. **MSP Partnership Program**
-   - Reseller model with 30% margins
+   - Community distribution model
    - Co-marketing materials
    - MSP technical certification
    - Joint case studies
@@ -249,7 +249,7 @@ This document outlines the strategic plan for expanding the Linux Command Transl
 ### Training Organizations
 1. **Windows Training Enhancement**
    - Curriculum integration
-   - Student licenses
+   - Free student access
    - Instructor resources
    - PowerShell certification preparation
 
@@ -257,7 +257,7 @@ This document outlines the strategic plan for expanding the Linux Command Transl
    - Training environment integration
    - Progress tracking
    - Custom module development
-   - Enterprise licensing
+   - Enterprise access
 
 ## Implementation Roadmap
 
