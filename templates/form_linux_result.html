@@ -21,15 +21,23 @@
                         <div class="command-output p-3">{{ command }}</div>
                     </div>
                     
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="/form-linux" class="btn btn-secondary">New Translation</a>
-                        <div>
-                            <button class="btn btn-primary" onclick="copyToClipboard()">
-                                <i class="fas fa-copy"></i> Copy Command
-                            </button>
-                            <button class="btn btn-success" onclick="executeCommand()">
-                                <i class="fas fa-play"></i> Execute Command
-                            </button>
+                    <div class="mt-4">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="remote-execution">
+                            <label class="form-check-label" for="remote-execution">
+                                Execute on remote system (if configured)
+                            </label>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a href="/form-linux" class="btn btn-secondary">New Translation</a>
+                            <div>
+                                <button class="btn btn-primary" onclick="copyToClipboard()">
+                                    <i class="fas fa-copy"></i> Copy Command
+                                </button>
+                                <button class="btn btn-success" onclick="executeCommand()">
+                                    <i class="fas fa-play"></i> Execute Command
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
@@ -117,7 +125,8 @@
             body: new URLSearchParams({
                 'command': command,
                 'mode': 'linux',
-                'workingDir': '.'
+                'workingDir': '.',
+                'remote': document.getElementById('remote-execution').checked
             })
         })
         .then(response => response.json())

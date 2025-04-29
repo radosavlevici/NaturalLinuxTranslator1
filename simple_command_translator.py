@@ -410,31 +410,61 @@ def execute_command():
     from datetime import datetime
     current_time = datetime.utcnow().isoformat() + "Z"
     
+    # Check if remote execution is requested
+    remote_execution = request.form.get('remote', 'false').lower() == 'true'
+    connection_info = {}
+    
     if mode == 'linux':
         if is_safe_linux_command(command):
             try:
-                # Get some environment info before execution
-                env_result = subprocess.run(
-                    "uname -a && whoami && pwd",
-                    shell=True,
-                    capture_output=True,
-                    text=True,
-                    timeout=2
-                )
-                execution_info["environment"] = env_result.stdout.strip()
-                
-                # Execute the command in a subprocess
-                result = subprocess.run(
-                    command,
-                    shell=True,
-                    cwd=working_dir,
-                    capture_output=True,
-                    text=True,
-                    timeout=10  # Increased timeout to 10 seconds
-                )
-                output = result.stdout
-                error = result.stderr
-                execution_info["exit_code"] = result.returncode
+                if remote_execution and REMOTE_SERVERS['linux']['enabled']:
+                    # Get remote execution info
+                    connection_info = {
+                        "host": REMOTE_SERVERS['linux']['host'],
+                        "port": REMOTE_SERVERS['linux']['port'],
+                        "username": REMOTE_SERVERS['linux']['username'],
+                        "using_key": bool(REMOTE_SERVERS['linux']['key_file']),
+                    }
+                    execution_info["connection"] = connection_info
+                    
+                    # Use remote Linux execution
+                    logger.info(f"Executing command on remote Linux server: {REMOTE_SERVERS['linux']['host']}")
+                    remote_output, remote_error, exit_code = execute_remote_linux_command(command, working_dir)
+                    output = remote_output
+                    error = remote_error
+                    execution_info["exit_code"] = exit_code
+                    execution_info["executed_on"] = "remote-linux"
+                    
+                    # Add environment info if available
+                    if not error:
+                        # Try to get environment info from remote system
+                        env_output, env_error, _ = execute_remote_linux_command("uname -a && whoami && pwd", working_dir)
+                        if not env_error:
+                            execution_info["environment"] = env_output.strip()
+                else:
+                    # Get some environment info before execution (local)
+                    env_result = subprocess.run(
+                        "uname -a && whoami && pwd",
+                        shell=True,
+                        capture_output=True,
+                        text=True,
+                        timeout=2
+                    )
+                    execution_info["environment"] = env_result.stdout.strip()
+                    execution_info["executed_on"] = "local"
+                    
+                    # Execute the command in a subprocess (local)
+                    result = subprocess.run(
+                        command,
+                        shell=True,
+                        cwd=working_dir,
+                        capture_output=True,
+                        text=True,
+                        timeout=10  # Increased timeout to 10 seconds
+                    )
+                    output = result.stdout
+                    error = result.stderr
+                    execution_info["exit_code"] = result.returncode
                 
                 # Log successful execution
                 logger.info(f"Linux command executed successfully: '{command}' by user '{username}'")
@@ -450,27 +480,54 @@ def execute_command():
     elif mode == 'powershell':
         if is_safe_powershell_command(command):
             try:
-                # Get some PowerShell environment info before execution
-                env_command = "Write-Output 'PowerShell Info:'; $PSVersionTable; Write-Output 'User:'; whoami; Write-Output 'Location:'; Get-Location"
-                env_result = subprocess.run(
-                    ["powershell", "-Command", env_command],
-                    capture_output=True,
-                    text=True,
-                    timeout=2
-                )
-                execution_info["environment"] = env_result.stdout.strip()
-                
-                # Execute the PowerShell command
-                result = subprocess.run(
-                    ["powershell", "-Command", command],
-                    cwd=working_dir,
-                    capture_output=True,
-                    text=True,
-                    timeout=10  # Increased timeout to 10 seconds
-                )
-                output = result.stdout
-                error = result.stderr
-                execution_info["exit_code"] = result.returncode
+                if remote_execution and REMOTE_SERVERS['powershell']['enabled']:
+                    # Get remote execution info
+                    connection_info = {
+                        "host": REMOTE_SERVERS['powershell']['host'],
+                        "port": REMOTE_SERVERS['powershell']['port'],
+                        "username": REMOTE_SERVERS['powershell']['username'],
+                        "using_ssl": REMOTE_SERVERS['powershell']['use_ssl'],
+                    }
+                    execution_info["connection"] = connection_info
+                    
+                    # Use remote PowerShell execution
+                    logger.info(f"Executing command on remote Windows server: {REMOTE_SERVERS['powershell']['host']}")
+                    remote_output, remote_error, exit_code = execute_remote_powershell_command(command, working_dir)
+                    output = remote_output
+                    error = remote_error
+                    execution_info["exit_code"] = exit_code
+                    execution_info["executed_on"] = "remote-powershell"
+                    
+                    # Add environment info if available
+                    if not error:
+                        # Try to get environment info from remote system
+                        env_command = "Write-Output 'PowerShell Info:'; $PSVersionTable; Write-Output 'User:'; whoami; Write-Output 'Location:'; Get-Location"
+                        env_output, env_error, _ = execute_remote_powershell_command(env_command, working_dir)
+                        if not env_error:
+                            execution_info["environment"] = env_output.strip()
+                else:
+                    # Get some PowerShell environment info before execution (local)
+                    env_command = "Write-Output 'PowerShell Info:'; $PSVersionTable; Write-Output 'User:'; whoami; Write-Output 'Location:'; Get-Location"
+                    env_result = subprocess.run(
+                        ["powershell", "-Command", env_command],
+                        capture_output=True,
+                        text=True,
+                        timeout=2
+                    )
+                    execution_info["environment"] = env_result.stdout.strip()
+                    execution_info["executed_on"] = "local"
+                    
+                    # Execute the PowerShell command (local)
+                    result = subprocess.run(
+                        ["powershell", "-Command", command],
+                        cwd=working_dir,
+                        capture_output=True,
+                        text=True,
+                        timeout=10  # Increased timeout to 10 seconds
+                    )
+                    output = result.stdout
+                    error = result.stderr
+                    execution_info["exit_code"] = result.returncode
                 
                 # Log successful execution
                 logger.info(f"PowerShell command executed successfully: '{command}' by user '{username}'")
