@@ -375,7 +375,7 @@ def form_translate_linux():
 def powershell():
     """
     Render the PowerShell command translator interface
-    Copyright (c) 2024 Ervin Remus Radosavlevici
+    Copyright (c) 2024
     """
     return render_template('powershell.html')
 
@@ -444,7 +444,7 @@ def translate():
 def translate_powershell():
     """
     Translate natural language to PowerShell command
-    Copyright (c) 2024 Ervin Remus Radosavlevici
+    Copyright (c) 2024
     """
     data = request.get_json() if request.is_json else request.form
     query = data.get('query', '')
@@ -885,7 +885,7 @@ def api_command_libraries():
 def get_linux_command(query):
     """
     Use OpenAI to translate natural language to Linux command with improved formatting
-    Copyright (c) 2024 Ervin Remus Radosavlevici
+    Copyright (c) 2024
     """
     sanitized_query = sanitize_input(query)
     
@@ -913,7 +913,7 @@ def get_linux_command(query):
 def get_powershell_command(query):
     """
     Use OpenAI to translate natural language to PowerShell command
-    Copyright (c) 2024 Ervin Remus Radosavlevici
+    Copyright (c) 2024
     """
     sanitized_query = sanitize_input(query)
     
