@@ -497,7 +497,7 @@ function Start-PowerShellTranslatorDemo {
     Initialize-PowerShellTranslator
     
     Write-Host "PowerShell Command Translator Demo" -ForegroundColor Cyan
-    Write-Host "Copyright (c) 2024 Ervin Remus Radosavlevici" -ForegroundColor Yellow
+    Write-Host "Copyright (c) 2024 Command Translator" -ForegroundColor Yellow
     Write-Host "Type 'exit' to quit the demo" -ForegroundColor Gray
     Write-Host ""
     
