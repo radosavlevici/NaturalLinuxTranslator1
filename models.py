@@ -1,7 +1,12 @@
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+# Import db from app's new location
+try:
+    from simple_command_translator import db
+except ImportError:
+    # Keep compatibility with main.py
+    from flask_sqlalchemy import SQLAlchemy
+    db = SQLAlchemy()
 
 class User(db.Model):
     """User model for authentication and personalization"""
