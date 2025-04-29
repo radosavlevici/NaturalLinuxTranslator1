@@ -57,6 +57,13 @@ def powershell():
                           copyright=COPYRIGHT_INFO,
                           config={'OPENAI_API_KEY': OPENAI_API_KEY})
 
+@app.route('/powershell-link')
+def powershell_link():
+    """
+    Render a direct link to the PowerShell interface
+    """
+    return render_template('powershell_link.html')
+
 @app.route('/translate', methods=['POST'])
 def translate():
     try:
