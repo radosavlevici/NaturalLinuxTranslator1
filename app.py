@@ -4,6 +4,9 @@ import json
 import base64
 import hashlib
 import time
+import re
+import random
+from datetime import datetime
 from flask import Flask, render_template, request, jsonify, session
 from openai import OpenAI
 import subprocess
@@ -32,13 +35,25 @@ else:
 COPYRIGHT_INFO = {
     "owner": "Ervin Remus Radosavlevici",
     "year": 2024,
-    "description": "Natural Language to Linux Command Translator"
+    "description": "Natural Language Command Translator",
+    "email": "ervin210@icloud.com",
+    "phone": "+447759313990"
 }
 
 @app.route('/')
 def index():
     # Pass OpenAI API key status and copyright info to template
     return render_template('index.html', 
+                          copyright=COPYRIGHT_INFO,
+                          config={'OPENAI_API_KEY': OPENAI_API_KEY})
+
+@app.route('/powershell')
+def powershell():
+    """
+    Render the PowerShell command translator interface
+    Copyright (c) 2024 Ervin Remus Radosavlevici
+    """
+    return render_template('powershell.html',
                           copyright=COPYRIGHT_INFO,
                           config={'OPENAI_API_KEY': OPENAI_API_KEY})
 
