@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100" height="100">
+  <style>
+    .terminal { fill: #17a2b8; }
+    .prompt { fill: #fd7e14; }
+    .text { fill: #ffffff; }
+    .cursor { fill: #17a2b8; animation: blink 1.2s infinite; }
+    
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+  </style>
+  
+  <!-- Terminal Background -->
+  <rect x="20" y="60" width="472" height="350" rx="15" ry="15" fill="#343a40" />
+  <rect x="40" y="100" width="432" height="290" rx="5" ry="5" fill="#212529" class="terminal" />
+  
+  <!-- Terminal Content -->
+  <text x="60" y="140" font-family="monospace" font-size="20" class="prompt">$</text>
+  <text x="80" y="140" font-family="monospace" font-size="20" class="text">translate</text>
+  
+  <!-- Translation Arrow -->
+  <path d="M100 170 L412 170" stroke="#6c757d" stroke-width="4" stroke-dasharray="10,5" />
+  <polygon points="412,170 400,160 400,180" fill="#6c757d" />
+  
+  <!-- Command Output -->
+  <text x="60" y="200" font-family="monospace" font-size="20" class="prompt">$</text>
+  <text x="80" y="200" font-family="monospace" font-size="20" class="terminal">ls -la</text>
+  <rect x="240" y="190" width="10" height="20" class="cursor" />
+  
+  <!-- Watermark -->
+  <text x="256" y="450" font-family="monospace" font-size="12" text-anchor="middle" class="text">ERR-TRANSLATE</text>
+</svg>

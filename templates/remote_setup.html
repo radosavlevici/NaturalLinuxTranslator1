@@ -1,0 +1,294 @@
+{% extends "layout.html" %}
+
+{% block title %}Remote Server Setup{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h2><i class="fas fa-server"></i> Remote Server Configuration</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Configure connections to remote Linux and Windows servers for executing commands directly on real hardware.
+                        <br>
+                        <small>All connection details are stored securely as environment variables.</small>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card bg-dark border-info mb-4">
+                                <div class="card-header bg-info bg-opacity-25">
+                                    <h3><i class="fab fa-linux"></i> Linux Server</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="linux-status" class="alert alert-secondary mb-3">
+                                        Checking connection status...
+                                    </div>
+                                    
+                                    <form id="linux-form" method="post" action="/remote-setup/save">
+                                        <input type="hidden" name="server_type" value="linux">
+                                        
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="linux-enabled" name="enabled" {% if linux_config.enabled %}checked{% endif %}>
+                                            <label class="form-check-label" for="linux-enabled">Enable Linux Remote Execution</label>
+                                            <small class="form-text text-muted d-block">When enabled, commands will be executed on this server.</small>
+                                        </div>
+                                        
+                                        <div class="alert alert-info">
+                                            <h6><i class="fas fa-shield-alt"></i> Security Information</h6>
+                                            <ul class="mb-0 small">
+                                                <li>Command execution includes DNA-based security validation</li>
+                                                <li>All commands are watermarked and traced with Ervin's security technology</li>
+                                                <li>Execution is logged for security audit purposes</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="linux-host" class="form-label">Host/IP Address</label>
+                                            <input type="text" class="form-control" id="linux-host" name="host" value="{{ linux_config.host }}" placeholder="e.g., 192.168.1.100">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="linux-port" class="form-label">SSH Port</label>
+                                            <input type="number" class="form-control" id="linux-port" name="port" value="{{ linux_config.port }}" placeholder="22">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="linux-username" class="form-label">Username</label>
+                                            <input type="text" class="form-control" id="linux-username" name="username" value="{{ linux_config.username }}" placeholder="e.g., ubuntu">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Authentication Method</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="auth_method" id="linux-password-auth" value="password" {% if not linux_config.key_file %}checked{% endif %}>
+                                                <label class="form-check-label" for="linux-password-auth">
+                                                    Password
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="auth_method" id="linux-key-auth" value="key" {% if linux_config.key_file %}checked{% endif %}>
+                                                <label class="form-check-label" for="linux-key-auth">
+                                                    SSH Key
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div id="linux-password-section" class="mb-3" {% if linux_config.key_file %}style="display: none;"{% endif %}>
+                                            <label for="linux-password" class="form-label">Password</label>
+                                            <input type="password" class="form-control" id="linux-password" name="password" placeholder="Password">
+                                            <small class="text-muted">Leave blank to keep existing password</small>
+                                        </div>
+                                        
+                                        <div id="linux-key-section" class="mb-3" {% if not linux_config.key_file %}style="display: none;"{% endif %}>
+                                            <label for="linux-key-file" class="form-label">SSH Key File Path</label>
+                                            <input type="text" class="form-control" id="linux-key-file" name="key_file" value="{{ linux_config.key_file }}" placeholder="e.g., /path/to/id_rsa">
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-info">Save Linux Configuration</button>
+                                            <button type="button" class="btn btn-secondary" onclick="testLinuxConnection()">Test Connection</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card bg-dark border-primary mb-4">
+                                <div class="card-header bg-primary bg-opacity-25">
+                                    <h3><i class="fab fa-windows"></i> Windows Server</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="powershell-status" class="alert alert-secondary mb-3">
+                                        Checking connection status...
+                                    </div>
+                                    
+                                    <form id="powershell-form" method="post" action="/remote-setup/save">
+                                        <input type="hidden" name="server_type" value="powershell">
+                                        
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="powershell-enabled" name="enabled" {% if powershell_config.enabled %}checked{% endif %}>
+                                            <label class="form-check-label" for="powershell-enabled">Enable PowerShell Remote Execution</label>
+                                            <small class="form-text text-muted d-block">When enabled, commands will be executed on this server.</small>
+                                        </div>
+                                        
+                                        <div class="alert alert-info">
+                                            <h6><i class="fas fa-shield-alt"></i> Security Information</h6>
+                                            <ul class="mb-0 small">
+                                                <li>Command execution includes DNA-based security validation</li>
+                                                <li>All commands are watermarked and traced with Ervin's security technology</li>
+                                                <li>Execution is logged for security audit purposes</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="powershell-host" class="form-label">Host/IP Address</label>
+                                            <input type="text" class="form-control" id="powershell-host" name="host" value="{{ powershell_config.host }}" placeholder="e.g., 192.168.1.200">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="powershell-port" class="form-label">WinRM Port</label>
+                                            <input type="number" class="form-control" id="powershell-port" name="port" value="{{ powershell_config.port }}" placeholder="5985">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="powershell-username" class="form-label">Username</label>
+                                            <input type="text" class="form-control" id="powershell-username" name="username" value="{{ powershell_config.username }}" placeholder="e.g., Administrator">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="powershell-password" class="form-label">Password</label>
+                                            <input type="password" class="form-control" id="powershell-password" name="password" placeholder="Password">
+                                            <small class="text-muted">Leave blank to keep existing password</small>
+                                        </div>
+                                        
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="powershell-ssl" name="use_ssl" value="true" {% if powershell_config.use_ssl %}checked{% endif %}>
+                                            <label class="form-check-label" for="powershell-ssl">
+                                                Use SSL (HTTPS)
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-primary">Save Windows Configuration</button>
+                                            <button type="button" class="btn btn-secondary" onclick="testPowershellConnection()">Test Connection</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="/" class="btn btn-secondary">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set up Linux auth method toggle
+        document.querySelectorAll('input[name="auth_method"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                if (this.value === 'password') {
+                    document.getElementById('linux-password-section').style.display = 'block';
+                    document.getElementById('linux-key-section').style.display = 'none';
+                } else {
+                    document.getElementById('linux-password-section').style.display = 'none';
+                    document.getElementById('linux-key-section').style.display = 'block';
+                }
+            });
+        });
+        
+        // Check connection status on page load
+        checkConnectionStatus();
+    });
+    
+    function checkConnectionStatus() {
+        const linuxStatusDiv = document.getElementById('linux-status');
+        const powershellStatusDiv = document.getElementById('powershell-status');
+        
+        linuxStatusDiv.innerHTML = 'Checking connection status...';
+        powershellStatusDiv.innerHTML = 'Checking connection status...';
+        
+        fetch('/api/connection-status')
+            .then(response => response.json())
+            .then(data => {
+                // Update Linux status
+                if (data.linux && data.linux.enabled) {
+                    let statusClass = data.linux.status.startsWith('Error') ? 'alert-danger' : 'alert-success';
+                    linuxStatusDiv.className = `alert ${statusClass} mb-3`;
+                    linuxStatusDiv.innerHTML = `<strong>Status:</strong> ${data.linux.status}`;
+                } else {
+                    linuxStatusDiv.className = 'alert alert-secondary mb-3';
+                    linuxStatusDiv.innerHTML = 'Remote Linux execution is not configured';
+                }
+                
+                // Update PowerShell status
+                if (data.powershell && data.powershell.enabled) {
+                    let statusClass = data.powershell.status.startsWith('Error') ? 'alert-danger' : 'alert-success';
+                    powershellStatusDiv.className = `alert ${statusClass} mb-3`;
+                    powershellStatusDiv.innerHTML = `<strong>Status:</strong> ${data.powershell.status}`;
+                } else {
+                    powershellStatusDiv.className = 'alert alert-secondary mb-3';
+                    powershellStatusDiv.innerHTML = 'Remote PowerShell execution is not configured';
+                }
+            })
+            .catch(error => {
+                console.error('Error checking connection status:', error);
+                linuxStatusDiv.className = 'alert alert-danger mb-3';
+                linuxStatusDiv.innerHTML = 'Failed to check connection status';
+                powershellStatusDiv.className = 'alert alert-danger mb-3';
+                powershellStatusDiv.innerHTML = 'Failed to check connection status';
+            });
+    }
+    
+    function testLinuxConnection() {
+        const statusDiv = document.getElementById('linux-status');
+        statusDiv.className = 'alert alert-info mb-3';
+        statusDiv.innerHTML = 'Testing connection...';
+        
+        // Prepare form data for testing
+        const formData = new FormData(document.getElementById('linux-form'));
+        formData.append('test_only', 'true');
+        
+        fetch('/remote-setup/save', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                statusDiv.className = 'alert alert-success mb-3';
+                statusDiv.innerHTML = `<strong>Success:</strong> ${data.message}`;
+            } else {
+                statusDiv.className = 'alert alert-danger mb-3';
+                statusDiv.innerHTML = `<strong>Error:</strong> ${data.message}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error testing connection:', error);
+            statusDiv.className = 'alert alert-danger mb-3';
+            statusDiv.innerHTML = '<strong>Error:</strong> Failed to test connection. Please try again.';
+        });
+    }
+    
+    function testPowershellConnection() {
+        const statusDiv = document.getElementById('powershell-status');
+        statusDiv.className = 'alert alert-info mb-3';
+        statusDiv.innerHTML = 'Testing connection...';
+        
+        // Prepare form data for testing
+        const formData = new FormData(document.getElementById('powershell-form'));
+        formData.append('test_only', 'true');
+        
+        fetch('/remote-setup/save', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                statusDiv.className = 'alert alert-success mb-3';
+                statusDiv.innerHTML = `<strong>Success:</strong> ${data.message}`;
+            } else {
+                statusDiv.className = 'alert alert-danger mb-3';
+                statusDiv.innerHTML = `<strong>Error:</strong> ${data.message}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error testing connection:', error);
+            statusDiv.className = 'alert alert-danger mb-3';
+            statusDiv.innerHTML = '<strong>Error:</strong> Failed to test connection. Please try again.';
+        });
+    }
+</script>
+{% endblock %}
