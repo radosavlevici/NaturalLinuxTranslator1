@@ -278,6 +278,100 @@ def form_translate_powershell():
     
     return render_template('form_powershell_result.html', query=query, command=command)
 
+@app.route('/api/connection-status')
+def connection_status():
+    """Get the status of remote system connections"""
+    linux_status = "Not configured"
+    powershell_status = "Not configured"
+    
+    # Check Linux connection
+    if REMOTE_SERVERS['linux']['enabled']:
+        try:
+            # Create SSH client
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            
+            # Try to connect with a short timeout
+            if REMOTE_SERVERS['linux']['key_file']:
+                ssh.connect(
+                    REMOTE_SERVERS['linux']['host'],
+                    port=REMOTE_SERVERS['linux']['port'],
+                    username=REMOTE_SERVERS['linux']['username'],
+                    key_filename=REMOTE_SERVERS['linux']['key_file'],
+                    timeout=3
+                )
+            else:
+                ssh.connect(
+                    REMOTE_SERVERS['linux']['host'],
+                    port=REMOTE_SERVERS['linux']['port'],
+                    username=REMOTE_SERVERS['linux']['username'],
+                    password=REMOTE_SERVERS['linux']['password'],
+                    timeout=3
+                )
+            
+            # If we reach here, the connection was successful
+            linux_status = "Connected"
+            
+            # Get system info
+            stdin, stdout, stderr = ssh.exec_command("uname -a", timeout=2)
+            system_info = stdout.read().decode('utf-8').strip()
+            if system_info:
+                linux_status = f"Connected: {system_info}"
+            
+            # Close the connection
+            ssh.close()
+        except Exception as e:
+            linux_status = f"Error: {str(e)}"
+            logger.error(f"Error checking Linux connection: {str(e)}")
+    
+    # Check PowerShell connection
+    if REMOTE_SERVERS['powershell']['enabled']:
+        try:
+            # For PowerShell, we'll try a simple socket connection first
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(3)
+            s.connect((REMOTE_SERVERS['powershell']['host'], REMOTE_SERVERS['powershell']['port']))
+            s.close()
+            
+            # If we reach here, we can at least reach the server
+            powershell_status = "Connected"
+            
+            # Try to use WinRM if available
+            try:
+                import winrm
+                
+                # Create WinRM session
+                session = winrm.Session(
+                    REMOTE_SERVERS['powershell']['host'],
+                    auth=(REMOTE_SERVERS['powershell']['username'], REMOTE_SERVERS['powershell']['password']),
+                    transport='ssl' if REMOTE_SERVERS['powershell']['use_ssl'] else 'ntlm',
+                    server_cert_validation='ignore'
+                )
+                
+                # Try to get system info
+                result = session.run_ps("$PSVersionTable | ConvertTo-Json")
+                if result.status_code == 0:
+                    powershell_status = f"Connected: PowerShell {result.std_out.decode('utf-8')[:30]}..."
+            except Exception as e:
+                # Just use the socket connection status, don't report this error
+                pass
+        except Exception as e:
+            powershell_status = f"Error: {str(e)}"
+            logger.error(f"Error checking PowerShell connection: {str(e)}")
+    
+    return jsonify({
+        "linux": {
+            "enabled": REMOTE_SERVERS['linux']['enabled'],
+            "status": linux_status,
+            "host": REMOTE_SERVERS['linux']['host'] if REMOTE_SERVERS['linux']['enabled'] else None
+        },
+        "powershell": {
+            "enabled": REMOTE_SERVERS['powershell']['enabled'],
+            "status": powershell_status,
+            "host": REMOTE_SERVERS['powershell']['host'] if REMOTE_SERVERS['powershell']['enabled'] else None
+        }
+    })
+
 # Sample user database (in-memory for simplicity)
 USERS = {
     'admin': {

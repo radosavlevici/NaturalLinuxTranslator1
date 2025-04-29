@@ -21,15 +21,29 @@
                         <div class="command-output p-3">{{ command }}</div>
                     </div>
                     
-                    <div class="d-flex justify-content-between mt-4">
-                        <a href="/form-powershell" class="btn btn-secondary">New Translation</a>
-                        <div>
-                            <button class="btn btn-info" onclick="copyToClipboard()">
-                                <i class="fas fa-copy"></i> Copy Command
-                            </button>
-                            <button class="btn btn-success" onclick="executeCommand()">
-                                <i class="fas fa-play"></i> Execute Command
-                            </button>
+                    <div class="mt-4">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remote-execution">
+                                <label class="form-check-label" for="remote-execution">
+                                    Execute on remote Windows system (if configured)
+                                </label>
+                            </div>
+                            <div id="connection-status" class="mt-1 small text-muted">
+                                <span id="connection-indicator">Checking connection status...</span>
+                                <button class="btn btn-sm btn-link" onclick="checkConnectionStatus()">Check Status</button>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a href="/form-powershell" class="btn btn-secondary">New Translation</a>
+                            <div>
+                                <button class="btn btn-info" onclick="copyToClipboard()">
+                                    <i class="fas fa-copy"></i> Copy Command
+                                </button>
+                                <button class="btn btn-success" onclick="executeCommand()">
+                                    <i class="fas fa-play"></i> Execute Command
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
@@ -72,6 +86,33 @@
 
 {% block scripts %}
 <script>
+    // Check connection status on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        checkConnectionStatus();
+    });
+    
+    function checkConnectionStatus() {
+        const indicator = document.getElementById('connection-indicator');
+        indicator.textContent = 'Checking connection status...';
+        
+        fetch('/api/connection-status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.powershell && data.powershell.enabled) {
+                    indicator.innerHTML = `<span class="text-success">✓</span> Windows Server: ${data.powershell.status}`;
+                    document.getElementById('remote-execution').disabled = false;
+                } else {
+                    indicator.innerHTML = `<span class="text-muted">Remote Windows execution not configured</span>`;
+                    document.getElementById('remote-execution').disabled = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error checking connection status:', error);
+                indicator.innerHTML = `<span class="text-danger">Failed to check connection status</span>`;
+                document.getElementById('remote-execution').disabled = true;
+            });
+    }
+    
     function copyToClipboard() {
         const commandText = `{{ command }}`;
         navigator.clipboard.writeText(commandText).then(function() {
@@ -118,7 +159,8 @@
             body: new URLSearchParams({
                 'command': command,
                 'mode': 'powershell',
-                'workingDir': '.'
+                'workingDir': '.',
+                'remote': document.getElementById('remote-execution').checked
             })
         })
         .then(response => response.json())

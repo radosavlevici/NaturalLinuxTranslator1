@@ -22,11 +22,17 @@
                     </div>
                     
                     <div class="mt-4">
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="remote-execution">
-                            <label class="form-check-label" for="remote-execution">
-                                Execute on remote system (if configured)
-                            </label>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remote-execution">
+                                <label class="form-check-label" for="remote-execution">
+                                    Execute on remote Linux system (if configured)
+                                </label>
+                            </div>
+                            <div id="connection-status" class="mt-1 small text-muted">
+                                <span id="connection-indicator">Checking connection status...</span>
+                                <button class="btn btn-sm btn-link" onclick="checkConnectionStatus()">Check Status</button>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-between">
                             <a href="/form-linux" class="btn btn-secondary">New Translation</a>
@@ -79,6 +85,33 @@
 
 {% block scripts %}
 <script>
+    // Check connection status on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        checkConnectionStatus();
+    });
+    
+    function checkConnectionStatus() {
+        const indicator = document.getElementById('connection-indicator');
+        indicator.textContent = 'Checking connection status...';
+        
+        fetch('/api/connection-status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.linux && data.linux.enabled) {
+                    indicator.innerHTML = `<span class="text-success">✓</span> Linux Server: ${data.linux.status}`;
+                    document.getElementById('remote-execution').disabled = false;
+                } else {
+                    indicator.innerHTML = `<span class="text-muted">Remote Linux execution not configured</span>`;
+                    document.getElementById('remote-execution').disabled = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error checking connection status:', error);
+                indicator.innerHTML = `<span class="text-danger">Failed to check connection status</span>`;
+                document.getElementById('remote-execution').disabled = true;
+            });
+    }
+    
     function copyToClipboard() {
         const commandText = `{{ command }}`;
         navigator.clipboard.writeText(commandText).then(function() {
