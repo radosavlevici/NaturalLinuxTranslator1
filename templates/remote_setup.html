@@ -34,6 +34,16 @@
                                         <div class="form-check form-switch mb-3">
                                             <input class="form-check-input" type="checkbox" id="linux-enabled" name="enabled" {% if linux_config.enabled %}checked{% endif %}>
                                             <label class="form-check-label" for="linux-enabled">Enable Linux Remote Execution</label>
+                                            <small class="form-text text-muted d-block">When enabled, commands will be executed on this server.</small>
+                                        </div>
+                                        
+                                        <div class="alert alert-info">
+                                            <h6><i class="fas fa-shield-alt"></i> Security Information</h6>
+                                            <ul class="mb-0 small">
+                                                <li>Command execution includes DNA-based security validation</li>
+                                                <li>All commands are watermarked and traced with Ervin's security technology</li>
+                                                <li>Execution is logged for security audit purposes</li>
+                                            </ul>
                                         </div>
                                         
                                         <div class="mb-3">
@@ -103,6 +113,16 @@
                                         <div class="form-check form-switch mb-3">
                                             <input class="form-check-input" type="checkbox" id="powershell-enabled" name="enabled" {% if powershell_config.enabled %}checked{% endif %}>
                                             <label class="form-check-label" for="powershell-enabled">Enable PowerShell Remote Execution</label>
+                                            <small class="form-text text-muted d-block">When enabled, commands will be executed on this server.</small>
+                                        </div>
+                                        
+                                        <div class="alert alert-info">
+                                            <h6><i class="fas fa-shield-alt"></i> Security Information</h6>
+                                            <ul class="mb-0 small">
+                                                <li>Command execution includes DNA-based security validation</li>
+                                                <li>All commands are watermarked and traced with Ervin's security technology</li>
+                                                <li>Execution is logged for security audit purposes</li>
+                                            </ul>
                                         </div>
                                         
                                         <div class="mb-3">
