@@ -89,6 +89,229 @@ def simple():
     """
     return render_template('simple_home.html')
     
+@app.route('/direct_translate', methods=['POST'])
+def direct_translate():
+    """
+    Process translation form submission from the direct interface
+    """
+    query = request.form.get('query', '')
+    mode = request.form.get('mode', 'linux')
+    
+    if not query:
+        return "No query provided. Please enter a query."
+    
+    try:
+        # Get command based on mode
+        if mode == 'powershell':
+            result = get_powershell_command(query)
+        else:
+            result = get_linux_command(query)
+        
+        command = result.get('command', 'Error: Could not generate command')
+        explanation = result.get('explanation', '')
+        warning = result.get('safety_warning', '')
+        
+        # Build response HTML
+        response_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Translation Result</title>
+            <style>
+                body {{ 
+                    font-family: Arial, sans-serif; 
+                    background-color: #333; 
+                    color: white; 
+                    margin: 20px; 
+                }}
+                .container {{ 
+                    background-color: #444; 
+                    padding: 20px; 
+                    border-radius: 5px; 
+                    max-width: 600px; 
+                    margin: 0 auto; 
+                }}
+                h1, h2 {{ text-align: center; }}
+                .command {{ 
+                    background-color: #222; 
+                    padding: 10px; 
+                    margin: 10px 0; 
+                    border-radius: 5px; 
+                    font-family: monospace; 
+                }}
+                .explanation {{ margin: 10px 0; }}
+                .warning {{ 
+                    color: #FFC107; 
+                    background-color: rgba(255, 193, 7, 0.1); 
+                    padding: 10px; 
+                    margin: 10px 0; 
+                    border-left: 3px solid #FFC107; 
+                }}
+                .back {{ 
+                    display: block; 
+                    text-align: center; 
+                    margin-top: 20px; 
+                    color: white; 
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Translation Result</h1>
+                <h2>Your {mode.title()} Command:</h2>
+                <div class="command">{command}</div>
+        """
+        
+        if explanation:
+            response_html += f"""
+                <h2>Explanation:</h2>
+                <div class="explanation">{explanation}</div>
+            """
+        
+        if warning:
+            response_html += f"""
+                <h2>Warning:</h2>
+                <div class="warning">{warning}</div>
+            """
+        
+        response_html += """
+                <a href="/direct" class="back">← Back to translator</a>
+            </div>
+        </body>
+        </html>
+        """
+        
+        return response_html
+    
+    except Exception as e:
+        error_message = f"An error occurred: {str(e)}"
+        return f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Error</title>
+            <style>
+                body {{ 
+                    font-family: Arial, sans-serif; 
+                    background-color: #333; 
+                    color: white; 
+                    margin: 20px; 
+                }}
+                .container {{ 
+                    background-color: #444; 
+                    padding: 20px; 
+                    border-radius: 5px; 
+                    max-width: 600px; 
+                    margin: 0 auto; 
+                }}
+                h1 {{ text-align: center; }}
+                .error {{ 
+                    color: #F44336; 
+                    background-color: rgba(244, 67, 54, 0.1); 
+                    padding: 10px; 
+                    margin: 10px 0; 
+                    border-left: 3px solid #F44336; 
+                }}
+                .back {{ 
+                    display: block; 
+                    text-align: center; 
+                    margin-top: 20px; 
+                    color: white; 
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Error</h1>
+                <div class="error">{error_message}</div>
+                <a href="/direct" class="back">← Back to translator</a>
+            </div>
+        </body>
+        </html>
+        """
+
+@app.route('/direct')
+def direct():
+    """
+    Render the direct ultra-simple interface with no templates
+    """
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Ultra Simple Translator</title>
+        <style>
+            body { 
+                font-family: Arial, sans-serif; 
+                background-color: #333; 
+                color: white; 
+                margin: 20px; 
+            }
+            form { 
+                background-color: #444; 
+                padding: 20px; 
+                border-radius: 5px; 
+                max-width: 600px; 
+                margin: 0 auto; 
+            }
+            h1 { text-align: center; }
+            textarea { 
+                width: 100%; 
+                height: 100px; 
+                margin: 10px 0; 
+                background-color: #222; 
+                color: white; 
+                border: 1px solid #666; 
+                padding: 5px; 
+            }
+            button { 
+                background-color: #4CAF50; 
+                color: white; 
+                padding: 10px 15px; 
+                border: none; 
+                cursor: pointer; 
+                display: block; 
+                margin: 10px 0; 
+            }
+            .result { 
+                background-color: #222; 
+                padding: 10px; 
+                margin-top: 20px; 
+                border-radius: 5px; 
+                white-space: pre-wrap; 
+            }
+            .links {
+                margin-top: 20px;
+                text-align: center;
+            }
+            .links a {
+                color: #4CAF50;
+                margin: 0 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Ultra Simple Translator</h1>
+        <form action="/direct_translate" method="post">
+            <div>
+                <label for="query">Enter what you want to do:</label>
+                <textarea name="query" placeholder="Example: list all files sorted by size"></textarea>
+            </div>
+            <div>
+                <input type="radio" name="mode" value="linux" id="linux" checked>
+                <label for="linux">Linux</label>
+                <input type="radio" name="mode" value="powershell" id="powershell">
+                <label for="powershell">PowerShell</label>
+            </div>
+            <button type="submit">Translate</button>
+            <div class="links">
+                <a href="/directory">Back to Directory</a>
+            </div>
+        </form>
+    </body>
+    </html>
+    """
+    
 @app.route('/simple/translate', methods=['POST'])
 def simple_translate():
     """
