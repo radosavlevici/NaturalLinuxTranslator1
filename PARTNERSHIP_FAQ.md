@@ -19,16 +19,16 @@ Our Linux Command Translator stands apart with several unique features:
 
 Most importantly, our tool was designed specifically for support and training scenarios, not just as a developer tool.
 
-### What is your pricing model for partners?
+### What is your partnership model?
 
 We offer flexible partnership models based on your specific needs:
 
-- **Reseller Model**: 30-40% margin on our standard pricing
-- **White-Label**: Custom pricing based on volume and integration depth
-- **Revenue Share**: Typically 70/30 split for marketplace integrations
-- **Referral Program**: 20-25% commission on referred clients
+- **Reseller Model**: Distribute our solution through your channels
+- **White-Label**: Rebrand our solution for your use
+- **Integration Model**: Add our technology to your existing products
+- **Referral Program**: Refer clients to our solution
 
-For enterprise partnerships, we develop custom pricing based on scale, integration needs, and support requirements. We'd be happy to discuss which model aligns best with your business goals.
+For enterprise partnerships, we develop custom arrangements based on integration needs and support requirements. We'd be happy to discuss which model aligns best with your business goals.
 
 ### Do you offer exclusivity for certain markets or industries?
 
@@ -115,17 +115,17 @@ We offer multiple integration options:
 
 Our technical team can provide a detailed integration assessment based on your specific needs.
 
-### What happens if OpenAI changes their API or pricing?
+### What happens if OpenAI changes their API?
 
 We've built protection against AI provider changes:
 
 1. **Provider Redundancy**: Ability to switch between AI providers
 2. **Cached Commands**: Most common commands don't require API calls
-3. **Price Protection**: Partner agreements include AI cost protection
+3. **Service Continuity**: Partner agreements include service continuity guarantees
 4. **Local Models**: Option for on-premises AI for sensitive environments
 5. **Migration Path**: Clear plan if we need to change providers
 
-Our business model accounts for potential AI pricing fluctuations, ensuring stable pricing for our partners.
+Our business model accounts for potential API changes, ensuring stable service for our partners.
 
 ## Security Questions
 
@@ -239,7 +239,7 @@ We track several key metrics to ensure partnership success:
 1. **Usage Metrics**: Active users, commands executed, success rate
 2. **Business Impact**: Support ticket reduction, time saved
 3. **Customer Satisfaction**: User feedback and satisfaction surveys
-4. **Revenue Growth**: For reseller partnerships
+4. **Distribution Growth**: For reseller partnerships
 5. **Adoption Rate**: Percentage of eligible users actively using the tool
 
 We provide regular reports on these metrics and schedule quarterly business reviews.

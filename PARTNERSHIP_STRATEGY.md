@@ -106,20 +106,19 @@ To build a collaborative network of partners who enhance, extend, and evangelize
 ### Tier 1: Authorized Partners
 - **Requirements**:
   - Basic sales and technical training
-  - Minimum annual revenue commitment
+  - Minimum distribution commitment
 - **Benefits**:
   - Partner portal access
   - Sales and marketing materials
-  - Standard partner discounts
+  - Standard partner support
   - Basic technical support
 
 ### Tier 2: Silver Partners
 - **Requirements**:
   - Certified sales and technical staff
-  - Moderate annual revenue commitment
+  - Moderate distribution commitment
   - Case study development
 - **Benefits**:
-  - Enhanced partner discounts
   - Joint marketing opportunities
   - Priority technical support
   - Partner advisory board eligibility
@@ -127,10 +126,9 @@ To build a collaborative network of partners who enhance, extend, and evangelize
 ### Tier 3: Gold Partners
 - **Requirements**:
   - Multiple certified technical staff
-  - Significant annual revenue commitment
+  - Significant distribution commitment
   - Customer success documentation
 - **Benefits**:
-  - Maximum partner discounts
   - Co-branded marketing campaigns
   - Dedicated partner manager
   - Early access to new features
@@ -142,10 +140,10 @@ To build a collaborative network of partners who enhance, extend, and evangelize
   - Executive sponsorship
   - Joint business planning
 - **Benefits**:
-  - Custom commercial arrangements
+  - Custom partnership arrangements
   - Joint product development
   - Executive relationship management
-  - Co-investment opportunities
+  - Co-development opportunities
 
 ## Partnership Engagement Process
 
@@ -181,10 +179,10 @@ To build a collaborative network of partners who enhance, extend, and evangelize
 
 ## Partnership Success Metrics
 
-- **Revenue Generation**
-  - Partner-influenced revenue
-  - Partner-sourced revenue
-  - Revenue growth rate
+- **Distribution Growth**
+  - Partner-influenced distribution
+  - Partner-sourced users
+  - User growth rate
 
 - **Market Expansion**
   - New customer acquisition
