@@ -5,6 +5,8 @@ db = SQLAlchemy()
 
 class User(db.Model):
     """User model for authentication and personalization"""
+    __tablename__ = 'users'  # Changed from 'user' to avoid conflicts
+    
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -24,7 +26,7 @@ class User(db.Model):
 class CommandHistory(db.Model):
     """Stores history of command translations for users"""
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Updated FK
     query = db.Column(db.Text, nullable=False)
     command = db.Column(db.Text, nullable=False)
     command_type = db.Column(db.String(20), nullable=False)  # 'linux' or 'powershell'
@@ -46,7 +48,7 @@ class CommandHistory(db.Model):
 class Favorite(db.Model):
     """Stores favorite/saved commands for quick access"""
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Updated FK
     command = db.Column(db.Text, nullable=False)
     description = db.Column(db.String(200), nullable=True)
     command_type = db.Column(db.String(20), nullable=False)  # 'linux' or 'powershell'
@@ -59,7 +61,7 @@ class Favorite(db.Model):
 class CustomCommand(db.Model):
     """Stores custom command templates and libraries"""
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Updated FK
     name = db.Column(db.String(100), nullable=False)
     command_template = db.Column(db.Text, nullable=False)
     description = db.Column(db.Text, nullable=True)
@@ -74,7 +76,7 @@ class CustomCommand(db.Model):
 class SecurityAudit(db.Model):
     """Tracks security events and potential issues"""
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Updated FK
     event_type = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text, nullable=False)
     ip_address = db.Column(db.String(45), nullable=True)
@@ -94,7 +96,7 @@ class CommandLibrary(db.Model):
     command_type = db.Column(db.String(20), nullable=False)  # 'linux' or 'powershell'
     category = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    created_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    created_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Updated FK
     
     # Relationships
     commands = db.relationship('LibraryCommand', backref='library', lazy='dynamic')
@@ -139,7 +141,7 @@ class License(db.Model):
 
 # Association table for user-license many-to-many relationship
 user_license = db.Table('user_license',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),  # Updated FK
     db.Column('license_id', db.Integer, db.ForeignKey('license.id'), primary_key=True),
     db.Column('assigned_at', db.DateTime, default=datetime.utcnow)
 )

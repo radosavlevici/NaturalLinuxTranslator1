@@ -1,8 +1,8 @@
-# Security and Watermarking
+# DNA-Based Security and Watermarking
 
-## Proprietary Technology by Command Translator
+## Proprietary Technology by Ervin Remus Radosavlevici
 
-This document provides a high-level overview of the proprietary security and watermarking technology implemented in the Command Translator application.
+This document provides a high-level overview of the proprietary DNA-based security and watermarking technology implemented in the Linux Command Translator application.
 
 ## Technology Overview
 
@@ -76,6 +76,6 @@ Unauthorized use, reverse engineering, or attempts to bypass this security syste
 
 ---
 
-© 2024 Command Translator. All rights reserved.
+© 2024 Ervin Remus Radosavlevici. All rights reserved.
 This document describes proprietary technology.
 Unauthorized reproduction or distribution is prohibited.

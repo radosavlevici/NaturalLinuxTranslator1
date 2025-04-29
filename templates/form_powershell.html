@@ -1,139 +1,65 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Form-based PowerShell Translator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #012456;
-            color: white;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #1a3969;
-            padding: 20px;
-            border-radius: 5px;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .nav {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .nav a {
-            display: inline-block;
-            background-color: #063b93;
-            color: white;
-            text-decoration: none;
-            padding: 5px 10px;
-            margin: 0 5px;
-            border-radius: 3px;
-        }
-        form {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-            background-color: #051a3e;
-            color: white;
-            border: 1px solid #3a5896;
-            padding: 8px;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-            font-family: monospace;
-        }
-        input[type="submit"] {
-            background-color: #3a5896;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 3px;
-        }
-        .result-box {
-            background-color: #051a3e;
-            border: 1px solid #3a5896;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 3px;
-        }
-        .command {
-            font-family: monospace;
-            white-space: pre-wrap;
-            background-color: #010e24;
-            padding: 10px;
-            border-radius: 3px;
-            margin-bottom: 10px;
-        }
-        .explanation {
-            margin-top: 15px;
-        }
-        .warning {
-            color: #ffcc00;
-            margin-top: 10px;
-            padding: 5px;
-            border-left: 3px solid #ffcc00;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #8aa3d2;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Form-based PowerShell Translator</h1>
-        
-        <div class="nav">
-            <a href="/">Linux Mode</a>
-            <a href="/directory">Directory</a>
-        </div>
-        
-        <form action="/form_translate_powershell" method="post">
-            <label for="query">What do you want to do in PowerShell?</label>
-            <textarea id="query" name="query" placeholder="Example: list all running processes sorted by CPU usage"></textarea>
-            <input type="submit" value="Translate to PowerShell">
-        </form>
-        
-        {% if command %}
-        <div class="result-box">
-            <h3>PowerShell Command:</h3>
-            <div class="command">{{ command }}</div>
-            
-            {% if explanation %}
-            <div class="explanation">
-                <h3>Explanation:</h3>
-                <p>{{ explanation }}</p>
-            </div>
-            {% endif %}
-            
-            {% if safety_warning %}
-            <div class="warning">
-                <h3>Warning:</h3>
-                <p>{{ safety_warning }}</p>
-            </div>
-            {% endif %}
-        </div>
-        {% endif %}
-        
-        <div class="footer">
-            &copy; 2024 Command Translator. All Rights Reserved.<br>
-            Featuring proprietary security technology
+{% extends "layout.html" %}
+
+{% block title %}PowerShell Command Translator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 text-center mb-4">
+            <h1>PowerShell Command Translator</h1>
+            <p class="lead">Transform natural language into PowerShell commands</p>
         </div>
     </div>
-</body>
-</html>
+    
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h2><i class="fab fa-windows"></i> Enter Your Request</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/form-translate-powershell">
+                        <div class="mb-3">
+                            <label for="query" class="form-label">What would you like to do?</label>
+                            <textarea class="form-control bg-dark text-light" id="query" name="query" rows="4" placeholder="Describe what you want to do in plain English. For example: 'List all running processes ordered by memory usage'" required></textarea>
+                        </div>
+                        {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                        {% endif %}
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-info">Translate to PowerShell Command</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card bg-dark mt-4">
+                <div class="card-header">
+                    <h3>Examples</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <p><strong>System information:</strong></p>
+                                <p class="text-muted">"Get detailed system information"</p>
+                                <div class="command-output">Get-ComputerInfo</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <p><strong>File operations:</strong></p>
+                                <p class="text-muted">"Find all text files containing the word 'error'"</p>
+                                <div class="command-output">Get-ChildItem -Path . -Filter *.txt -Recurse | Select-String -Pattern "error" | Group-Object Path</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="/simple" class="btn btn-secondary">Back to Simple Interface</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

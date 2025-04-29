@@ -22,7 +22,7 @@ A natural language to command translator tool that intelligently converts conver
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/commandtranslator/command-translator.git
+   git clone https://github.com/YourUsername/command-translator.git
    cd command-translator
    ```
 
@@ -142,7 +142,7 @@ Commands are validated for safety before execution to prevent potentially danger
 
 ## 👤 Author
 
-Created by Command Translator Team - Contact: support@commandtranslator.com
+Created by Ervin Remus Radosavlevici - Contact: ervin210@icloud.com | +447759313990
 
 ## 📄 License Options
 
@@ -162,4 +162,4 @@ The GPL is a copyleft license that requires any modified versions of the softwar
 
 - OpenAI for providing the GPT-4o API
 - Contributors and testers who helped improve this tool
-- Command Translator Team for the original concept and design
+- Ervin Remus Radosavlevici for the original concept and design

@@ -264,10 +264,10 @@ To build a collaborative network of partners who enhance, extend, and evangelize
 
 For partnership inquiries, please contact:
 
-**Partnership Team**  
-Command Translator Strategic Partnerships  
-Email: partnerships@commandtranslator.com  
-Phone: +1-800-000-0000
+**Ervin Remus Radosavlevici**  
+Director of Strategic Partnerships  
+Email: ervin210@icloud.com  
+Phone: +447759313990
 
 ---
 
