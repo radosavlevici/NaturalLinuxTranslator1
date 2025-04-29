@@ -3,204 +3,148 @@
 {% block title %}Remote Session Details{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/remote-sessions">Remote Sessions</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Session #{{ session.id }}</li>
-                </ol>
-            </nav>
-            
-            <h1 class="mb-4">Remote Session Details</h1>
-            
-            <div class="alert alert-info">
-                <i class="fas fa-shield-alt"></i> This session is secured with DNA-based watermarking.
-                <br><small>Copyright (c) 2024 Ervin Remus Radosavlevici</small>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Remote Session Details</h1>
+        <a href="{{ url_for('remote_sessions') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Sessions
+        </a>
+    </div>
+    
+    <!-- Session Details Card -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Session #{{ session.id }}</h5>
+                <span class="badge {% if session.session_type == 'linux' %}bg-success{% else %}bg-primary{% endif %}">
+                    {{ session.session_type|upper }}
+                </span>
             </div>
-            
+        </div>
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Session Information</h5>
-                        </div>
-                        <div class="card-body">
-                            <table class="table">
-                                <tr>
-                                    <th style="width: 150px;">ID</th>
-                                    <td>{{ session.id }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Type</th>
-                                    <td>
-                                        {% if session.session_type == 'linux' %}
-                                        <span class="badge bg-success">Linux</span>
-                                        {% else %}
-                                        <span class="badge bg-primary">PowerShell</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Host</th>
-                                    <td>{{ session.host }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Port</th>
-                                    <td>{{ session.port }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Username</th>
-                                    <td>{{ session.username }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Started</th>
-                                    <td>{{ session.start_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Ended</th>
-                                    <td>
-                                        {% if session.end_time %}
-                                            {{ session.end_time.strftime('%Y-%m-%d %H:%M:%S') }}
-                                        {% else %}
-                                            <span class="badge bg-warning">Active</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Duration</th>
-                                    <td>
-                                        {% if session.end_time %}
-                                            {{ (session.end_time - session.start_time).total_seconds()|round|int }} seconds
-                                        {% else %}
-                                            <span class="badge bg-warning">Ongoing</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Client IP</th>
-                                    <td>{{ session.ip_address }}</td>
-                                </tr>
-                            </table>
-                        </div>
+                    <div class="mb-3">
+                        <h6 class="text-muted">Host Information</h6>
+                        <p class="mb-1"><strong>Host:</strong> {{ session.host }}</p>
+                        <p class="mb-1"><strong>Port:</strong> {{ session.port }}</p>
+                        <p class="mb-1"><strong>Username:</strong> {{ session.username }}</p>
+                        <p class="mb-0"><strong>Client IP:</strong> {{ session.ip_address }}</p>
+                    </div>
+                    
+                    <div class="mb-0">
+                        <h6 class="text-muted">Time Information</h6>
+                        <p class="mb-1"><strong>Started:</strong> {{ session.start_time.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                        {% if session.end_time %}
+                            <p class="mb-1"><strong>Ended:</strong> {{ session.end_time.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                            <p class="mb-0"><strong>Duration:</strong> {{ (session.end_time - session.start_time).total_seconds()|round|int }} seconds</p>
+                        {% else %}
+                            <p class="mb-1"><strong>Status:</strong> <span class="badge bg-success">Active</span></p>
+                            <p class="mb-0"><strong>Duration so far:</strong> {{ (now - session.start_time).total_seconds()|round|int }} seconds</p>
+                        {% endif %}
                     </div>
                 </div>
                 
                 <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Security Information</h5>
-                        </div>
-                        <div class="card-body">
-                            <table class="table">
-                                <tr>
-                                    <th style="width: 150px;">Session Hash</th>
-                                    <td><code>{{ session.session_hash }}</code></td>
-                                </tr>
-                                <tr>
-                                    <th>Watermark</th>
-                                    <td><code>{{ session.session_watermark }}</code></td>
-                                </tr>
-                                <tr>
-                                    <th>User</th>
-                                    <td>
-                                        {% if session.user %}
-                                            {{ session.user.username }}
-                                        {% else %}
-                                            <span class="text-muted">Anonymous</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                    <div class="mb-3">
+                        <h6 class="text-muted">Security Information</h6>
+                        <p class="mb-1"><strong>Session Hash:</strong> <code class="text-break">{{ session.session_hash }}</code></p>
+                        <p class="mb-1"><strong>Watermark:</strong> <code class="text-break">{{ session.session_watermark }}</code></p>
+                        <p class="mb-0">
+                            <strong>DNA Protection:</strong>
+                            <span class="text-success">
+                                <i class="fas fa-shield-alt me-1"></i> Active
+                            </span>
+                        </p>
                     </div>
-                </div>
-            </div>
-            
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between">
-                    <h5 class="mb-0">Commands Executed</h5>
-                    <span class="badge bg-dark">Total: {{ commands|length }}</span>
-                </div>
-                <div class="card-body">
-                    {% if commands %}
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Timestamp</th>
-                                        <th>Query</th>
-                                        <th>Command</th>
-                                        <th>Status</th>
-                                        <th>Watermark</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for command in commands %}
-                                    <tr>
-                                        <td>{{ command.created_at.strftime('%H:%M:%S') }}</td>
-                                        <td>{{ command.query }}</td>
-                                        <td><code>{{ command.command }}</code></td>
-                                        <td>
-                                            {% if command.execution_success %}
-                                                <span class="badge bg-success">Success</span>
-                                            {% else %}
-                                                <span class="badge bg-danger">Failed</span>
-                                            {% endif %}
-                                        </td>
-                                        <td><code class="small">{{ command.watermark[:8] }}...</code></td>
-                                    </tr>
-                                    <tr class="command-output-row">
-                                        <td colspan="5">
-                                            <div class="command-output">{{ command.execution_output }}</div>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-secondary">
-                            No commands were executed in this session.
+                    
+                    {% if session.audit_log %}
+                        <div class="mb-0">
+                            <h6 class="text-muted">Audit Information</h6>
+                            <div class="bg-dark text-light p-2 rounded" style="max-height: 120px; overflow-y: auto;">
+                                <pre class="mb-0" style="font-size: 0.8rem;">{{ session.audit_log }}</pre>
+                            </div>
                         </div>
                     {% endif %}
                 </div>
             </div>
-            
-            <div class="mt-4">
-                <a href="/remote-sessions" class="btn btn-primary">
-                    <i class="fas fa-arrow-left"></i> Back to Sessions
-                </a>
-                {% if not session.end_time %}
-                <a href="/remote-setup" class="btn btn-warning">
-                    <i class="fas fa-server"></i> Server Configuration
-                </a>
-                {% endif %}
-            </div>
         </div>
     </div>
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add click event to toggle command output visibility
-        const rows = document.querySelectorAll('tr:not(.command-output-row)');
-        rows.forEach(row => {
-            row.addEventListener('click', function() {
-                const outputRow = this.nextElementSibling;
-                if (outputRow && outputRow.classList.contains('command-output-row')) {
-                    outputRow.classList.toggle('d-none');
-                }
-            });
-        });
+    
+    <!-- Commands List -->
+    <div class="card">
+        <div class="card-header bg-dark">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Commands Executed</h5>
+                <span class="badge bg-info">{{ commands|length }} commands</span>
+            </div>
+        </div>
         
-        // Initially hide all command outputs
-        document.querySelectorAll('.command-output-row').forEach(row => {
-            row.classList.add('d-none');
-        });
-    });
-</script>
+        {% if commands %}
+            <div class="list-group list-group-flush">
+                {% for command in commands %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="mb-1">
+                                    <span class="badge {% if command.execution_success %}bg-success{% else %}bg-danger{% endif %} me-2">
+                                        {% if command.execution_success %}Success{% else %}Failed{% endif %}
+                                    </span>
+                                    <span class="text-muted small">{{ command.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                                </div>
+                                <h6 class="mb-1">Query: {{ command.query }}</h6>
+                                <div class="bg-dark rounded p-2 mb-2">
+                                    <code class="text-light">{{ command.command }}</code>
+                                </div>
+                                
+                                {% if command.execution_output %}
+                                    <div class="mb-0">
+                                        <button class="btn btn-sm btn-outline-secondary mb-1" type="button" 
+                                                data-bs-toggle="collapse" data-bs-target="#output-{{ command.id }}">
+                                            Show Output
+                                        </button>
+                                        <div class="collapse" id="output-{{ command.id }}">
+                                            <div class="card card-body bg-light">
+                                                <pre class="mb-0" style="font-size: 0.8rem;">{{ command.execution_output }}</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="ms-3 text-end">
+                                <div class="mb-1">
+                                    <span class="badge bg-{% if command.risk_level == 0 %}success{% elif command.risk_level == 1 %}info{% elif command.risk_level == 2 %}warning{% else %}danger{% endif %}">
+                                        Risk: {{ command.risk_level }}/3
+                                    </span>
+                                </div>
+                                {% if command.command_hash %}
+                                    <small class="d-block text-muted">Hash: {{ command.command_hash[:10] }}...</small>
+                                {% endif %}
+                                {% if command.watermark %}
+                                    <small class="d-block text-muted">Watermark: {{ command.watermark[:10] }}...</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card-body">
+                <p class="text-center mb-0">No commands were executed during this session.</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Copyright Notice -->
+    <div class="mt-4 text-center">
+        <p class="text-muted">
+            <small>
+                DNA-based security technology. Remote Session Watermarking System.
+                <br>
+                Copyright (c) 2024 Ervin Remus Radosavlevici. All rights reserved.
+            </small>
+        </p>
+    </div>
+</div>
 {% endblock %}

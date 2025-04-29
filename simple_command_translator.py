@@ -7,14 +7,11 @@ import json
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+from flask_sqlalchemy import SQLAlchemy
 
 # Set up OpenAI API
 import openai
 openai.api_key = os.environ.get("OPENAI_API_KEY")
-
-# Initialize Flask app
-app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET", os.urandom(24).hex())
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
@@ -198,8 +195,12 @@ def execute_remote_powershell_command(command, working_dir='.'):
         # In a production environment, you would use pywinrm or similar libraries
         
         # Fallback to using SSH if available (for PowerShell Core on Linux)
+        winrm_available = False
         try:
             import winrm
+            winrm_available = True
+        except ImportError:
+            # WinRM package not installed, will return error below
             
             # Create WinRM session
             session = winrm.Session(
@@ -226,33 +227,37 @@ def execute_remote_powershell_command(command, working_dir='.'):
         logger.error(f"Error executing remote PowerShell command: {str(e)}")
         return '', f"Error connecting to remote Windows server: {str(e)}", 1
 
-# Routes
-@app.route('/')
-def index():
-    """Render the home page"""
-    return render_template('index.html')
+# Function to configure all routes on an app instance
+def configure_routes(app, db):
+    """Configure all routes for the Flask application"""
+    
+    # Routes
+    @app.route('/')
+    def index():
+        """Render the home page"""
+        return render_template('index.html')
 
-@app.route('/directory')
-def directory():
-    """Render the directory page with links to all interfaces"""
-    return render_template('directory.html')
+    @app.route('/directory')
+    def directory():
+        """Render the directory page with links to all interfaces"""
+        return render_template('directory.html')
 
-@app.route('/simple')
-def simple():
-    """Render the simple home page with both Linux and PowerShell options"""
-    return render_template('simple.html')
+    @app.route('/simple')
+    def simple():
+        """Render the simple home page with both Linux and PowerShell options"""
+        return render_template('simple.html')
 
-@app.route('/remote-setup')
-def remote_setup():
-    """Render the remote server setup page"""
-    # Check if user is logged in
-    if session.get('user_id') is None:
-        flash('Please log in to access this page', 'warning')
-        return redirect(url_for('login', next=request.url))
-        
-    return render_template('remote_setup.html', 
-                           linux_config=REMOTE_SERVERS['linux'],
-                           powershell_config=REMOTE_SERVERS['powershell'])
+    @app.route('/remote-setup')
+    def remote_setup():
+        """Render the remote server setup page"""
+        # Check if user is logged in
+        if session.get('user_id') is None:
+            flash('Please log in to access this page', 'warning')
+            return redirect(url_for('login', next=request.url))
+            
+        return render_template('remote_setup.html', 
+                            linux_config=REMOTE_SERVERS['linux'],
+                            powershell_config=REMOTE_SERVERS['powershell'])
 
 @app.route('/remote-setup/save', methods=['POST'])
 def save_remote_setup():
@@ -993,6 +998,7 @@ def get_powershell_command(query):
 @login_required
 def remote_sessions():
     """Display and filter remote sessions"""
+    # Import model inside function to avoid circular imports
     from models import RemoteSession
     
     # Get filters from query parameters
@@ -1036,6 +1042,7 @@ def remote_sessions():
 def remote_session_details(session_id):
     """Display details of a specific remote session"""
     from models import RemoteSession, CommandHistory
+    import datetime
     
     # Get the session
     remote_session = RemoteSession.query.get_or_404(session_id)
@@ -1048,7 +1055,10 @@ def remote_session_details(session_id):
     # Get commands for this session
     commands = CommandHistory.query.filter_by(remote_session_id=session_id).order_by(CommandHistory.created_at).all()
     
-    return render_template('remote_session_details.html', session=remote_session, commands=commands)
+    # Get current time for duration calculation
+    now = datetime.datetime.utcnow()
+    
+    return render_template('remote_session_details.html', session=remote_session, commands=commands, now=now)
 
 
 if __name__ == "__main__":
