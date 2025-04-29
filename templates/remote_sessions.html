@@ -1,0 +1,165 @@
+{% extends 'layout.html' %}
+
+{% block title %}Remote Sessions History{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Remote Sessions History</h1>
+    
+    <!-- Filter Form -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark">
+            <h5 class="mb-0">Filter Sessions</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" action="{{ url_for('remote_sessions') }}" class="row g-3">
+                <div class="col-md-3">
+                    <label for="session_type" class="form-label">Session Type</label>
+                    <select name="session_type" id="session_type" class="form-select">
+                        <option value="">All Types</option>
+                        <option value="linux" {% if request.args.get('session_type') == 'linux' %}selected{% endif %}>Linux</option>
+                        <option value="powershell" {% if request.args.get('session_type') == 'powershell' %}selected{% endif %}>PowerShell</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="host" class="form-label">Host</label>
+                    <input type="text" class="form-control" id="host" name="host" value="{{ request.args.get('host', '') }}" placeholder="Search by hostname or IP">
+                </div>
+                <div class="col-md-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="date" name="date" value="{{ request.args.get('date', '') }}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Sessions Table -->
+    {% if sessions %}
+        <div class="card">
+            <div class="card-header bg-dark">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Sessions List</h5>
+                    <span class="badge bg-info">{{ pagination.total }} sessions</span>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Type</th>
+                                <th>Host</th>
+                                <th>Started</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for session in sessions %}
+                                <tr>
+                                    <td>{{ session.id }}</td>
+                                    <td>
+                                        <span class="badge {% if session.session_type == 'linux' %}bg-success{% else %}bg-primary{% endif %}">
+                                            {{ session.session_type }}
+                                        </span>
+                                    </td>
+                                    <td>{{ session.host }}:{{ session.port }}</td>
+                                    <td>{{ session.start_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                    <td>
+                                        {% if session.end_time %}
+                                            {{ (session.end_time - session.start_time).total_seconds()|round|int }} sec
+                                        {% else %}
+                                            <span class="badge bg-warning">Active</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if session.end_time %}
+                                            <span class="badge bg-secondary">Closed</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('remote_session_details', session_id=session.id) }}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-info-circle"></i> Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            {% if pagination.pages > 1 %}
+                <div class="card-footer">
+                    <nav aria-label="Session pagination">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item {% if pagination.page == 1 %}disabled{% endif %}">
+                                <a class="page-link" href="{{ url_for('remote_sessions', page=pagination.prev_num, 
+                                    session_type=request.args.get('session_type', ''),
+                                    host=request.args.get('host', ''),
+                                    date=request.args.get('date', '')) }}">
+                                    Previous
+                                </a>
+                            </li>
+                            
+                            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                {% if page_num %}
+                                    <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                        <a class="page-link" href="{{ url_for('remote_sessions', page=page_num,
+                                            session_type=request.args.get('session_type', ''),
+                                            host=request.args.get('host', ''),
+                                            date=request.args.get('date', '')) }}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">…</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <li class="page-item {% if pagination.page == pagination.pages %}disabled{% endif %}">
+                                <a class="page-link" href="{{ url_for('remote_sessions', page=pagination.next_num,
+                                    session_type=request.args.get('session_type', ''),
+                                    host=request.args.get('host', ''),
+                                    date=request.args.get('date', '')) }}">
+                                    Next
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> No remote sessions found.</h5>
+            <p class="mb-0 mt-2">To create a remote session, enable remote execution when translating commands.</p>
+        </div>
+    {% endif %}
+
+    <!-- DNA Security Notice -->
+    <div class="card mt-4">
+        <div class="card-header bg-dark">
+            <h5 class="mb-0">DNA Security Information</h5>
+        </div>
+        <div class="card-body">
+            <p class="mb-0">
+                <i class="fas fa-shield-alt me-2 text-success"></i>
+                All remote sessions are protected with DNA-based watermarking and session hashing for enhanced security and traceability.
+                <br>
+                <small class="text-muted">Copyright (c) 2024 Ervin Remus Radosavlevici</small>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

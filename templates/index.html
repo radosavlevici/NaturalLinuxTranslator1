@@ -1,106 +1,107 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Reference</title>
+    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <style>
+        .command-card {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .command-output {
+            font-family: 'Courier New', Courier, monospace;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: var(--bs-dark);
+        }
+        .powered-by {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .command-list {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="d-flex justify-content-between align-items-center py-3 mb-4 border-bottom">
+            <h1 class="fs-4">Linux Command Reference</h1>
+        </header>
 
-{% block title %}Command Translator - Natural Language to Terminal Commands{% endblock %}
+        <main>
 
-{% block content %}
-<div class="container">
-    <div class="row mb-5">
-        <div class="col-md-12 text-center">
-            <h1 class="display-4 mb-4">Command Translator</h1>
-            <p class="lead">Transform natural language into precise terminal commands with advanced cross-platform capabilities.</p>
-            <div class="mt-4">
-                <a href="/form-linux" class="btn btn-primary mx-2">Linux Translator</a>
-                <a href="/form-powershell" class="btn btn-info mx-2">PowerShell Translator</a>
-                <a href="/simple" class="btn btn-secondary mx-2">Simple Interface</a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card bg-dark">
-                <div class="card-body">
-                    <h3 class="card-title"><i class="fas fa-terminal"></i> Natural Language Processing</h3>
-                    <p class="card-text">Describe what you want to do in plain English, and get the precise command you need.</p>
+            <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+                <div class="container-fluid py-5">
+                    <h1 class="display-5 fw-bold">Linux Command Reference</h1>
+                    <p class="col-md-8 fs-4">A collection of useful Linux commands for everyday tasks.</p>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card bg-dark">
-                <div class="card-body">
-                    <h3 class="card-title"><i class="fas fa-exchange-alt"></i> Cross-Platform Support</h3>
-                    <p class="card-text">Get commands for both Linux and PowerShell environments with the same natural query.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card bg-dark">
-                <div class="card-body">
-                    <h3 class="card-title"><i class="fas fa-shield-alt"></i> Secure Execution</h3>
-                    <p class="card-text">Execute commands with comprehensive safety validation and detailed explanations.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <div class="card bg-dark">
-                <div class="card-header">
-                    <h2>How It Works</h2>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4 text-center">
-                            <div class="p-3">
-                                <i class="fas fa-keyboard fa-3x mb-3"></i>
-                                <h4>1. Enter Your Request</h4>
-                                <p>Type what you want to do in plain language</p>
-                            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card command-card">
+                        <div class="card-header">
+                            File Management Commands
                         </div>
-                        <div class="col-md-4 text-center">
-                            <div class="p-3">
-                                <i class="fas fa-cogs fa-3x mb-3"></i>
-                                <h4>2. Advanced Processing</h4>
-                                <p>Our AI translates your request to a precise command</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <div class="p-3">
-                                <i class="fas fa-check-circle fa-3x mb-3"></i>
-                                <h4>3. Verified Result</h4>
-                                <p>Get a command you can use right away</p>
-                            </div>
+                        <div class="card-body">
+                            <ul class="list-group command-list">
+                                <li class="list-group-item">
+                                    <h5>List files and directories</h5>
+                                    <pre class="command-output">ls -la</pre>
+                                </li>
+                                <li class="list-group-item">
+                                    <h5>Find files by name</h5>
+                                    <pre class="command-output">find /path/to/search -name "filename"</pre>
+                                </li>
+                                <li class="list-group-item">
+                                    <h5>Find files created in last 7 days</h5>
+                                    <pre class="command-output">find /path/to/search -type f -mtime -7</pre>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <div class="row mt-5">
-        <div class="col-md-6">
-            <div class="card bg-dark">
-                <div class="card-header">
-                    <h3>Example: Linux Command</h3>
-                </div>
-                <div class="card-body">
-                    <p><strong>Natural Language:</strong> "Find all PDF files modified in the last 7 days"</p>
-                    <div class="command-output">find . -name "*.pdf" -type f -mtime -7</div>
+            
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card command-card">
+                        <div class="card-header">
+                            System Information Commands
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group command-list">
+                                <li class="list-group-item">
+                                    <h5>Check disk space</h5>
+                                    <pre class="command-output">df -h</pre>
+                                </li>
+                                <li class="list-group-item">
+                                    <h5>Check memory usage</h5>
+                                    <pre class="command-output">free -h</pre>
+                                </li>
+                                <li class="list-group-item">
+                                    <h5>View running processes</h5>
+                                    <pre class="command-output">ps aux | grep process_name</pre>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card bg-dark">
-                <div class="card-header">
-                    <h3>Example: PowerShell Command</h3>
-                </div>
-                <div class="card-body">
-                    <p><strong>Natural Language:</strong> "Find all PDF files modified in the last 7 days"</p>
-                    <div class="command-output">Get-ChildItem -Path . -Filter *.pdf -Recurse | Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-7) }</div>
-                </div>
+        </main>
+
+        <footer class="pt-3 mt-4 text-body-secondary border-top">
+            <div class="powered-by">
+                <p class="text-danger fw-bold">PROPRIETARY SOFTWARE - DO NOT MODIFY OR REDISTRIBUTE</p>
+                <p>This software is protected by international copyright laws and contains DNA-based security tracking technology.</p>
+                <p>Copyright &copy; 2024 Ervin Remus Radosavlevici. All rights reserved.</p>
+                <p>Unauthorized modification, distribution, or use of this software is strictly prohibited and will result in legal action.</p>
             </div>
-        </div>
+        </footer>
     </div>
-</div>
-{% endblock %}
+</body>
+</html>
