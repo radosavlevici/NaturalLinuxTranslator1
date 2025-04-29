@@ -18,7 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const executeButton = document.getElementById('executeButton');
     const saveButton = document.getElementById('saveButton');
     const clearButton = document.getElementById('clearButton');
-    const workingDirModal = new bootstrap.Modal(document.getElementById('workingDirModal'));
+    let workingDirModal = null;
+    // Initialize bootstrap modal after ensuring the element exists
+    if (document.getElementById('workingDirModal')) {
+        workingDirModal = new bootstrap.Modal(document.getElementById('workingDirModal'));
+    }
     const confirmWorkingDir = document.getElementById('confirmWorkingDir');
     const workingDirInput = document.getElementById('workingDirInput');
     
@@ -652,32 +656,44 @@ document.addEventListener('DOMContentLoaded', function() {
     // Translate natural language query to PowerShell command
     async function translateQuery(query) {
         try {
-            // In a real implementation, this would call the backend API
-            // For demo purposes, we'll simulate a response
+            // Call the actual backend API
+            const response = await fetch('/translate_powershell', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    query: query
+                })
+            });
             
-            // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // Check if response is ok
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Server error');
+            }
             
-            // Simulate API response based on query
-            const command = getSimulatedCommand(query);
+            // Parse response
+            const result = await response.json();
             
+            // Format it for our UI
             return {
-                command: command.command,
-                explanation: command.explanation,
-                breakdown: command.breakdown,
-                simulation: command.simulation,
-                safety_warning: command.safety_warning,
-                RiskLevel: command.risk_level,
+                command: result.command,
+                explanation: result.explanation,
+                breakdown: result.breakdown,
+                simulation: result.simulation,
+                safety_warning: result.safety_warning,
+                RiskLevel: result.risk_level || 0,
                 Watermark: {
-                    DnaSignature: generateDummySignature(),
-                    VisualCode: generateDummyVisualCode(),
-                    Timestamp: new Date().toISOString()
+                    DnaSignature: result.watermark || '-',
+                    VisualCode: result.timestamp ? new Date(result.timestamp).toISOString().substring(0, 10) : '-',
+                    Timestamp: result.timestamp
                 }
             };
             
         } catch (error) {
             console.error('API Error:', error);
-            throw new Error('Failed to translate query. Please try again.');
+            throw new Error(error.message || 'Failed to translate query. Please try again.');
         }
     }
     
