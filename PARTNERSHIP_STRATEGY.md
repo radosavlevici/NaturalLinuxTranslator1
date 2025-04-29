@@ -244,9 +244,9 @@ To build a collaborative network of partners who enhance, extend, and evangelize
   - Co-branded marketing templates
   - Market development funds
 
-- **Legal & Financial Resources**
+- **Legal & Administrative Resources**
   - Partnership agreement templates
-  - Revenue sharing models
+  - Usage tracking models
   - Partnership performance tracking
 
 ## Risk Assessment and Mitigation

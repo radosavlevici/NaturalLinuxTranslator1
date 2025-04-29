@@ -1,6 +1,22 @@
-# MIT License
+# MIT License - FREE SOFTWARE
 
 Copyright (c) 2025 Ervin Remus Radosavlevici
+
+## IMPORTANT NOTICE - FREE SOFTWARE DECLARATION
+
+This software is 100% FREE and should NEVER be sold by anyone. 
+
+### STRICT PROHIBITION ON MONETIZATION:
+1. NO ONE may sell this software or charge money for it
+2. NO ONE may include this software in any paid product or service
+3. NO ONE may make money from this software in any way
+4. NO ONE may create derivative works with the intent to sell them
+
+If you have paid money to acquire this software, YOU HAVE BEEN SCAMMED.
+Please contact the author immediately at ervin210@icloud.com.
+
+All commercial terms in any accompanying BUSINESS_LICENSE.md, COMMERCIAL_LICENSE_AGREEMENT.md,
+or similar files should be considered NULL AND VOID. This software is FREE for everyone.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
