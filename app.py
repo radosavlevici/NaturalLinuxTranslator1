@@ -71,6 +71,13 @@ def simple_powershell():
     """
     return render_template('simple_powershell.html')
 
+@app.route('/powershell-basic')
+def powershell_basic():
+    """
+    Render the most basic version of the PowerShell interface with minimal JavaScript
+    """
+    return render_template('powershell_basic.html')
+
 @app.route('/translate', methods=['POST'])
 def translate():
     try:
