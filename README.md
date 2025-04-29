@@ -1,6 +1,16 @@
-# Command Translator
+# Command Translator - 100% FREE OPEN SOURCE SOFTWARE
 
-A natural language to command translator tool that intelligently converts conversational English queries into precise terminal commands for both Linux and PowerShell environments.
+## ⚠️ THIS SOFTWARE IS 100% FREE - NOBODY CAN SELL IT OR MAKE MONEY FROM IT ⚠️
+
+This 100% FREE OPEN SOURCE tool intelligently converts conversational English queries into precise terminal commands for both Linux and PowerShell environments. It is released under the GNU GPL v3 license with additional terms that strictly prohibit any form of monetization.
+
+### HOW TO APPROACH THIS PROJECT
+- **As a User**: Download and use completely free for any non-commercial purpose
+- **As a Developer**: View, modify, and distribute the source code (must remain free)
+- **As an Organization**: Use freely for internal non-commercial purposes
+- **Contact**: Ervin Remus Radosavlevici (ervin210@icloud.com, +447759313990)
+
+If anyone tries to charge you money for this software, YOU ARE BEING SCAMMED. Please report this immediately to the contact above.
 
 ## 🌟 Features
 
