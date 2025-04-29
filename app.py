@@ -941,8 +941,8 @@ def get_powershell_command(query):
 def generate_watermark(content, timestamp):
     """
     Generate a unique watermark based on content and timestamp
-    - This is a simplified "DNA-based" security concept
-    Copyright (c) 2024 Ervin Remus Radosavlevici
+    - This is a simplified security concept
+    Copyright (c) 2024
     """
     # Create a hash of the content and timestamp
     content_hash = hashlib.sha256(content.encode()).hexdigest()
