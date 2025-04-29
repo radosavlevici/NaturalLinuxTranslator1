@@ -18,11 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const executeButton = document.getElementById('executeButton');
     const saveButton = document.getElementById('saveButton');
     const clearButton = document.getElementById('clearButton');
-    let workingDirModal = null;
-    // Initialize bootstrap modal after ensuring the element exists
-    if (document.getElementById('workingDirModal')) {
-        workingDirModal = new bootstrap.Modal(document.getElementById('workingDirModal'));
-    }
+    const workingDirModal = new bootstrap.Modal(document.getElementById('workingDirModal'));
     const confirmWorkingDir = document.getElementById('confirmWorkingDir');
     const workingDirInput = document.getElementById('workingDirInput');
     
@@ -656,90 +652,59 @@ document.addEventListener('DOMContentLoaded', function() {
     // Translate natural language query to PowerShell command
     async function translateQuery(query) {
         try {
-            // Call the actual backend API
-            const response = await fetch('/translate_powershell', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    query: query
-                })
-            });
+            // In a real implementation, this would call the backend API
+            // For demo purposes, we'll simulate a response
             
-            // Check if response is ok
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Server error');
-            }
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
             
-            // Parse response
-            const result = await response.json();
+            // Simulate API response based on query
+            const command = getSimulatedCommand(query);
             
-            // Format it for our UI
             return {
-                command: result.command,
-                explanation: result.explanation,
-                breakdown: result.breakdown,
-                simulation: result.simulation,
-                safety_warning: result.safety_warning,
-                RiskLevel: result.risk_level || 0,
+                command: command.command,
+                explanation: command.explanation,
+                breakdown: command.breakdown,
+                simulation: command.simulation,
+                safety_warning: command.safety_warning,
+                RiskLevel: command.risk_level,
                 Watermark: {
-                    DnaSignature: result.watermark || '-',
-                    VisualCode: result.timestamp ? new Date(result.timestamp).toISOString().substring(0, 10) : '-',
-                    Timestamp: result.timestamp
+                    DnaSignature: generateDummySignature(),
+                    VisualCode: generateDummyVisualCode(),
+                    Timestamp: new Date().toISOString()
                 }
             };
             
         } catch (error) {
             console.error('API Error:', error);
-            throw new Error(error.message || 'Failed to translate query. Please try again.');
+            throw new Error('Failed to translate query. Please try again.');
         }
     }
     
     // Execute PowerShell command
     async function executeCommandAPI(command, workingDirectory) {
         try {
-            // Call the actual API endpoint
-            const response = await fetch('/execute_powershell', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    command: command,
-                    working_dir: workingDirectory
-                })
-            });
+            // In a real implementation, this would call the backend API
+            // For demo purposes, we'll simulate a response
             
-            // Check if response is ok
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Server error');
-            }
+            // Simulate network delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
             
-            // Parse response
-            const result = await response.json();
+            // Simulate execution result
+            const executionResult = simulateCommandExecution(command);
             
-            // Format response for our UI
             return {
-                Stdout: result.stdout || '',
-                Stderr: result.stderr || '',
-                ExecutionSuccessful: result.execution_successful,
-                ExitCode: result.exit_code || 1,
-                ExecutionTime: result.execution_time || 0,
-                Error: result.error || '',
-                SystemInfo: result.system_info || {},
-                WorkingDir: result.working_dir || workingDirectory,
-                Watermark: {
-                    DnaSignature: result.watermark || '-',
-                    VisualCode: result.watermark ? result.watermark.substring(0, 8) : '-'
-                }
+                Stdout: executionResult.output,
+                Stderr: executionResult.error,
+                ExecutionSuccessful: executionResult.success,
+                ExitCode: executionResult.exitCode,
+                ExecutionTime: executionResult.executionTime,
+                Error: executionResult.errorMessage
             };
             
         } catch (error) {
             console.error('API Error:', error);
-            throw new Error(error.message || 'Failed to execute command. Please try again.');
+            throw new Error('Failed to execute command. Please try again.');
         }
     }
     

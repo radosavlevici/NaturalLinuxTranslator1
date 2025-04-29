@@ -57,27 +57,6 @@ def powershell():
                           copyright=COPYRIGHT_INFO,
                           config={'OPENAI_API_KEY': OPENAI_API_KEY})
 
-@app.route('/powershell-link')
-def powershell_link():
-    """
-    Render a direct link to the PowerShell interface
-    """
-    return render_template('powershell_link.html')
-
-@app.route('/simple-powershell')
-def simple_powershell():
-    """
-    Render a simpler version of the PowerShell interface
-    """
-    return render_template('simple_powershell.html')
-
-@app.route('/powershell-basic')
-def powershell_basic():
-    """
-    Render the most basic version of the PowerShell interface with minimal JavaScript
-    """
-    return render_template('powershell_basic.html')
-
 @app.route('/translate', methods=['POST'])
 def translate():
     try:
