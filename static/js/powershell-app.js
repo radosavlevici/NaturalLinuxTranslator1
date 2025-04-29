@@ -1,6 +1,6 @@
 /**
  * PowerShell Command Translator Frontend
- * Copyright (c) 2024 Ervin Remus Radosavlevici
+ * Copyright (c) 2024
  * 
  * This file contains the frontend JavaScript code for the PowerShell Command Translator
  * Integrates with the PowerShell backend API for natural language processing

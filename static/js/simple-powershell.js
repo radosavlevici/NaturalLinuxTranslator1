@@ -1,6 +1,6 @@
 /**
  * PowerShell Command Translator (Simple Version)
- * Copyright (c) 2024 Ervin Remus Radosavlevici
+ * Copyright (c) 2024
  */
 
 document.addEventListener('DOMContentLoaded', function() {
