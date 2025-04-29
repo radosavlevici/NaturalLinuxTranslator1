@@ -189,6 +189,16 @@
                     resultDisplay += `\nCopyright (c) 2024 Ervin Remus Radosavlevici`;
                 }
                 
+                if (data.execution_info && data.execution_info.executed_on && data.execution_info.executed_on.startsWith('remote')) {
+                    resultDisplay += `\n\n--- REMOTE EXECUTION SESSION INFO ---`;
+                    if (data.execution_info.connection) {
+                        resultDisplay += `\nHost: ${data.execution_info.connection.host}`;
+                        resultDisplay += `\nPort: ${data.execution_info.connection.port}`;
+                        resultDisplay += `\nUsername: ${data.execution_info.connection.username}`;
+                    }
+                    resultDisplay += `\nExecution Mode: ${data.execution_info.executed_on}`;
+                }
+                
                 if (data.execution_info && data.execution_info.system_info) {
                     const sysInfo = data.execution_info.system_info;
                     resultDisplay += `\n\n--- SYSTEM INFO ---\n${sysInfo.system} ${sysInfo.release} on ${sysInfo.machine}`;
