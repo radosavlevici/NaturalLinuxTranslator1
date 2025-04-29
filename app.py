@@ -64,6 +64,13 @@ def powershell_link():
     """
     return render_template('powershell_link.html')
 
+@app.route('/simple-powershell')
+def simple_powershell():
+    """
+    Render a simpler version of the PowerShell interface
+    """
+    return render_template('simple_powershell.html')
+
 @app.route('/translate', methods=['POST'])
 def translate():
     try:
