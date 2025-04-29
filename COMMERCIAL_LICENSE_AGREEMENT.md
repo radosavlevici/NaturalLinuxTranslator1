@@ -45,54 +45,47 @@ Subject to the terms and conditions of this Agreement, Licensor hereby grants to
 
 As an alternative to the perpetual licenses described in Section 1, Licensor offers the following subscription-based licenses:
 
-### 2.1 Basic Subscription
+### 2.1 Basic License
 
 - **Rights Granted**: Installation and use of the Software on up to two (2) devices by a single named user.
-- **Term**: Monthly or annual subscription, automatically renewed.
-- **Support**: Basic email support for the duration of the subscription.
-- **Price**: $4.99 USD per month, or $49.99 USD per year.
+- **Term**: Perpetual license with no expiration.
+- **Support**: Basic email support.
 
-### 2.2 Professional Subscription
+### 2.2 Professional License
 
 - **Rights Granted**: Installation and use of the Software by up to five (5) named users within a single organization.
-- **Term**: Monthly or annual subscription, automatically renewed.
-- **Support**: Priority email and chat support for the duration of the subscription.
+- **Term**: Perpetual license with no expiration.
+- **Support**: Priority email and chat support.
 - **Additional Features**: Team management dashboard, customizable command sets.
-- **Price**: $9.99 USD per user per month, or $99.99 USD per user per year.
 
-### 2.3 Enterprise Subscription
+### 2.3 Enterprise License
 
 - **Rights Granted**: Installation and use of the Software by an unlimited number of users within a single organization.
-- **Term**: Annual subscription, automatically renewed.
+- **Term**: Perpetual license with no expiration.
 - **Support**: Dedicated support contact, with SLA (Service Level Agreement).
 - **Additional Features**: On-premise deployment option, customization services, advanced security features, integration with enterprise systems.
-- **Price**: Based on organization size and requirements. Contact sales for custom quote.
 
 ## 3. ADDITIONAL SERVICES
 
-Licensor offers the following additional services for purchase:
+Licensor offers the following additional services:
 
 ### 3.1 Custom Command Set Development
 
 - Development of industry-specific or company-specific command libraries tailored to the client's needs.
-- **Price**: Starting at $500.00 USD per custom set.
 
 ### 3.2 Integration Services
 
 - Professional services to integrate the Software with client's existing systems and workflows.
-- **Price**: Starting at $1,000.00 USD per integration.
 
 ### 3.3 Training Programs
 
 - Remote or on-site training sessions for users and administrators.
-- **Price**: Starting at $200.00 USD per session.
 
 ### 3.4 Enhanced Support Packages
 
 - **Standard**: Email and chat support with 24-hour response time.
 - **Premium**: Email, chat, and phone support with 4-hour response time.
 - **Enterprise**: Dedicated support manager with custom SLA.
-- **Price**: Contact sales for custom quote.
 
 ## 4. OWNERSHIP AND COPYRIGHT
 

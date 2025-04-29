@@ -55,8 +55,6 @@ This document outlines various licensing options for businesses interested in us
 
 ### 4. OEM/Redistribution License
 
-**Price Range:** Custom pricing based on distribution volume
-
 **Features:**
 - Right to include in commercial products
 - White-labeling options
@@ -70,34 +68,21 @@ This document outlines various licensing options for businesses interested in us
 
 ## Subscription Options
 
-As an alternative to one-time purchases, consider offering subscription-based licensing:
-
-### Monthly Subscription
-
-**Pricing:**
-- Basic: $4.99/month per user
-- Professional: $9.99/month per user
-- Enterprise: Custom pricing
+The software is provided at no cost.
 
 **Benefits:**
-- Lower initial cost
 - Always access to latest updates
 - Scalable as team grows
-- Monthly billing for better cash flow
 
 ## Value-Added Services
 
-Consider offering these value-added services to business customers:
+The following services are available:
 
 ### 1. Custom Command Set Development
-
-**Price Range:** $500-2,000 per custom set
 
 Development of industry-specific or company-specific command libraries tailored to the client's needs. This could include commands for proprietary systems or specialized business workflows.
 
 ### 2. Integration Services
-
-**Price Range:** $1,000-5,000 per integration
 
 Professional services to integrate the Command Translator with:
 - Ticketing systems
@@ -107,8 +92,6 @@ Professional services to integrate the Command Translator with:
 - Custom APIs and internal systems
 
 ### 3. Training Programs
-
-**Price Range:** $200-1,000 per session
 
 - Remote training sessions
 - On-site training workshops
