@@ -1,0 +1,244 @@
+import os
+import subprocess
+import logging
+from flask import Flask, render_template, request, jsonify, session
+
+# Set up OpenAI API
+import openai
+openai.api_key = os.environ.get("OPENAI_API_KEY")
+
+# Initialize Flask app
+app = Flask(__name__)
+app.secret_key = os.environ.get("SESSION_SECRET", os.urandom(24).hex())
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, 
+                   format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+# Define safe Linux commands
+SAFE_LINUX_COMMANDS = [
+    'ls', 'pwd', 'cd', 'echo', 'cat', 'head', 'tail', 
+    'grep', 'find', 'wc', 'date', 'cal', 'uname', 'whoami',
+    'df', 'du', 'free', 'ps', 'uptime', 'w', 'finger',
+    'id', 'groups', 'who', 'last', 'history',
+    'chmod', 'chown', 'mkdir', 'rmdir', 'touch', 'mv', 'cp',
+    'ln', 'less', 'more', 'sort', 'uniq', 'tr', 'cut', 'paste',
+    'diff', 'file', 'tar', 'gzip', 'gunzip', 'zip', 'unzip',
+    'hostname', 'ping', 'traceroute', 'ifconfig', 'netstat',
+    'ss', 'dig', 'nslookup', 'host'
+]
+
+# Define safe PowerShell commands
+SAFE_POWERSHELL_COMMANDS = [
+    'Get-ChildItem', 'Get-Location', 'Set-Location', 'Write-Output',
+    'Get-Content', 'Select-String', 'Get-Process', 'Get-Date',
+    'Get-Service', 'Get-Command', 'Test-Path', 'Get-Item', 
+    'Format-List', 'Format-Table', 'Measure-Object', 'Where-Object',
+    'Select-Object', 'Sort-Object', 'Get-Member', 'Get-Help',
+    'Get-PSDrive', 'Get-ItemProperty', 'Get-Alias', 'New-Item',
+    'Copy-Item', 'Move-Item', 'Rename-Item', 'Remove-Item',
+    'New-PSDrive', 'Get-Host', 'Get-History', 'Invoke-History',
+    'Get-ComputerInfo', 'Get-NetIPAddress', 'Get-NetAdapter',
+    'Get-Disk', 'Get-Volume', 'Get-Partition'
+]
+
+# Function to check if a Linux command is safe to execute
+def is_safe_linux_command(command):
+    """Check if a Linux command is safe to execute"""
+    if not command:
+        return False
+    
+    # Extract the base command (before any options)
+    cmd_parts = command.strip().split()
+    if not cmd_parts:
+        return False
+    
+    main_cmd = cmd_parts[0]
+    
+    # Check if the command is in our safe list
+    return main_cmd in SAFE_LINUX_COMMANDS
+
+# Function to check if a PowerShell command is safe to execute
+def is_safe_powershell_command(command):
+    """Check if a PowerShell command is safe to execute"""
+    if not command:
+        return False
+    
+    # Extract the base command (before any options)
+    cmd_parts = command.strip().split()
+    if not cmd_parts:
+        return False
+    
+    main_cmd = cmd_parts[0]
+    
+    # Check if the command is in our safe list
+    return main_cmd in SAFE_POWERSHELL_COMMANDS
+
+# Sanitize input
+def sanitize_input(text):
+    """Sanitize user input"""
+    if not text:
+        return ""
+    
+    # Limit length
+    return text[:1000]
+
+# Routes
+@app.route('/')
+def index():
+    """Render the home page"""
+    return render_template('index.html')
+
+@app.route('/form-linux')
+def form_linux():
+    """Render the form-based Linux translator"""
+    return render_template('form_linux.html')
+
+@app.route('/form-powershell')
+def form_powershell():
+    """Render the form-based PowerShell translator"""
+    return render_template('form_powershell.html')
+
+@app.route('/form-translate-linux', methods=['POST'])
+def form_translate_linux():
+    """Process Linux translation form"""
+    query = request.form.get('query', '')
+    
+    if not query:
+        return render_template('form_linux.html', error="Please provide a query.")
+    
+    # Get Linux command
+    command = get_linux_command(query)
+    
+    return render_template('form_linux_result.html', query=query, command=command)
+
+@app.route('/form-translate-powershell', methods=['POST'])
+def form_translate_powershell():
+    """Process PowerShell translation form"""
+    query = request.form.get('query', '')
+    
+    if not query:
+        return render_template('form_powershell.html', error="Please provide a query.")
+    
+    # Get PowerShell command
+    command = get_powershell_command(query)
+    
+    return render_template('form_powershell_result.html', query=query, command=command)
+
+@app.route('/execute', methods=['POST'])
+def execute_command():
+    """Execute a command and return the results"""
+    command = request.form.get('command', '')
+    mode = request.form.get('mode', 'linux')
+    working_dir = request.form.get('workingDir', '.')
+    
+    if not command:
+        return jsonify({"error": "No command provided"}), 400
+    
+    output = ""
+    error = ""
+    
+    if mode == 'linux':
+        if is_safe_linux_command(command):
+            try:
+                # Execute the command in a subprocess
+                result = subprocess.run(
+                    command,
+                    shell=True,
+                    cwd=working_dir,
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                output = result.stdout
+                error = result.stderr
+            except subprocess.TimeoutExpired:
+                error = "Command execution timed out after 5 seconds"
+            except Exception as e:
+                error = f"Error executing command: {str(e)}"
+        else:
+            error = f"Command '{command}' is not in the allowed safe commands list"
+    elif mode == 'powershell':
+        if is_safe_powershell_command(command):
+            try:
+                # Execute the PowerShell command
+                result = subprocess.run(
+                    ["powershell", "-Command", command],
+                    cwd=working_dir,
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                output = result.stdout
+                error = result.stderr
+            except subprocess.TimeoutExpired:
+                error = "Command execution timed out after 5 seconds"
+            except Exception as e:
+                error = f"Error executing PowerShell command: {str(e)}"
+        else:
+            error = f"PowerShell command '{command}' is not in the allowed safe commands list"
+    else:
+        error = f"Unsupported mode: {mode}"
+    
+    return jsonify({
+        "output": output,
+        "error": error,
+        "working_directory": working_dir,
+        "timestamp": "2025-04-29T00:00:00Z"  # Placeholder timestamp
+    })
+
+def get_linux_command(query):
+    """
+    Use OpenAI to translate natural language to Linux command
+    Copyright (c) 2024 Ervin Remus Radosavlevici
+    """
+    sanitized_query = sanitize_input(query)
+    
+    try:
+        response = openai.chat.completions.create(
+            model="gpt-4o",  # the newest OpenAI model is "gpt-4o" which was released May 13, 2024
+            messages=[
+                {"role": "system", "content": "You are a Linux command expert. Generate only the exact command with no explanation or markdown formatting. The response should contain ONLY the command itself, nothing else."},
+                {"role": "user", "content": f"Convert this request to a Linux command: {sanitized_query}"}
+            ],
+            temperature=0.2,
+            max_tokens=150
+        )
+        
+        command = response.choices[0].message.content.strip()
+        logger.info(f"Linux command generated: {command}")
+        
+        return command
+    except Exception as e:
+        logger.error(f"Error generating Linux command: {str(e)}")
+        return f"Error generating command. Please try again later. ({str(e)[:50]}...)"
+
+def get_powershell_command(query):
+    """
+    Use OpenAI to translate natural language to PowerShell command
+    Copyright (c) 2024 Ervin Remus Radosavlevici
+    """
+    sanitized_query = sanitize_input(query)
+    
+    try:
+        response = openai.chat.completions.create(
+            model="gpt-4o",  # the newest OpenAI model is "gpt-4o" which was released May 13, 2024
+            messages=[
+                {"role": "system", "content": "You are a PowerShell command expert. Generate only the exact PowerShell command with no explanation or markdown formatting. The response should contain ONLY the command itself, nothing else."},
+                {"role": "user", "content": f"Convert this request to a PowerShell command: {sanitized_query}"}
+            ],
+            temperature=0.2,
+            max_tokens=150
+        )
+        
+        command = response.choices[0].message.content.strip()
+        logger.info(f"PowerShell command generated: {command}")
+        
+        return command
+    except Exception as e:
+        logger.error(f"Error generating PowerShell command: {str(e)}")
+        return f"Error generating PowerShell command. Please try again later. ({str(e)[:50]}...)"
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)
