@@ -5,18 +5,22 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
-# Set up OpenAI API
-import openai
-openai.api_key = os.environ.get("OPENAI_API_KEY")
-
-# Initialize Flask app
-app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET", os.urandom(24).hex())
-
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+# Set up OpenAI API
+import openai
+api_key = os.environ.get("OPENAI_API_KEY")
+if not api_key:
+    logger.warning("No OpenAI API key found. Translation features will not work.")
+else:
+    openai.api_key = api_key
+
+# Initialize Flask app
+app = Flask(__name__)
+app.secret_key = os.environ.get("SESSION_SECRET", os.urandom(24).hex())
 
 # Define safe Linux commands
 SAFE_LINUX_COMMANDS = [

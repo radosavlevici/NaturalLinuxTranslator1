@@ -25,9 +25,11 @@ name = "Start application"
 author = "agent"
 
 [[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
-waitForPort = 5000
+task = "workflow.run"
+args = "Project"
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
 
 [[ports]]
 localPort = 5000
