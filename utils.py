@@ -227,7 +227,7 @@ def log_command_request(user_query, generated_command, user_ip=None, command_typ
     except Exception as e:
         logger.error(f"Error logging command: {e}")
 
-def create_dna_signature(content):
+def create_security_signature(content):
     """
     Create a signature for content tracking
     Copyright (c) 2024
