@@ -35,121 +35,55 @@ Command Translator is **100% FREE OPEN SOURCE SOFTWARE** released under the GNU 
 - Government agencies (non-commercial use)
 - Any organization wanting to use it for FREE (with no monetization)
 
-## Subscription Options
+## ⛔ NO SUBSCRIPTIONS EXIST - THE SOFTWARE IS COMPLETELY FREE ⛔
 
-The software is provided at no cost.
+Command Translator is provided at **NO COST WHATSOEVER**. There are **NO PAID SUBSCRIPTION OPTIONS**.
 
-**Benefits:**
-- Always access to latest updates
-- Scalable as team grows
+**ACTUAL BENEFITS:**
+- Free access to all updates for everyone
+- Free for any organization to use (for non-commercial purposes only)
+- Free to modify and distribute (must remain free)
 
-## Value-Added Services
+## ⛔ NO PAID SERVICES EXIST - ALL MENTIONED SERVICES ARE INVALID ⛔
 
-The following services are available:
+### ⚠️ WARNING ABOUT FRAUDULENT SERVICES ⚠️
 
-### 1. Custom Command Set Development
+The following services **DO NOT EXIST** as paid options:
+- There are NO paid "Custom Command Set Development" services
+- There are NO paid "Integration Services" 
+- There are NO paid "Training Programs"
+- There are NO paid "Support Packages"
 
-Development of industry-specific or company-specific command libraries tailored to the client's needs. This could include commands for proprietary systems or specialized business workflows.
+### ✅ COMMUNITY SUPPORT MODEL ✅
 
-### 2. Integration Services
+As a 100% FREE OPEN SOURCE project, Command Translator operates on a community support model only:
 
-Professional services to integrate the Command Translator with:
-- Ticketing systems
-- Monitoring tools
-- CI/CD pipelines
-- Corporate knowledge bases
-- Custom APIs and internal systems
+- GitHub Issues for bug reporting and feature requests
+- Community forums for user questions and discussions
+- Documentation and guides freely available online
+- Volunteer contribution for improvements and extensions
 
-### 3. Training Programs
+## ⛔ NO SPECIAL LICENSING PROGRAMS - ALL USERS HAVE THE SAME FREE LICENSE ⛔
 
-- Remote training sessions
-- On-site training workshops
-- Custom training materials
-- Train-the-trainer programs
+### ⚠️ DISCOUNTS ARE IRRELEVANT BECAUSE THE SOFTWARE IS FREE ⚠️
 
-### 4. Support Packages
+- NO "Educational Discount" exists because the software is FREE FOR EVERYONE
+- NO "Non-Profit Discount" exists because the software is FREE FOR EVERYONE
+- NO "Startup Program" exists because the software is FREE FOR EVERYONE
 
-**Options:**
-- Basic: Email support with 48-hour response time
-- Standard: Email and chat support with 24-hour response time
-- Premium: Email, chat, and phone support with 4-hour response time
-- Enterprise: Dedicated support manager with custom SLA
+## ⚠️ REMINDER: THIS ENTIRE DOCUMENT IS NULL AND VOID ⚠️
 
-## Special Licensing Programs
+All "Business License" information in this document is completely INVALID. The only valid license is the GNU GPL v3 license with additional terms that specifically prohibit any commercial use.
 
-### Educational Discount
+## ✅ PROPER CONTACT INFORMATION ✅
 
-Offer discounted licenses for educational institutions:
-- 50% discount for schools and universities
-- Free licenses for classroom use
-
-### Non-Profit Discount
-
-- 40% discount for registered non-profit organizations
-
-### Startup Program
-
-- Special pricing for startups (under 2 years old or under $1M in funding)
-- Includes basic integration support
-
-## Legal Considerations
-
-When offering commercial licenses, include these legal protections:
-
-1. **Detailed End User License Agreement (EULA)**
-   - Clear usage terms
-   - Liability limitations
-   - Warranty disclaimers
-   - Intellectual property protections
-
-2. **Service Level Agreement (SLA) for Enterprise Customers**
-   - Uptime guarantees (if offering hosted solutions)
-   - Support response times
-   - Escalation procedures
-   - Performance metrics
-
-3. **Data Processing Agreement (DPA)**
-   - Important if the tool processes any customer data
-   - Should address data privacy regulations (GDPR, CCPA, etc.)
-
-4. **Confidentiality Clauses**
-   - Protection of both parties' confidential information
-
-## License Management System
-
-For commercial licensing, implement a license management system that provides:
-
-1. License key generation and validation
-2. User/seat management for team licenses
-3. Usage analytics
-4. Expiration notifications
-5. Automatic renewal processing
-
-## Distribution Partnerships
-
-Consider offering reseller or affiliate programs:
-
-**Reseller Program:**
-- Distribution authorization
-- Sales and marketing materials
-- Technical training
-- Deal registration system
-
-**Affiliate Program:**
-- Referral tracking
-- Tracking links
-- Marketing materials
-- Performance dashboard
-
-## Contact Information
-
-For business licensing inquiries, please contact:
+For questions about the FREE OPEN SOURCE LICENSE or to report any attempts to sell this software:
 
 **Ervin Remus Radosavlevici**  
-Business Development Manager  
+Open Source Project Owner  
 Email: ervin210@icloud.com  
 Phone: +447759313990
 
 ---
 
-*Note: All licensing terms should be finalized after consulting with legal advisors.*
+If you see anyone attempting to sell or charge for this software, PLEASE REPORT THEM IMMEDIATELY as they are violating the license terms.
