@@ -818,9 +818,19 @@ def execute_command():
         error = f"Unsupported mode: {mode}"
         logger.error(f"Unsupported mode: {mode} for command '{command}'")
     
-    # Create a watermark for verification
+    # Create a watermark for verification using Ervin's DNA-based security technology
     from hashlib import sha256
-    execution_hash = sha256(f"{command}:{mode}:{username}:{current_time}".encode()).hexdigest()[:12]
+    from utils import create_dna_signature
+    
+    # Base hash with command details
+    base_hash = sha256(f"{command}:{mode}:{username}:{current_time}".encode()).hexdigest()[:12]
+    
+    # Enhanced DNA-based watermark for security tracing
+    execution_environment = "remote" if remote_execution else "local"
+    dna_marker = create_dna_signature(f"{command}:{mode}:{username}:{execution_environment}:{current_time}")
+    
+    # Final execution hash combines both for traceability
+    execution_hash = f"{base_hash}:{dna_marker[:8]}"
     
     return jsonify({
         "output": output,
