@@ -52,17 +52,17 @@ Our standard support structure for partnerships includes:
 
 We can customize this arrangement based on your support capabilities and preferences.
 
-### What ROI can we expect from this partnership?
+### What benefits can we expect from this partnership?
 
-Partners typically see ROI from multiple sources:
+Partners typically see benefits from multiple sources:
 
 1. **Support Efficiency**: 30-40% reduction in command-related support tickets
-2. **Revenue Generation**: New income from value-added services
+2. **Enhanced Service**: Improved capabilities for your existing free services
 3. **Customer Satisfaction**: Improved metrics from faster issue resolution
 4. **Training Effectiveness**: 40% faster proficiency development
 5. **Staff Utilization**: Better use of junior staff capabilities
 
-We have an ROI calculator we can customize with your specific metrics to provide a detailed projection for your organization.
+We have a benefit calculator we can customize with your specific metrics to help you understand the value of incorporating this free open source tool.
 
 ## Technical Questions
 
@@ -202,9 +202,9 @@ For a successful partnership, we typically require:
 - **Implementation Team**: Staff to assist with deployment (typically 2-5 days of effort)
 - **Training Participants**: Staff who will use the system
 
-For reseller or white-label partnerships, we also recommend:
-- **Marketing Contact**: For co-marketing activities
-- **Sales Representative**: For sales enablement
+For distribution or community partnerships, we also recommend:
+- **Community Contact**: For joint community activities
+- **Distribution Coordinator**: For helping distribute the free software
 
 ### How do you handle updates and new features?
 
@@ -224,7 +224,7 @@ Our partner enablement program includes:
 
 - **Admin Training**: Technical setup and management
 - **User Training**: End-user functionality training
-- **Sales Training**: For partners reselling the solution
+- **Distribution Training**: For partners distributing the free solution
 - **Certification**: Official certification program
 - **Materials**: Customizable training materials
 
@@ -239,7 +239,7 @@ We track several key metrics to ensure partnership success:
 1. **Usage Metrics**: Active users, commands executed, success rate
 2. **Business Impact**: Support ticket reduction, time saved
 3. **Customer Satisfaction**: User feedback and satisfaction surveys
-4. **Distribution Growth**: For reseller partnerships
+4. **Distribution Growth**: For community distribution partnerships
 5. **Adoption Rate**: Percentage of eligible users actively using the tool
 
 We provide regular reports on these metrics and schedule quarterly business reviews.
@@ -253,7 +253,7 @@ Our partner support program includes:
 - **Technical Support**: Priority support for partner issues
 - **Business Reviews**: Quarterly partnership reviews
 - **Marketing Support**: Co-marketing materials and campaigns
-- **Sales Enablement**: Regular training and updates
+- **Community Enablement**: Regular training and updates
 
 Enterprise partners receive additional dedicated resources based on partnership level.
 
@@ -291,6 +291,6 @@ Phone: +447759313990
 
 ---
 
-© 2024 Ervin Remus Radosavlevici. All rights reserved.
-This document contains proprietary business strategy information.
-Unauthorized reproduction or distribution is prohibited.
+© 2025 Ervin Remus Radosavlevici.
+This document is part of the free open source Command Translator project.
+Licensed under GNU GPL v3 with additional terms prohibiting commercial use.
