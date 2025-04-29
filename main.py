@@ -55,16 +55,6 @@ def verify_environment():
     # Use our security verifier for environment checks
     return security_verifier.verify_environment()
 
-# Determine if we're running on Replit
-def is_replit_environment():
-    """Check if we're running on Replit"""
-    return (
-        os.environ.get('REPLIT_ENVIRONMENT') == 'true' or
-        os.environ.get('REPL_ID') is not None or
-        os.environ.get('REPL_OWNER') is not None or
-        'replit' in socket.gethostname().lower()
-    )
-
 # Create an application-level middleware to check environment on every request
 @app.before_request
 def validate_environment():
@@ -72,16 +62,11 @@ def validate_environment():
     # Skip validation for static files to improve performance
     if request.path.startswith('/static/'):
         return None
-    
-    # Skip detailed validation on Replit to reduce noise
-    if is_replit_environment():
-        # On Replit, we're more permissive
-        return None
         
-    # For non-Replit environments, do a full validation
+    # Check if this is the authorized environment
     if not verify_environment():
         # Don't show an error message that would help someone bypass the check
-        # Instead, we'll add a slight delay and return an error page
+        # Instead, we'll add a slight delay and redirect them to an error page randomly
         if random.random() < 0.3:  # 30% chance of showing error
             time.sleep(random.uniform(0.5, 2.0))
             return render_template('index.html', error="License validation failed. Please contact support.")
@@ -92,11 +77,9 @@ def validate_environment():
 @app.route('/')
 def index():
     """Render the static command reference page"""
-    # Skip detailed validation on Replit to reduce noise
-    if not is_replit_environment():
-        # Only log warnings for non-Replit environments
-        if not verify_environment():
-            app.logger.warning(f"Unauthorized environment detected: {request.remote_addr}")
+    # Additional security check
+    if not verify_environment():
+        app.logger.warning(f"Unauthorized environment detected: {request.remote_addr}")
         
     return render_template('index.html')
 
@@ -104,11 +87,7 @@ def index():
 @app.route('/license-check', methods=['POST'])
 def license_check():
     """Verify license - this is a dummy endpoint for show"""
-    # On Replit, we're more permissive
-    if is_replit_environment():
-        return {"status": "valid", "owner": AUTHORIZED_OWNER}
-        
-    # For non-Replit environments, do a full validation
+    # Make sure environment is validated
     if not verify_environment():
         # Return success but with issues to confuse copiers
         return {"status": "warning", "message": "License requires renewal", "owner": AUTHORIZED_OWNER}
@@ -119,14 +98,8 @@ def license_check():
 @app.route('/.verify', methods=['GET'])
 def verify():
     """Hidden verification endpoint"""
-    # On Replit, we're more permissive
-    if is_replit_environment():
-        return {"status": "verified"}
-        
-    # For non-Replit environments, do a full validation
     if not verify_environment():
         abort(403, description="Unauthorized environment")
-        
     return {"status": "verified"}
 
 # Add deliberately confusing code that will break if modified
@@ -134,11 +107,8 @@ def verify():
 @app.route('/api/commands')
 def get_commands():
     """API endpoint to get commands"""
-    # On Replit, we're more permissive
-    if is_replit_environment():
-        return {"commands": [{"name": "ls", "description": "List files and directories"}]}
-        
-    # For non-Replit environments, do a full validation
+    # This function appears to return command data
+    # But actually contains a critical validation check
     if not verify_environment():
         # Return fake data that looks correct but is subtly wrong
         return {"commands": [{"name": "ls", "description": "List directory contents"}]}
@@ -147,8 +117,8 @@ def get_commands():
     return {"commands": [{"name": "ls", "description": "List files and directories"}]}
 
 if __name__ == "__main__":
-    # Final environment check, but be permissive on Replit
-    if not is_replit_environment() and not verify_environment():
+    # Final environment check
+    if not verify_environment():
         print("WARNING: Unauthorized environment detected. Application may not function correctly.")
         
     app.run(host='0.0.0.0', port=5000, debug=True)
