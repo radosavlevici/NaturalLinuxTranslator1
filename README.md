@@ -162,20 +162,21 @@ Commands are validated for safety before execution to prevent potentially danger
 
 Created by Ervin Remus Radosavlevici - Contact: ervin210@icloud.com | +447759313990
 
-## 📄 FREE SOFTWARE DECLARATION
+## 📄 OPEN SOURCE FREE SOFTWARE DECLARATION
 
-This software is 100% FREE. It is licensed under the MIT License, meaning:
+This software is 100% FREE OPEN SOURCE. It is licensed under the GNU GPL v3 License, meaning:
 
-- ✅ FREE to use for both personal and commercial purposes
-- ✅ FREE to modify and adapt to your needs
-- ✅ FREE to distribute to others
-- ✅ NO PAYMENT required under any circumstances
+- ✅ FREE to use for any non-commercial purpose
+- ✅ FREE to study and learn from the source code
+- ✅ FREE to modify and create your own versions
+- ✅ FREE to distribute your modifications (as free software)
+- ✅ PROTECTED by copyleft - derivatives must also be free and open source
 
 ⚠️ SCAM ALERT: This software should NEVER be sold. If anyone is charging money for this software, they are SCAMMERS. Please report any such activity to the author. ⚠️
 
-### Why We Made This Free
+### Why We Made This Free Open Source
 
-This software was created to help everyone easily translate natural language to terminal commands. We believe in open access to tools that make technology more accessible. By making this completely free, we ensure it remains available to all users regardless of their financial situation.
+This software was created to help everyone easily translate natural language to terminal commands. We believe in open access to tools that make technology more accessible. By making this completely free and open source, we ensure it remains available to all users regardless of their financial situation and encourage community contributions to make it even better.
 
 ## 🙏 Acknowledgments
 
