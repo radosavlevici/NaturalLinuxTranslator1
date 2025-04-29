@@ -89,6 +89,88 @@ def simple():
     """
     return render_template('simple_home.html')
     
+@app.route('/direct')
+def direct():
+    """
+    Render the direct ultra-simple interface with no templates
+    """
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Ultra Simple Translator</title>
+        <style>
+            body { 
+                font-family: Arial, sans-serif; 
+                background-color: #333; 
+                color: white; 
+                margin: 20px; 
+            }
+            form { 
+                background-color: #444; 
+                padding: 20px; 
+                border-radius: 5px; 
+                max-width: 600px; 
+                margin: 0 auto; 
+            }
+            h1 { text-align: center; }
+            textarea { 
+                width: 100%; 
+                height: 100px; 
+                margin: 10px 0; 
+                background-color: #222; 
+                color: white; 
+                border: 1px solid #666; 
+                padding: 5px; 
+            }
+            button { 
+                background-color: #4CAF50; 
+                color: white; 
+                padding: 10px 15px; 
+                border: none; 
+                cursor: pointer; 
+                display: block; 
+                margin: 10px 0; 
+            }
+            .result { 
+                background-color: #222; 
+                padding: 10px; 
+                margin-top: 20px; 
+                border-radius: 5px; 
+                white-space: pre-wrap; 
+            }
+            .links {
+                margin-top: 20px;
+                text-align: center;
+            }
+            .links a {
+                color: #4CAF50;
+                margin: 0 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Ultra Simple Translator</h1>
+        <form action="/direct_translate" method="post">
+            <div>
+                <label for="query">Enter what you want to do:</label>
+                <textarea name="query" placeholder="Example: list all files sorted by size"></textarea>
+            </div>
+            <div>
+                <input type="radio" name="mode" value="linux" id="linux" checked>
+                <label for="linux">Linux</label>
+                <input type="radio" name="mode" value="powershell" id="powershell">
+                <label for="powershell">PowerShell</label>
+            </div>
+            <button type="submit">Translate</button>
+            <div class="links">
+                <a href="/directory">Back to Directory</a>
+            </div>
+        </form>
+    </body>
+    </html>
+    """
+    
 @app.route('/simple/translate', methods=['POST'])
 def simple_translate():
     """
