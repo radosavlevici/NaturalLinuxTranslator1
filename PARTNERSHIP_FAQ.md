@@ -30,15 +30,15 @@ We offer flexible partnership models based on your specific needs:
 
 For enterprise partnerships, we develop custom arrangements based on integration needs and support requirements. We'd be happy to discuss which model aligns best with your business goals.
 
-### Do you offer exclusivity for certain markets or industries?
+### Do you offer focused distribution for certain markets or industries?
 
-We consider exclusivity arrangements on a case-by-case basis:
+We consider focused distribution arrangements on a case-by-case basis:
 
-- Geographic exclusivity may be available for strong regional partners
-- Industry exclusivity is possible for partners with dominant market position
-- Distribution exclusivity is considered for major Linux distributions
+- Geographic focus may be available for strong regional partners
+- Industry focus is possible for partners with industry expertise
+- Distribution focus is considered for major Linux distributions
 
-Exclusivity agreements typically include minimum volume commitments and marketing investments. We'd need to discuss your specific market position and goals to determine if exclusivity makes sense for both parties.
+These arrangements typically include distribution commitments and joint community initiatives. We'd need to discuss your specific expertise and goals to determine if a focused distribution arrangement makes sense for both parties.
 
 ### How do you handle support for partner customers?
 
