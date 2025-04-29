@@ -2,19 +2,18 @@
 
 A comprehensive reference guide for commonly used Linux commands.
 
+## IMPORTANT NOTICE
+
+**THIS APPLICATION CONTAINS PROPRIETARY CODE AND IS NOT TO BE MODIFIED, DISTRIBUTED, OR REMIXED**
+
+Any attempt to modify this code or create derivative works violates copyright law and will result in legal action. This software is subject to strict proprietary licensing and DNA-based security tracking.
+
 ## Features
 
 - **Organized Categories**: Commands grouped by function for easy reference
 - **Simple Interface**: Clean, intuitive UI for easy browsing
 - **Detailed Examples**: Clear examples of how to use each command
 - **Parameter Explanations**: Understand what each parameter does
-
-## Getting Started
-
-1. Visit the web interface
-2. Browse the categorized commands
-3. Find the command you need with example usage
-4. Copy and paste directly into your terminal
 
 ## Technology Stack
 
