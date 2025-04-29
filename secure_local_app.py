@@ -1,17 +1,15 @@
 import os
 from flask import Flask, request, jsonify, render_template_string
 
-# Create Flask app with enhanced security
+# Create Flask app with safer security but Replit-accessible
 app = Flask(__name__)
-app.config['SERVER_NAME'] = '127.0.0.1:5000'  # Localhost only
-app.config['PREFERRED_URL_SCHEME'] = 'http'
 
 # Simple HTML template
 TEMPLATE = '''
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Secure Local Command Translator</title>
+    <title>Secure Command Translator</title>
     <style>
         body { background-color: #333; color: #fff; font-family: Arial; padding: 20px; }
         .container { max-width: 800px; margin: 0 auto; }
@@ -23,8 +21,8 @@ TEMPLATE = '''
 </head>
 <body>
     <div class="container">
-        <h1>Secure Local Command Translator</h1>
-        <p>Running in secure local-only mode</p>
+        <h1>Secure Command Translator</h1>
+        <p>Running in Replit environment</p>
         
         <form id="translateForm" method="POST" action="/translate">
             <div>
@@ -87,6 +85,7 @@ def api_translate():
     })
 
 if __name__ == '__main__':
-    print("Starting secure local-only application...")
-    print("Access only via http://127.0.0.1:5000")
-    app.run(debug=True, host='127.0.0.1', port=5000)
+    print("Starting Replit-accessible application...")
+    print("Access via Replit webview")
+    # Bind to 0.0.0.0 to make it accessible via Replit
+    app.run(debug=True, host='0.0.0.0', port=5000)
