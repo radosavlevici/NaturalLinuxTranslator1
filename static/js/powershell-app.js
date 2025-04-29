@@ -684,27 +684,46 @@ document.addEventListener('DOMContentLoaded', function() {
     // Execute PowerShell command
     async function executeCommandAPI(command, workingDirectory) {
         try {
-            // In a real implementation, this would call the backend API
-            // For demo purposes, we'll simulate a response
+            // Call the actual API endpoint
+            const response = await fetch('/execute_powershell', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    command: command,
+                    working_dir: workingDirectory
+                })
+            });
             
-            // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Check if response is ok
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Server error');
+            }
             
-            // Simulate execution result
-            const executionResult = simulateCommandExecution(command);
+            // Parse response
+            const result = await response.json();
             
+            // Format response for our UI
             return {
-                Stdout: executionResult.output,
-                Stderr: executionResult.error,
-                ExecutionSuccessful: executionResult.success,
-                ExitCode: executionResult.exitCode,
-                ExecutionTime: executionResult.executionTime,
-                Error: executionResult.errorMessage
+                Stdout: result.stdout || '',
+                Stderr: result.stderr || '',
+                ExecutionSuccessful: result.execution_successful,
+                ExitCode: result.exit_code || 1,
+                ExecutionTime: result.execution_time || 0,
+                Error: result.error || '',
+                SystemInfo: result.system_info || {},
+                WorkingDir: result.working_dir || workingDirectory,
+                Watermark: {
+                    DnaSignature: result.watermark || '-',
+                    VisualCode: result.watermark ? result.watermark.substring(0, 8) : '-'
+                }
             };
             
         } catch (error) {
             console.error('API Error:', error);
-            throw new Error('Failed to execute command. Please try again.');
+            throw new Error(error.message || 'Failed to execute command. Please try again.');
         }
     }
     
