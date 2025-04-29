@@ -28,7 +28,12 @@ SAFE_LINUX_COMMANDS = [
     'ln', 'less', 'more', 'sort', 'uniq', 'tr', 'cut', 'paste',
     'diff', 'file', 'tar', 'gzip', 'gunzip', 'zip', 'unzip',
     'hostname', 'ping', 'traceroute', 'ifconfig', 'netstat',
-    'ss', 'dig', 'nslookup', 'host'
+    'ss', 'dig', 'nslookup', 'host',
+    # Additional common Linux commands
+    'awk', 'sed', 'top', 'htop', 'curl', 'wget', 'jq',
+    'journalctl', 'systemctl', 'lsblk', 'df', 'du',
+    'find', 'xargs', 'rsync', 'scp', 'sftp',
+    'ssh', 'sshd', 'passwd', 'mount', 'umount'
 ]
 
 # Define safe PowerShell commands
@@ -42,7 +47,15 @@ SAFE_POWERSHELL_COMMANDS = [
     'Copy-Item', 'Move-Item', 'Rename-Item', 'Remove-Item',
     'New-PSDrive', 'Get-Host', 'Get-History', 'Invoke-History',
     'Get-ComputerInfo', 'Get-NetIPAddress', 'Get-NetAdapter',
-    'Get-Disk', 'Get-Volume', 'Get-Partition'
+    'Get-Disk', 'Get-Volume', 'Get-Partition',
+    # Additional PowerShell commands
+    'Get-WmiObject', 'Invoke-Command', 'Start-Process', 'Stop-Process',
+    'Get-EventLog', 'Write-Host', 'Out-File', 'Import-Csv', 'Export-Csv',
+    'ConvertTo-Json', 'ConvertFrom-Json', 'Get-FileHash', 'Get-Random',
+    'Get-Credential', 'New-TimeSpan', 'Measure-Command', 'Start-Job',
+    'Receive-Job', 'Out-GridView', 'Clear-Host', 'Clear-Content',
+    'Compare-Object', 'Get-Module', 'Import-Module', 'Remove-Module',
+    'Get-ExecutionPolicy', 'Set-ExecutionPolicy', 'Test-Connection'
 ]
 
 # Function to check if a Linux command is safe to execute
@@ -229,20 +242,59 @@ def profile():
 
 @app.route('/execute', methods=['POST'])
 def execute_command():
-    """Execute a command and return the results"""
+    """Execute a command in a real environment and return the results
+    Enhanced to provide more context about the real Linux/PowerShell environment
+    Copyright (c) 2024 Ervin Remus Radosavlevici
+    """
     command = request.form.get('command', '')
     mode = request.form.get('mode', 'linux')
     working_dir = request.form.get('workingDir', '.')
     
+    # Log the command execution request
+    logger.info(f"Command execution request: '{command}' (mode: {mode})")
+    
     if not command:
         return jsonify({"error": "No command provided"}), 400
     
+    # Record the username if logged in
+    username = session.get('user_id', 'anonymous')
+    
     output = ""
     error = ""
+    execution_info = {}
+    
+    # Get system info for extra context
+    try:
+        import platform
+        system_info = {
+            "system": platform.system(),
+            "node": platform.node(),
+            "release": platform.release(),
+            "version": platform.version(),
+            "machine": platform.machine(),
+            "processor": platform.processor()
+        }
+        execution_info["system_info"] = system_info
+    except Exception as e:
+        logger.error(f"Error getting system info: {str(e)}")
+    
+    # Get current timestamp
+    from datetime import datetime
+    current_time = datetime.utcnow().isoformat() + "Z"
     
     if mode == 'linux':
         if is_safe_linux_command(command):
             try:
+                # Get some environment info before execution
+                env_result = subprocess.run(
+                    "uname -a && whoami && pwd",
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=2
+                )
+                execution_info["environment"] = env_result.stdout.strip()
+                
                 # Execute the command in a subprocess
                 result = subprocess.run(
                     command,
@@ -250,43 +302,77 @@ def execute_command():
                     cwd=working_dir,
                     capture_output=True,
                     text=True,
-                    timeout=5
+                    timeout=10  # Increased timeout to 10 seconds
                 )
                 output = result.stdout
                 error = result.stderr
+                execution_info["exit_code"] = result.returncode
+                
+                # Log successful execution
+                logger.info(f"Linux command executed successfully: '{command}' by user '{username}'")
             except subprocess.TimeoutExpired:
-                error = "Command execution timed out after 5 seconds"
+                error = "Command execution timed out after 10 seconds"
+                logger.warning(f"Command execution timeout: '{command}' by user '{username}'")
             except Exception as e:
                 error = f"Error executing command: {str(e)}"
+                logger.error(f"Command execution error: '{command}' - {str(e)}")
         else:
             error = f"Command '{command}' is not in the allowed safe commands list"
+            logger.warning(f"Unsafe command attempt: '{command}' by user '{username}'")
     elif mode == 'powershell':
         if is_safe_powershell_command(command):
             try:
+                # Get some PowerShell environment info before execution
+                env_command = "Write-Output 'PowerShell Info:'; $PSVersionTable; Write-Output 'User:'; whoami; Write-Output 'Location:'; Get-Location"
+                env_result = subprocess.run(
+                    ["powershell", "-Command", env_command],
+                    capture_output=True,
+                    text=True,
+                    timeout=2
+                )
+                execution_info["environment"] = env_result.stdout.strip()
+                
                 # Execute the PowerShell command
                 result = subprocess.run(
                     ["powershell", "-Command", command],
                     cwd=working_dir,
                     capture_output=True,
                     text=True,
-                    timeout=5
+                    timeout=10  # Increased timeout to 10 seconds
                 )
                 output = result.stdout
                 error = result.stderr
+                execution_info["exit_code"] = result.returncode
+                
+                # Log successful execution
+                logger.info(f"PowerShell command executed successfully: '{command}' by user '{username}'")
             except subprocess.TimeoutExpired:
-                error = "Command execution timed out after 5 seconds"
+                error = "Command execution timed out after 10 seconds"
+                logger.warning(f"Command execution timeout: '{command}' by user '{username}'")
             except Exception as e:
                 error = f"Error executing PowerShell command: {str(e)}"
+                logger.error(f"PowerShell command execution error: '{command}' - {str(e)}")
         else:
             error = f"PowerShell command '{command}' is not in the allowed safe commands list"
+            logger.warning(f"Unsafe PowerShell command attempt: '{command}' by user '{username}'")
     else:
         error = f"Unsupported mode: {mode}"
+        logger.error(f"Unsupported mode: {mode} for command '{command}'")
+    
+    # Create a watermark for verification
+    from hashlib import sha256
+    execution_hash = sha256(f"{command}:{mode}:{username}:{current_time}".encode()).hexdigest()[:12]
     
     return jsonify({
         "output": output,
         "error": error,
         "working_directory": working_dir,
-        "timestamp": "2025-04-29T00:00:00Z"  # Placeholder timestamp
+        "timestamp": current_time,
+        "execution_info": execution_info,
+        "execution_hash": execution_hash,
+        "mode": mode,
+        "command": command,
+        "execution_user": username
     })
 
 def get_linux_command(query):

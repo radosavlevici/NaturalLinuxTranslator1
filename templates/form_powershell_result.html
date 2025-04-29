@@ -23,9 +23,20 @@
                     
                     <div class="d-flex justify-content-between mt-4">
                         <a href="/form-powershell" class="btn btn-secondary">New Translation</a>
-                        <button class="btn btn-info" onclick="copyToClipboard()">
-                            <i class="fas fa-copy"></i> Copy Command
-                        </button>
+                        <div>
+                            <button class="btn btn-info" onclick="copyToClipboard()">
+                                <i class="fas fa-copy"></i> Copy Command
+                            </button>
+                            <button class="btn btn-success" onclick="executeCommand()">
+                                <i class="fas fa-play"></i> Execute Command
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="execution-result" class="mt-4" style="display: none;">
+                        <h5>Execution Result:</h5>
+                        <div class="command-output p-3" id="execution-output"></div>
+                        <div class="alert alert-danger mt-2" id="execution-error" style="display: none;"></div>
                     </div>
                 </div>
             </div>
@@ -84,6 +95,75 @@
             } finally {
                 document.body.removeChild(textarea);
             }
+        });
+    }
+    
+    function executeCommand() {
+        const command = `{{ command }}`;
+        const resultDiv = document.getElementById('execution-result');
+        const outputDiv = document.getElementById('execution-output');
+        const errorDiv = document.getElementById('execution-error');
+        
+        // Show loading state
+        resultDiv.style.display = 'block';
+        outputDiv.innerHTML = 'Executing command...';
+        errorDiv.style.display = 'none';
+        
+        // Send the command to the server for execution
+        fetch('/execute', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'command': command,
+                'mode': 'powershell',
+                'workingDir': '.'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                errorDiv.innerHTML = `<strong>Error:</strong> ${data.error}`;
+                errorDiv.style.display = 'block';
+                outputDiv.innerHTML = '';
+            } else {
+                let resultDisplay = data.output || 'Command executed successfully with no output.';
+                        
+                // Add execution info if available
+                if (data.execution_info && data.execution_info.environment) {
+                    resultDisplay = `--- EXECUTION ENVIRONMENT ---\n${data.execution_info.environment}\n\n--- COMMAND OUTPUT ---\n${resultDisplay}`;
+                }
+                
+                if (data.working_directory) {
+                    resultDisplay += `\n\n--- EXECUTION DETAILS ---\nWorking directory: ${data.working_directory}`;
+                }
+                
+                if (data.timestamp) {
+                    resultDisplay += `\nTimestamp: ${data.timestamp}`;
+                }
+                
+                if (data.execution_hash) {
+                    resultDisplay += `\nVerification hash: ${data.execution_hash}`;
+                }
+                
+                if (data.execution_info && data.execution_info.system_info) {
+                    const sysInfo = data.execution_info.system_info;
+                    resultDisplay += `\n\n--- SYSTEM INFO ---\n${sysInfo.system} ${sysInfo.release} on ${sysInfo.machine}`;
+                }
+                
+                if (data.execution_info && data.execution_info.exit_code !== undefined) {
+                    resultDisplay += `\nExit code: ${data.execution_info.exit_code}`;
+                }
+                
+                outputDiv.innerHTML = resultDisplay;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            errorDiv.innerHTML = `<strong>Error:</strong> Failed to execute command. Please try again.`;
+            errorDiv.style.display = 'block';
+            outputDiv.innerHTML = '';
         });
     }
 </script>
