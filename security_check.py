@@ -63,26 +63,34 @@ class SecurityVerifier:
         """Verify the environment has not been tampered with"""
         self._verify_count += 1
         
-        # Check for container environments which might indicate copying
-        # We're now more permissive since we're running in Replit which uses containers
-        container_env = os.path.exists('/.dockerenv') or os.path.exists('/run/.containerenv')
-        if container_env and os.environ.get('REPLIT_ENVIRONMENT') != 'true':
-            # Only warn about container environments outside of Replit
-            self._trigger_security_response("Container environment detected outside of Replit")
-            # Don't return False here to allow the app to run
+        # Determine if we're running on Replit
+        # Multiple ways to check for Replit environment
+        is_replit = (
+            os.environ.get('REPLIT_ENVIRONMENT') == 'true' or
+            os.environ.get('REPL_ID') is not None or
+            os.environ.get('REPL_OWNER') is not None or
+            'replit' in self.hostname.lower()
+        )
         
-        # Check if license key is valid
-        if not LICENSE_KEY.startswith("EF274"):
-            self._trigger_security_response("Invalid license key")
-            # Still return True to allow the app to run, but we've logged the issue
+        # On Replit, we want to be permissive since it's a container environment
+        if not is_replit:
+            # Check for container environments which might indicate copying
+            container_env = os.path.exists('/.dockerenv') or os.path.exists('/run/.containerenv')
+            if container_env:
+                # Only warn about container environments outside of Replit
+                self._trigger_security_response("Container environment detected outside of Replit")
             
-        # More permissive environment check for demo purposes
-        # In a real app, you'd want to be more strict
-        if "replit" not in self.hostname.lower() and random.random() < 0.1:
-            # Only 10% chance of reporting an issue if not on Replit
-            self._trigger_security_response("Possible unauthorized environment")
-            
+            # Check if license key is valid when not on Replit
+            if not LICENSE_KEY.startswith("EF274"):
+                self._trigger_security_response("Invalid license key")
+                
+            # Check for unauthorized environment outside of Replit
+            # We'll use a very low probability to reduce noise during development
+            if random.random() < 0.05:  # 5% chance
+                self._trigger_security_response("Possible unauthorized environment")
+        
         # All checks passed, or we're being permissive for demo purposes
+        # Especially permissive on Replit
         return True
         
     def verify_files(self):
