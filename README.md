@@ -1,26 +1,24 @@
-# Command Translator
+# Linux Command Reference
 
-An intelligent command translation platform that transforms natural language into precise terminal commands with advanced cross-platform capabilities and user-friendly interaction design.
+A comprehensive reference guide for commonly used Linux commands.
 
 ## Features
 
-- **Natural Language Processing**: Translate everyday language into precise Linux and PowerShell commands
-- **Cross-Platform Support**: Works with both Linux shells and Windows PowerShell
-- **Simple Interface**: Clean, intuitive UI for easy interaction
-- **Command History**: Saves your command history for future reference
-- **User Authentication**: Simple login system to protect your command history
+- **Organized Categories**: Commands grouped by function for easy reference
+- **Simple Interface**: Clean, intuitive UI for easy browsing
+- **Detailed Examples**: Clear examples of how to use each command
+- **Parameter Explanations**: Understand what each parameter does
 
 ## Getting Started
 
 1. Visit the web interface
-2. Type your request in natural language (e.g., "Find all PDF files created in the last week")
-3. Select Linux or PowerShell as your target platform
-4. Get your command instantly!
+2. Browse the categorized commands
+3. Find the command you need with example usage
+4. Copy and paste directly into your terminal
 
 ## Technology Stack
 
 - Flask web framework
-- OpenAI API for natural language processing
 - Bootstrap CSS for styling
 
 ## Credits
