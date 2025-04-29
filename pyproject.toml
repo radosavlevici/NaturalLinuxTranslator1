@@ -10,4 +10,5 @@ readme = "README.md"
 license = {text = "Proprietary"}
 dependencies = [
     "flask>=3.1.0",
+    "gunicorn>=23.0.0",
 ]
