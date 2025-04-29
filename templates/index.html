@@ -1,125 +1,104 @@
 {% extends "layout.html" %}
 
-{% block title %}Command Translator - Home{% endblock %}
+{% block title %}Command Translator - Natural Language to Terminal Commands{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12 text-center mb-4">
-            <h1>Command Translator</h1>
-            <p class="lead">Transform natural language into precise terminal commands</p>
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-md-12 text-center">
+            <h1 class="display-4 mb-4">Command Translator</h1>
+            <p class="lead">Transform natural language into precise terminal commands with advanced cross-platform capabilities.</p>
+            <div class="mt-4">
+                <a href="/form-linux" class="btn btn-primary mx-2">Linux Translator</a>
+                <a href="/form-powershell" class="btn btn-info mx-2">PowerShell Translator</a>
+                <a href="/simple" class="btn btn-secondary mx-2">Simple Interface</a>
+            </div>
         </div>
     </div>
-
-    <div class="row mb-5">
-        <div class="col-md-8 offset-md-2">
+    
+    <div class="row">
+        <div class="col-md-4">
             <div class="card bg-dark">
                 <div class="card-body">
-                    <h3 class="card-title">What would you like to do?</h3>
-                    <div class="row mt-4">
-                        <div class="col-md-6 mb-3">
-                            <div class="card h-100 bg-dark border-primary">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title text-primary">Linux Commands</h4>
-                                    <p class="card-text">Translate natural language to Linux terminal commands</p>
-                                    <a href="/form-linux" class="btn btn-primary">Linux Translator</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="card h-100 bg-dark border-info">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title text-info">PowerShell Commands</h4>
-                                    <p class="card-text">Translate natural language to PowerShell commands</p>
-                                    <a href="/form-powershell" class="btn btn-info">PowerShell Translator</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6 mb-3">
-                            <div class="card h-100 bg-dark border-secondary">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">Simple Mode</h4>
-                                    <p class="card-text">Use the simplified interface for quick translations</p>
-                                    <a href="/simple" class="btn btn-secondary">Simple Mode</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="card h-100 bg-dark border-secondary">
-                                <div class="card-body text-center">
-                                    <h4 class="card-title">Interface Directory</h4>
-                                    <p class="card-text">View all available interfaces and options</p>
-                                    <a href="/directory" class="btn btn-secondary">View Directory</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <h3 class="card-title"><i class="fas fa-terminal"></i> Natural Language Processing</h3>
+                    <p class="card-text">Describe what you want to do in plain English, and get the precise command you need.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="fas fa-exchange-alt"></i> Cross-Platform Support</h3>
+                    <p class="card-text">Get commands for both Linux and PowerShell environments with the same natural query.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <h3 class="card-title"><i class="fas fa-shield-alt"></i> Secure Execution</h3>
+                    <p class="card-text">Execute commands with comprehensive safety validation and detailed explanations.</p>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <h2 class="text-center mb-4">Features</h2>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 bg-dark">
-                <div class="card-body">
-                    <h4 class="card-title">Natural Language Processing</h4>
-                    <p class="card-text">Simply describe what you want to do in plain English, and let our AI generate the exact command you need.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 bg-dark">
-                <div class="card-body">
-                    <h4 class="card-title">Cross-Platform Support</h4>
-                    <p class="card-text">Generate commands for both Linux and Windows PowerShell environments from the same intuitive interface.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 bg-dark">
-                <div class="card-body">
-                    <h4 class="card-title">Command Execution</h4>
-                    <p class="card-text">Execute commands directly within the interface with built-in safety validation to prevent dangerous operations.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 bg-dark">
-                <div class="card-body">
-                    <h4 class="card-title">History Tracking</h4>
-                    <p class="card-text">Save your command history for future reference and easily reuse common commands.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 bg-dark">
-                <div class="card-body">
-                    <h4 class="card-title">Custom Command Libraries</h4>
-                    <p class="card-text">Create and share custom command templates for specific workflows and environments.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 bg-dark">
-                <div class="card-body">
-                    <h4 class="card-title">Enterprise-Ready</h4>
-                    <p class="card-text">Robust security features, audit logging, and integration options for organizational deployment.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
     <div class="row mt-5">
-        <div class="col-md-12 text-center">
-            <div class="alert alert-secondary" role="alert">
-                <h4>Ready to get started?</h4>
-                <p>Choose one of the interfaces above or <a href="/register" class="alert-link">create an account</a> to save your command history.</p>
+        <div class="col-md-12">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h2>How It Works</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="p-3">
+                                <i class="fas fa-keyboard fa-3x mb-3"></i>
+                                <h4>1. Enter Your Request</h4>
+                                <p>Type what you want to do in plain language</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3">
+                                <i class="fas fa-cogs fa-3x mb-3"></i>
+                                <h4>2. Advanced Processing</h4>
+                                <p>Our AI translates your request to a precise command</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3">
+                                <i class="fas fa-check-circle fa-3x mb-3"></i>
+                                <h4>3. Verified Result</h4>
+                                <p>Get a command you can use right away</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h3>Example: Linux Command</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Natural Language:</strong> "Find all PDF files modified in the last 7 days"</p>
+                    <div class="command-output">find . -name "*.pdf" -type f -mtime -7</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h3>Example: PowerShell Command</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Natural Language:</strong> "Find all PDF files modified in the last 7 days"</p>
+                    <div class="command-output">Get-ChildItem -Path . -Filter *.pdf -Recurse | Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-7) }</div>
+                </div>
             </div>
         </div>
     </div>
