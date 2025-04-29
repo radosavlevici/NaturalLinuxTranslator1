@@ -1,18 +1,21 @@
-# GNU GPL v3 - FREE OPEN SOURCE SOFTWARE
+# GNU GPL v3 - 100% FREE OPEN SOURCE SOFTWARE - ABSOLUTELY NO MONETIZATION ALLOWED
 
 Copyright (c) 2025 Ervin Remus Radosavlevici
 
-## IMPORTANT NOTICE - FREE OPEN SOURCE SOFTWARE DECLARATION
+## IMPORTANT NOTICE - FREE OPEN SOURCE SOFTWARE DECLARATION - ZERO TOLERANCE FOR MONETIZATION
 
-This software is 100% FREE OPEN SOURCE SOFTWARE and should NEVER be sold or monetized by anyone.
+This software is 100% FREE OPEN SOURCE SOFTWARE and should NEVER be sold or monetized by anyone under any circumstances.
 
-### STRICT PROHIBITION ON MONETIZATION:
-1. NO ONE may sell this software or charge money for it
-2. NO ONE may include this software in any paid product or service
-3. NO ONE may make money from this software in any way
-4. NO ONE may create derivative works with the intent to sell them
+### ⚠️ ABSOLUTE PROHIBITION ON MONETIZATION ⚠️
+1. NO ONE may sell this software or charge money for it - EVER - UNDER ANY CIRCUMSTANCES
+2. NO ONE may include this software in ANY paid product or service - NO EXCEPTIONS
+3. NO ONE may make money from this software in ANY WAY WHATSOEVER
+4. NO ONE may create derivative works with the intent to sell them - ALL DERIVATIVES MUST BE FREE
 5. NO ONE may charge for installation, support, or training related to this software
 6. NO ONE may require payment for access to any features or functionality
+7. NO ONE may monetize this software through advertising, sponsorships, or donations
+8. ANY ATTEMPT to profit from this software in any form is STRICTLY PROHIBITED and VIOLATES THIS LICENSE
+9. NO EXCEPTIONS will be made to these rules under any circumstances
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

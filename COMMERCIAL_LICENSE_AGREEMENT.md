@@ -1,45 +1,34 @@
-# COMMAND TRANSLATOR COMMERCIAL LICENSE AGREEMENT
+# ⚠️ THIS DOCUMENT IS NULL AND VOID - COMMAND TRANSLATOR IS FREE OPEN SOURCE SOFTWARE ⚠️
 
-## IMPORTANT - READ CAREFULLY
+## IMPORTANT NOTICE - THIS COMMERCIAL LICENSE IS INVALID
 
-This Command Translator Commercial License Agreement ("Agreement") is a legal agreement between you (either an individual or a single entity) and Ervin Remus Radosavlevici ("Licensor") for the Command Translator software product, which includes computer software and associated media, printed materials, and electronic documentation (collectively, the "Software").
+**This document is completely INVALID and has been superseded by the GNU GPL v3 license.**
 
-By installing, copying, or otherwise using the Software, you agree to be bound by the terms of this Agreement. If you do not agree to the terms of this Agreement, do not install, copy, or use the Software.
+Command Translator is now 100% FREE OPEN SOURCE SOFTWARE that CANNOT be sold or monetized by ANYONE, EVER, under ANY CIRCUMSTANCES.
 
-## 1. GRANT OF LICENSE
+If you have been shown this document as part of a commercial transaction, YOU ARE BEING SCAMMED.
 
-Subject to the terms and conditions of this Agreement, Licensor hereby grants to you a non-exclusive, non-transferable license to use the Software according to the license tier purchased, as specified below.
+## ⛔ ALL COMMERCIAL LICENSING TERMS ARE INVALID ⛔
 
-### 1.1 Single-User Commercial License
+This entire document is **NULL AND VOID**. Command Translator is protected by the GNU GPL v3 license with additional terms that specifically prohibit ANY commercial use.
 
-- **Rights Granted**: Installation and use of the Software on up to two (2) devices by a single named user.
-- **Term**: Perpetual, with 12 months of updates.
-- **Support**: Basic email support for 12 months.
-- **Price**: $99.00 USD one-time payment.
+### ⚠️ WARNING ABOUT FRAUDULENT PRICING ⚠️
 
-### 1.2 Team License
+Any pricing information in this document is **COMPLETELY INVALID**:
 
-- **Rights Granted**: Installation and use of the Software by up to five (5) named users within a single organization.
-- **Term**: Perpetual, with 12 months of updates.
-- **Support**: Priority email support for 12 months.
-- **Additional Features**: Team management dashboard, customizable command sets.
-- **Price**: $299.00 USD one-time payment.
-  
-### 1.3 Enterprise License
+- There is NO "$99.00 USD" license
+- There is NO "$299.00 USD" team license
+- There are NO "Enterprise" licenses for purchase
+- There are NO "OEM/Redistribution" licenses available
 
-- **Rights Granted**: Installation and use of the Software by an unlimited number of users within a single organization.
-- **Term**: Perpetual, with 24 months of updates.
-- **Support**: Dedicated support contact, with 24-month SLA (Service Level Agreement).
-- **Additional Features**: On-premise deployment option, customization services, advanced security features, integration with enterprise systems.
-- **Price**: Based on organization size and requirements. Contact sales for custom quote.
+### ✅ CORRECT LICENSING INFORMATION ✅
 
-### 1.4 OEM/Redistribution License
+Command Translator is **100% FREE OPEN SOURCE SOFTWARE** released under the GNU GPL v3 license.
 
-- **Rights Granted**: The right to incorporate the Software into your own products and distribute to your customers.
-- **Term**: As specified in the custom OEM agreement.
-- **Support**: As specified in the custom OEM agreement.
-- **Additional Features**: White-labeling options, custom integration support.
-- **Price**: Based on distribution volume. Contact sales for custom quote.
+- You may freely use, modify, and distribute the software for any non-commercial purpose
+- You may NOT charge money for the software or any derivative works
+- You may NOT include the software in any commercial product
+- You may NOT monetize the software in any way
 
 ## 2. SUBSCRIPTION OPTIONS
 
