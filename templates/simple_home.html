@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Command Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #444;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            border: 1px solid #666;
+        }
+        .tab.active {
+            background-color: #555;
+            font-weight: bold;
+        }
+        .tab:first-child {
+            border-radius: 5px 0 0 5px;
+        }
+        .tab:last-child {
+            border-radius: 0 5px 5px 0;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            background-color: #222;
+            color: #fff;
+            border: 1px solid #666;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .result {
+            background-color: #222;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .result h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        .command {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .warning {
+            color: #FFC107;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(255, 193, 7, 0.1);
+            border-left: 3px solid #FFC107;
+        }
+        .error {
+            color: #F44336;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(244, 67, 54, 0.1);
+            border-left: 3px solid #F44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Command Translator</h1>
+        
+        <form action="/simple/translate" method="post">
+            <div class="tabs">
+                <div class="tab {% if mode != 'powershell' %}active{% endif %}" onclick="setMode('linux')">Linux</div>
+                <div class="tab {% if mode == 'powershell' %}active{% endif %}" onclick="setMode('powershell')">PowerShell</div>
+            </div>
+            
+            <input type="hidden" id="mode" name="mode" value="{{ mode or 'linux' }}">
+            
+            <label for="query">What do you want to do?</label>
+            <textarea id="query" name="query" placeholder="Example: list all files in the current directory sorted by size">{{ query or '' }}</textarea>
+            
+            <button type="submit">Translate</button>
+        </form>
+        
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if command %}
+        <div class="result">
+            <h3>Command:</h3>
+            <div class="command">{{ command }}</div>
+            
+            {% if explanation %}
+            <div class="explanation">
+                <h3>Explanation:</h3>
+                <p>{{ explanation }}</p>
+            </div>
+            {% endif %}
+            
+            {% if safety_warning %}
+            <div class="warning">
+                <h3>Warning:</h3>
+                <p>{{ safety_warning }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+    function setMode(mode) {
+        document.getElementById('mode').value = mode;
+        
+        // Update active tab
+        var tabs = document.getElementsByClassName('tab');
+        for (var i = 0; i < tabs.length; i++) {
+            if (i === 0 && mode === 'linux') {
+                tabs[i].className = "tab active";
+            } else if (i === 1 && mode === 'powershell') {
+                tabs[i].className = "tab active";
+            } else {
+                tabs[i].className = "tab";
+            }
+        }
+    }
+    </script>
+</body>
+</html>

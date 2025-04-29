@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}Linux Command Translator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 text-center mb-4">
+            <h1>Linux Command Translator</h1>
+            <p class="lead">Transform natural language into Linux shell commands</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h2><i class="fas fa-terminal"></i> Enter Your Request</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/form-translate-linux">
+                        <div class="mb-3">
+                            <label for="query" class="form-label">What would you like to do?</label>
+                            <textarea class="form-control bg-dark text-light" id="query" name="query" rows="4" placeholder="Describe what you want to do in plain English. For example: 'Find all PDF files created in the last week'" required></textarea>
+                        </div>
+                        {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                        {% endif %}
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Translate to Linux Command</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card bg-dark mt-4">
+                <div class="card-header">
+                    <h3>Examples</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <p><strong>Find files by name:</strong></p>
+                                <p class="text-muted">"Find all .jpg images in the current directory"</p>
+                                <div class="command-output">find . -name "*.jpg"</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <p><strong>Process text:</strong></p>
+                                <p class="text-muted">"Count the number of lines in a file"</p>
+                                <div class="command-output">wc -l filename.txt</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="/simple" class="btn btn-secondary">Back to Simple Interface</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
