@@ -1,9 +1,15 @@
-import hashlib
-import re
-import subprocess
 import os
+import re
+import json
+import hashlib
 import logging
 from datetime import datetime
+import sqlite3
+
+# Setup logging
+logging.basicConfig(level=logging.INFO, 
+                   format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 def validate_linux_command(command):
     """
@@ -19,80 +25,125 @@ def validate_linux_command(command):
     Copyright (c) 2024 Ervin Remus Radosavlevici
     This function includes proprietary DNA-based security features.
     """
-    # List of dangerous commands
-    high_risk_patterns = [
-        r"rm\s+-rf\s+[/\*]",          # rm -rf / or rm -rf *
-        r"rm\s+-[a-z]*f[a-z]*\s+/",   # Any rm with f flag targeting root
-        r":(){ :\|:& };:",            # Fork bomb
-        r"dd\s+if=/dev/",             # dd operations on devices
-        r"mkfs",                      # Format filesystem
-        r"mv\s+[^\s]+\s+/dev/null",   # Move to /dev/null
-        r">\s+/dev/sd[a-z]",          # Redirect to disk
-        r"wget\s+.+\s+\|\s+bash",     # Download and pipe to bash
-        r"curl\s+.+\s+\|\s+sh",       # Curl and pipe to shell
-        r"chmod\s+-[a-z]*R[a-z]*\s+777", # Recursive chmod with full permissions
-        r"shred\s+(-[a-z]*\s+)*[\/]", # Shred targeting important locations
-        r"truncate\s+-s\s+0\s+\/",    # Truncate files at root
-        r"shutdown|halt|poweroff|reboot", # System power commands
-        r"fdisk|sfdisk|cfdisk",       # Disk partitioning
-        r"\s+>\s+\/etc\/.+",          # Redirect output to /etc files
-        r"chown\s+-[a-z]*R[a-z]*\s+\w+\s+\/", # Recursive ownership change of root
+    if not command:
+        return False, "Empty command", 0
+    
+    # Normalize the command
+    command = command.strip()
+    
+    # Extract the base command (before any options)
+    cmd_parts = command.split()
+    if not cmd_parts:
+        return False, "Empty command after splitting", 0
+    
+    main_cmd = cmd_parts[0]
+    
+    # High-risk commands (system altering)
+    high_risk_cmds = ['rm', 'dd', 'mkfs', 'fdisk', 'shutdown', 'reboot', 
+                     'halt', 'poweroff', 'init', 'format', 'shred', 'sudo']
+    
+    # Medium-risk commands (significant data changes)
+    medium_risk_cmds = ['mv', 'cp', 'rsync', 'chown', 'chmod', 'truncate', 
+                        'sed', 'awk', 'perl', 'python', 'ruby', 'bash']
+    
+    # Low-risk commands (minor changes)
+    low_risk_cmds = ['touch', 'mkdir', 'rmdir', 'ln', 'echo', 'cat']
+    
+    # Safe commands (read-only or info)
+    safe_cmds = ['ls', 'pwd', 'cd', 'dir', 'find', 'grep', 'less', 'more',
+                'head', 'tail', 'wc', 'date', 'cal', 'uptime', 'w',
+                'who', 'whoami', 'id', 'df', 'du', 'ps', 'top', 'history']
+    
+    # Check for dangerous patterns
+    danger_patterns = [
+        r'rm\s+(-r|-f|--recursive|--force)', # Recursive or force remove
+        r'>\s*/dev/', # Redirecting to device files
+        r'>\s*/etc/', # Redirecting to system config
+        r'>\s*/var/', # Redirecting to var
+        r'>\s*/boot/', # Redirecting to boot
+        r';.*(rm|dd|mkfs|sudo)', # Command chaining with dangerous commands
+        r'\|\s*(rm|dd|mkfs|sudo)', # Piping to dangerous commands
+        r'`.*\brm\b.*`', # Command substitution with rm
+        r'\$\(.*\brm\b.*\)', # Command substitution with rm
     ]
     
-    medium_risk_patterns = [
-        r"rm\s+-[a-z]*r[a-z]*\s+",         # Recursive remove
-        r"find\s+.+\s+-delete",             # Find and delete
-        r"chmod\s+777",                     # Chmod with full permissions
-        r"chown\s+-R",                      # Recursive chown
-        r"sudo\s+apt\s+(dist-)?upgrade",    # System upgrade 
-        r"tar\s+-[a-z]*[xc][a-z]*\s+",      # Extract/create archives (potential overwrite)
-        r"\s+>\s+\/etc\/\w+",               # Write to /etc 
-        r"(^|;|\s+)ping\s+-f",              # Flood ping
-        r"dd\s+of=.+",                      # DD with output file
-    ]
+    # Risk level assessment
+    if main_cmd in high_risk_cmds or any(re.search(pattern, command) for pattern in danger_patterns):
+        risk_level = 3
+        reason = f"Command '{main_cmd}' is high risk or matches dangerous pattern"
+        is_safe = False
+    elif main_cmd in medium_risk_cmds:
+        risk_level = 2
+        reason = f"Command '{main_cmd}' has potential for significant data changes"
+        is_safe = True  # Still considered safe for execution with caution
+    elif main_cmd in low_risk_cmds:
+        risk_level = 1
+        reason = f"Command '{main_cmd}' makes minor modifications"
+        is_safe = True
+    elif main_cmd in safe_cmds:
+        risk_level = 0
+        reason = f"Command '{main_cmd}' is safe"
+        is_safe = True
+    else:
+        # Unknown command, default to medium risk
+        risk_level = 2
+        reason = f"Command '{main_cmd}' is not in the known command lists"
+        is_safe = False
     
-    low_risk_patterns = [
-        r"sudo\s+apt(-get)?\s+(install|remove)",  # Package management
-        r"npm\s+(install|uninstall)\s+(-g\s+)?",  # NPM packages
-        r"pip(3)?\s+(install|uninstall)",         # PIP packages
-        r"ssh\s+\w+@.+",                        # SSH connections
-        r"curl\s+(-[a-zA-Z]+\s+)*https?:\/\/",   # Curl commands
-        r"wget\s+(-[a-zA-Z]+\s+)*https?:\/\/",   # Wget commands
-    ]
+    # Additional security checks
+    if 'sudo' in cmd_parts:
+        risk_level = 3
+        reason = "Command uses sudo for privilege escalation"
+        is_safe = False
     
-    # Check for high risk patterns
-    for pattern in high_risk_patterns:
-        if re.search(pattern, command, re.IGNORECASE):
-            return False, f"Command is high risk: {pattern}", 3
+    # Check for specific dangerous arguments
+    dangerous_args = ['/dev/sd', 'passwd', 'shadow', '--no-preserve-root', 
+                      '/boot', 'grub', 'fstab', 'resolv.conf', 'sysctl']
     
-    # Check for medium risk patterns - these are warnings but not blocked
-    for pattern in medium_risk_patterns:
-        if re.search(pattern, command, re.IGNORECASE):
-            return True, f"Command carries medium risk: {pattern}", 2
+    for arg in dangerous_args:
+        if arg in command:
+            risk_level = max(risk_level, 2)  # Increase risk level if not already higher
+            reason += f"; Contains potentially dangerous argument '{arg}'"
+            is_safe = False
+            break
     
-    # Check for low risk patterns - these are minor warnings
-    for pattern in low_risk_patterns:
-        if re.search(pattern, command, re.IGNORECASE):
-            return True, f"Command carries low risk: {pattern}", 1
+    # Create security fingerprint for the command
+    cmd_hash = generate_command_hash(command)
+    security_signature = f"{cmd_hash}:{risk_level}:{datetime.utcnow().isoformat()}"
     
-    return True, "Command appears safe", 0
+    # Log the security validation
+    logger.info(f"Command security validation: '{main_cmd}', Risk: {risk_level}, Safe: {is_safe}, Reason: {reason}")
+    
+    return is_safe, reason, risk_level
 
 def generate_command_hash(command):
     """
     Generate a hash for a command
     """
-    return hashlib.sha256(command.encode()).hexdigest()
+    salt = os.environ.get('COMMAND_SALT', 'default_salt_value')
+    
+    # Create a salted hash
+    hash_input = salt + command
+    hash_obj = hashlib.sha256(hash_input.encode())
+    return hash_obj.hexdigest()
 
 def sanitize_input(text):
     """
     Sanitize user input
     """
-    # Remove potentially dangerous shell characters
-    dangerous_chars = [';', '&', '|', '>', '<', '`', '$', '\\', '!', '\n']
-    for char in dangerous_chars:
-        text = text.replace(char, '')
+    if not text:
+        return ""
     
-    return text.strip()
+    # Remove potentially dangerous characters
+    sanitized = re.sub(r'[;<>&|]', ' ', text)
+    
+    # Remove potential command injection characters
+    sanitized = re.sub(r'[`$()]', '', sanitized)
+    
+    # Limit length
+    sanitized = sanitized[:1000]
+    
+    return sanitized
 
 def log_command_request(user_query, generated_command, user_ip=None, command_type="linux"):
     """
@@ -100,15 +151,118 @@ def log_command_request(user_query, generated_command, user_ip=None, command_typ
     Enhanced to support both Linux and PowerShell commands
     Copyright (c) 2024 Ervin Remus Radosavlevici
     """
-    # Create log entry with timestamp and command type
+    # Create a log entry
     log_entry = {
-        "user_query": user_query,
-        "generated_command": generated_command,
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.utcnow().isoformat(),
+        "query": user_query,
+        "command": generated_command,
         "ip_address": user_ip,
-        "command_type": command_type.upper(),
+        "command_type": command_type,
         "command_hash": generate_command_hash(generated_command)
     }
     
-    logging.info(f"Command request: {log_entry}")
-    # In a production system, this would write to a secure database with encryption
+    # Log to console
+    logger.info(f"Command request: {log_entry['query']} -> {log_entry['command']} ({command_type})")
+    
+    try:
+        # Ensure log directory exists
+        log_dir = os.path.join(os.getcwd(), 'logs')
+        os.makedirs(log_dir, exist_ok=True)
+        
+        # Log to JSON file
+        log_file = os.path.join(log_dir, f'command_log_{datetime.utcnow().strftime("%Y%m%d")}.json')
+        
+        # Append to existing log or create new log
+        try:
+            with open(log_file, 'r+') as f:
+                try:
+                    logs = json.load(f)
+                    logs.append(log_entry)
+                    f.seek(0)
+                    json.dump(logs, f, indent=2)
+                except json.JSONDecodeError:
+                    # File exists but isn't valid JSON, overwrite it
+                    f.seek(0)
+                    json.dump([log_entry], f, indent=2)
+        except FileNotFoundError:
+            # File doesn't exist, create it
+            with open(log_file, 'w') as f:
+                json.dump([log_entry], f, indent=2)
+                
+        # Also log to SQLite database for easier querying
+        try:
+            conn = sqlite3.connect(os.path.join(log_dir, 'command_log.db'))
+            c = conn.cursor()
+            
+            # Create table if it doesn't exist
+            c.execute('''
+                CREATE TABLE IF NOT EXISTS command_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    timestamp TEXT,
+                    query TEXT,
+                    command TEXT,
+                    ip_address TEXT,
+                    command_type TEXT,
+                    command_hash TEXT
+                )
+            ''')
+            
+            # Insert the log entry
+            c.execute('''
+                INSERT INTO command_logs (timestamp, query, command, ip_address, command_type, command_hash)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (
+                log_entry["timestamp"],
+                log_entry["query"],
+                log_entry["command"],
+                log_entry["ip_address"],
+                log_entry["command_type"],
+                log_entry["command_hash"]
+            ))
+            
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            logger.error(f"Error logging to SQLite: {e}")
+    except Exception as e:
+        logger.error(f"Error logging command: {e}")
+
+def create_dna_signature(content):
+    """
+    Create a DNA-like signature for content tracking
+    Copyright (c) 2024 Ervin Remus Radosavlevici
+    """
+    # Base validation
+    if not content:
+        return "INVALID"
+    
+    # Create base hash
+    base_hash = hashlib.sha256(content.encode()).hexdigest()
+    
+    # DNA components (A-T, G-C pairs)
+    components = {
+        '0': 'A', '1': 'T',
+        '2': 'G', '3': 'C',
+        '4': 'A', '5': 'T',
+        '6': 'G', '7': 'C',
+        '8': 'G', '9': 'C',
+        'a': 'A', 'b': 'T',
+        'c': 'G', 'd': 'C',
+        'e': 'A', 'f': 'T'
+    }
+    
+    # Generate DNA sequence from hash
+    dna_sequence = ''
+    for char in base_hash[:24]:  # Use first 24 chars for reasonable length
+        dna_sequence += components.get(char, 'N')
+    
+    # Add structural elements (like DNA's phosphate backbone)
+    structured_dna = ''
+    for i, nucleotide in enumerate(dna_sequence):
+        if i % 4 == 0:
+            structured_dna += 'P-'
+        structured_dna += nucleotide
+        if i % 4 == 3 and i < len(dna_sequence) - 1:
+            structured_dna += '-P-'
+    
+    return structured_dna
