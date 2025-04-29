@@ -126,16 +126,19 @@ For deeper Linux integration:
    WantedBy=multi-user.target
    ```
 
-## 📜 License - 100% FREE OPEN SOURCE SOFTWARE - NOBODY CAN SELL THIS
+## 📜 License - 100% FREE OPEN SOURCE SOFTWARE - NO MONETIZATION ALLOWED WHATSOEVER
 
-This project is COMPLETELY FREE and OPEN SOURCE under the GNU GPL v3 License.
+This project is COMPLETELY FREE and OPEN SOURCE under the GNU GPL v3 License with strict additional terms.
 
-### STRICT RULES:
-1. ⛔ NOBODY can sell this software - EVER
-2. ⛔ NOBODY can make money from this software in any way
-3. ⛔ NOBODY can include this in any commercial/paid product
+### ⚠️ ZERO TOLERANCE FOR MAKING MONEY FROM THIS SOFTWARE ⚠️
+1. ⛔ NOBODY can sell this software - EVER - UNDER ANY CIRCUMSTANCES
+2. ⛔ NOBODY can make money from this software in ANY WAY WHATSOEVER
+3. ⛔ NOBODY can include this in ANY commercial/paid product or service
 4. ⛔ NOBODY can charge for installation, support, or training for this software
-5. ⛔ NOBODY can require payment for any features or functionality
+5. ⛔ NOBODY can monetize through donations, advertising, or sponsorships
+6. ⛔ NOBODY can require payment for any features or functionality
+7. ⛔ ANY ATTEMPT to profit from this software in any form is STRICTLY PROHIBITED
+8. ⛔ NO EXCEPTIONS will be made to these rules under any circumstances
 
 ### Open Source Freedom:
 1. ✅ You CAN use this software for any personal or organizational purpose
