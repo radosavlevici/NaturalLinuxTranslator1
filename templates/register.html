@@ -1,0 +1,146 @@
+{% extends "layout.html" %}
+
+{% block title %}Register - Command Translator{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h2>Create an Account</h2>
+                </div>
+                <div class="card-body">
+                    <form action="/register" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control bg-dark text-light" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control bg-dark text-light" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control bg-dark text-light" id="password" name="password" required>
+                            <div class="form-text">Password must be at least 8 characters long.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control bg-dark text-light" id="confirm_password" name="confirm_password" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                            <label class="form-check-label" for="terms">I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms of Service</a> and <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a></label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p>Already have an account? <a href="/login">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms of Service Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Terms of Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4>1. Acceptance of Terms</h4>
+                <p>By registering for Command Translator, you agree to be bound by these Terms of Service.</p>
+                
+                <h4>2. Use of the Service</h4>
+                <p>You agree to use the service only for lawful purposes and in accordance with these Terms of Service.</p>
+                
+                <h4>3. User Accounts</h4>
+                <p>You are responsible for safeguarding the password that you use to access the service and for any activities or actions under your password.</p>
+                
+                <h4>4. Command Execution</h4>
+                <p>While Command Translator includes safety validations, we are not responsible for any damage caused by commands executed using our service.</p>
+                
+                <h4>5. Intellectual Property</h4>
+                <p>Command Translator and its original content, features, and functionality are owned by Ervin Remus Radosavlevici and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.</p>
+                
+                <h4>6. Termination</h4>
+                <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
+                
+                <h4>7. Limitation of Liability</h4>
+                <p>In no event shall Command Translator, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages.</p>
+                
+                <h4>8. Changes</h4>
+                <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Policy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title" id="privacyModalLabel">Privacy Policy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h4>1. Information We Collect</h4>
+                <p>We collect information you provide directly to us when you register for an account, create or modify your profile, or use the service.</p>
+                
+                <h4>2. How We Use Information</h4>
+                <p>We use the information we collect to provide, maintain, and improve our services, including to process transactions, send you related information, and provide customer support.</p>
+                
+                <h4>3. Command History</h4>
+                <p>We store your command translation history to improve your experience and enhance our service. This data is associated with your account and can be viewed in your user profile.</p>
+                
+                <h4>4. Information Sharing</h4>
+                <p>We do not share your personal information with third parties except as described in this privacy policy, such as to comply with laws or to protect our rights.</p>
+                
+                <h4>5. Security</h4>
+                <p>We take reasonable measures to help protect information about you from loss, theft, misuse, unauthorized access, disclosure, alteration, and destruction.</p>
+                
+                <h4>6. Your Choices</h4>
+                <p>You may update, correct, or delete your account information at any time by accessing your account settings.</p>
+                
+                <h4>7. Changes to This Policy</h4>
+                <p>We may change this privacy policy from time to time. If we make changes, we will notify you by revising the date at the top of the policy.</p>
+                
+                <h4>8. Contact Us</h4>
+                <p>If you have any questions about this privacy policy, please contact us at ervin210@icloud.com.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+        
+        form.addEventListener('submit', function (event) {
+            if (password.value.length < 8) {
+                event.preventDefault();
+                alert('Password must be at least 8 characters long.');
+            } else if (password.value !== confirmPassword.value) {
+                event.preventDefault();
+                alert('Passwords do not match.');
+            }
+        });
+    });
+</script>
+{% endblock %}
