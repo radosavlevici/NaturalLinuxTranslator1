@@ -3,6 +3,7 @@ import re
 import subprocess
 import os
 import logging
+from datetime import datetime
 
 def validate_linux_command(command):
     """
@@ -93,16 +94,21 @@ def sanitize_input(text):
     
     return text.strip()
 
-def log_command_request(user_query, generated_command, user_ip=None):
+def log_command_request(user_query, generated_command, user_ip=None, command_type="linux"):
     """
     Log command requests for security and auditing
+    Enhanced to support both Linux and PowerShell commands
+    Copyright (c) 2024 Ervin Remus Radosavlevici
     """
+    # Create log entry with timestamp and command type
     log_entry = {
         "user_query": user_query,
         "generated_command": generated_command,
-        "timestamp": None,  # Would be filled in actual implementation
-        "ip_address": user_ip
+        "timestamp": datetime.now().isoformat(),
+        "ip_address": user_ip,
+        "command_type": command_type.upper(),
+        "command_hash": generate_command_hash(generated_command)
     }
     
     logging.info(f"Command request: {log_entry}")
-    # In a production system, this would likely write to a database
+    # In a production system, this would write to a secure database with encryption
