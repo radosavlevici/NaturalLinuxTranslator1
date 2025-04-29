@@ -283,6 +283,14 @@ We tailor our marketing support to align with your specific goals and audience.
 
 ---
 
+## Contact Information
+
+**Ervin Remus Radosavlevici**
+Email: ervin210@icloud.com
+Phone: +447759313990
+
+---
+
 © 2024 Ervin Remus Radosavlevici. All rights reserved.
 This document contains proprietary business strategy information.
 Unauthorized reproduction or distribution is prohibited.
