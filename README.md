@@ -126,9 +126,11 @@ For deeper Linux integration:
    WantedBy=multi-user.target
    ```
 
-## 📜 License
+## 📜 License - 100% FREE SOFTWARE
 
-This project is licensed under [MIT License](LICENSE.md) for personal and open-source use. For commercial applications, please see our [Business License](BUSINESS_LICENSE.md) options.
+This project is COMPLETELY FREE and OPEN SOURCE under the MIT License. 
+
+⚠️ IMPORTANT: This software is FREE and should NEVER be sold. If anyone tries to charge you for this software, they are SCAMMERS. ⚠️
 
 ## 🧠 How It Works
 
@@ -144,19 +146,20 @@ Commands are validated for safety before execution to prevent potentially danger
 
 Created by Ervin Remus Radosavlevici - Contact: ervin210@icloud.com | +447759313990
 
-## 📄 License Options
+## 📄 FREE SOFTWARE DECLARATION
 
-### MIT License (Recommended)
+This software is 100% FREE. It is licensed under the MIT License, meaning:
 
-The MIT License is a permissive license that allows for reuse in both commercial and non-commercial projects with minimal restrictions, requiring only that the original copyright notice and license be included in any substantial copies of the software.
+- ✅ FREE to use for both personal and commercial purposes
+- ✅ FREE to modify and adapt to your needs
+- ✅ FREE to distribute to others
+- ✅ NO PAYMENT required under any circumstances
 
-### Apache License 2.0
+⚠️ SCAM ALERT: This software should NEVER be sold. If anyone is charging money for this software, they are SCAMMERS. Please report any such activity to the author. ⚠️
 
-The Apache License 2.0 is another permissive license that also provides an express grant of patent rights from contributors to users.
+### Why We Made This Free
 
-### GNU General Public License (GPL)
-
-The GPL is a copyleft license that requires any modified versions of the software to also be licensed under the GPL, ensuring that derivatives remain open source.
+This software was created to help everyone easily translate natural language to terminal commands. We believe in open access to tools that make technology more accessible. By making this completely free, we ensure it remains available to all users regardless of their financial situation.
 
 ## 🙏 Acknowledgments
 
