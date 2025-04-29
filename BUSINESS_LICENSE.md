@@ -193,10 +193,10 @@ Consider offering reseller or affiliate programs:
 
 For business licensing inquiries, please contact:
 
-**Ervin Remus Radosavlevici**  
-Business Development Manager  
-Email: ervin210@icloud.com  
-Phone: +447759313990
+**Business Development Team**  
+Command Translator Sales  
+Email: sales@commandtranslator.com  
+Phone: +1-800-000-0000
 
 ---
 

@@ -1,5 +1,5 @@
 // Linux Command Translator
-// Copyright (c) 2024 Ervin Remus Radosavlevici
+// Copyright (c) 2024 Command Translator
 // All rights reserved
 
 document.addEventListener('DOMContentLoaded', function() {
