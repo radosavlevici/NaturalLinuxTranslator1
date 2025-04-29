@@ -2,7 +2,7 @@
 
 ## IMPORTANT - READ CAREFULLY
 
-This Command Translator Commercial License Agreement ("Agreement") is a legal agreement between you (either an individual or a single entity) and Ervin Remus Radosavlevici ("Licensor") for the Command Translator software product, which includes computer software and associated media, printed materials, and electronic documentation (collectively, the "Software").
+This Command Translator Commercial License Agreement ("Agreement") is a legal agreement between you (either an individual or a single entity) and Command Translator ("Licensor") for the Command Translator software product, which includes computer software and associated media, printed materials, and electronic documentation (collectively, the "Software").
 
 By installing, copying, or otherwise using the Software, you agree to be bound by the terms of this Agreement. If you do not agree to the terms of this Agreement, do not install, copy, or use the Software.
 
@@ -135,9 +135,9 @@ This Agreement constitutes the entire agreement between you and Licensor regardi
 
 If you have any questions about this Agreement, please contact:
 
-**Ervin Remus Radosavlevici**  
-Email: ervin210@icloud.com  
-Phone: +447759313990
+**Command Translator Legal Team**  
+Email: legal@commandtranslator.com  
+Phone: +1-800-000-0000
 
 By installing, copying, or otherwise using the Software, you acknowledge that you have read this Agreement, understand it, and agree to be bound by its terms and conditions.
 
