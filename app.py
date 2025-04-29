@@ -81,6 +81,37 @@ def form_linux():
     Render the form-based Linux translator without any JavaScript
     """
     return render_template('form_linux.html')
+    
+@app.route('/simple')
+def simple():
+    """
+    Render the simple home page with both Linux and PowerShell options
+    """
+    return render_template('simple_home.html')
+    
+@app.route('/simple/translate', methods=['POST'])
+def simple_translate():
+    """
+    Process translation form submission from the simple interface
+    """
+    query = request.form.get('query', '')
+    mode = request.form.get('mode', 'linux')
+    
+    if not query:
+        return render_template('simple_home.html', error="Please enter a query")
+    
+    # Choose prompt based on mode
+    if mode == 'powershell':
+        result = get_powershell_command(query)
+    else:  # Linux by default
+        result = get_linux_command(query)
+    
+    return render_template('simple_home.html', 
+                          query=query,
+                          mode=mode,
+                          command=result.get('command'),
+                          explanation=result.get('explanation'),
+                          safety_warning=result.get('safety_warning'))
 
 @app.route('/form_translate_powershell', methods=['POST'])
 def form_translate_powershell():
