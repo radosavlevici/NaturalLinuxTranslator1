@@ -22,8 +22,8 @@ def validate_linux_command(command):
     - 2: Medium risk - Commands with potential for significant data changes
     - 3: High risk - Dangerous system-altering commands that could damage the system
     
-    Copyright (c) 2024 Ervin Remus Radosavlevici
-    This function includes proprietary DNA-based security features.
+    Copyright (c) 2024
+    This function includes proprietary security features.
     """
     if not command:
         return False, "Empty command", 0
@@ -149,7 +149,7 @@ def log_command_request(user_query, generated_command, user_ip=None, command_typ
     """
     Log command requests for security and auditing
     Enhanced to support both Linux and PowerShell commands
-    Copyright (c) 2024 Ervin Remus Radosavlevici
+    Copyright (c) 2024
     """
     # Create a log entry
     log_entry = {
@@ -229,8 +229,8 @@ def log_command_request(user_query, generated_command, user_ip=None, command_typ
 
 def create_dna_signature(content):
     """
-    Create a DNA-like signature for content tracking
-    Copyright (c) 2024 Ervin Remus Radosavlevici
+    Create a signature for content tracking
+    Copyright (c) 2024
     """
     # Base validation
     if not content:
