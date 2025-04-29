@@ -1,64 +1,176 @@
-{% extends "layout.html" %}
-
-{% block title %}Linux Command Translator{% endblock %}
-
-{% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12 text-center mb-4">
-            <h1>Linux Command Translator</h1>
-            <p class="lead">Describe what you want to do, and I'll generate the Linux command for you</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form-based Linux Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .nav a {
+            display: inline-block;
+            background-color: #3c3c3c;
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: 3px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            background-color: #1a1a1a;
+            color: white;
+            border: 1px solid #444;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+        input[type="submit"] {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+        .result-box {
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 3px;
+        }
+        .command {
+            font-family: monospace;
+            white-space: pre-wrap;
+            background-color: #000;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .breakdown {
+            margin-top: 15px;
+        }
+        .breakdown ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .breakdown li {
+            margin-bottom: 5px;
+            padding-left: 15px;
+            border-left: 3px solid #0066cc;
+        }
+        .simulation {
+            margin-top: 15px;
+            background-color: #000;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .warning {
+            color: #ffcc00;
+            margin-top: 10px;
+            padding: 5px;
+            border-left: 3px solid #ffcc00;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Form-based Linux Translator</h1>
+        
+        <div class="nav">
+            <a href="/form_powershell">PowerShell Mode</a>
+            <a href="/directory">Directory</a>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card bg-dark">
-                <div class="card-body">
-                    <form action="/form-translate-linux" method="post">
-                        <div class="mb-3">
-                            <label for="query" class="form-label">What would you like to do?</label>
-                            <textarea class="form-control bg-dark text-light" id="query" name="query" rows="3" placeholder="Example: List all files in the current directory sorted by size" required></textarea>
-                        </div>
-                        {% if error %}
-                        <div class="alert alert-danger">{{ error }}</div>
-                        {% endif %}
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Generate Linux Command</button>
-                        </div>
-                    </form>
-                </div>
+        
+        <form action="/form_translate_linux" method="post">
+            <label for="query">What do you want to do in Linux?</label>
+            <textarea id="query" name="query" placeholder="Example: list all files sorted by size"></textarea>
+            <input type="submit" value="Translate to Linux Command">
+        </form>
+        
+        {% if command %}
+        <div class="result-box">
+            <h3>Linux Command:</h3>
+            <div class="command">{{ command }}</div>
+            
+            {% if explanation %}
+            <div class="explanation">
+                <h3>Explanation:</h3>
+                <p>{{ explanation }}</p>
             </div>
-        </div>
-    </div>
-
-    <div class="row mt-5">
-        <div class="col-md-8 offset-md-2">
-            <div class="card bg-dark">
-                <div class="card-header">
-                    <h4>Example Queries</h4>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush bg-dark">
-                        <li class="list-group-item bg-dark text-light">Find all text files modified in the last 7 days</li>
-                        <li class="list-group-item bg-dark text-light">Show disk usage for each directory, sorted by size</li>
-                        <li class="list-group-item bg-dark text-light">Count the number of lines in all Python files recursively</li>
-                        <li class="list-group-item bg-dark text-light">Find all processes using more than 100MB of memory</li>
-                        <li class="list-group-item bg-dark text-light">Copy all jpg files from downloads to pictures folder</li>
-                    </ul>
-                </div>
+            {% endif %}
+            
+            {% if breakdown %}
+            <div class="breakdown">
+                <h3>Command Breakdown:</h3>
+                <ul>
+                {% for key, value in breakdown.items() %}
+                    <li><strong>{{ key }}</strong>: {{ value }}</li>
+                {% endfor %}
+                </ul>
             </div>
-        </div>
-    </div>
-
-    <div class="row mt-3">
-        <div class="col-md-8 offset-md-2">
-            <div class="alert alert-info">
-                <h5>About Linux Command Translation</h5>
-                <p>This tool uses advanced AI to convert natural language descriptions into executable Linux commands. It supports a wide range of command-line tasks including file operations, system monitoring, text processing, and more.</p>
-                <p>For security reasons, some high-risk commands may be restricted from execution, but all commands will be translated.</p>
+            {% endif %}
+            
+            {% if simulation %}
+            <div class="simulation">
+                <h3>Simulation:</h3>
+                <pre>{{ simulation }}</pre>
             </div>
+            {% endif %}
+            
+            {% if safety_warning %}
+            <div class="warning">
+                <h3>Warning:</h3>
+                <p>{{ safety_warning }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="footer">
+            &copy; 2024 Ervin Remus Radosavlevici. All Rights Reserved.<br>
+            Featuring proprietary DNA-based security technology
         </div>
     </div>
-</div>
-{% endblock %}
+</body>
+</html>
