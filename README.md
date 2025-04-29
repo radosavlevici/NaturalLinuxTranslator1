@@ -126,11 +126,27 @@ For deeper Linux integration:
    WantedBy=multi-user.target
    ```
 
-## 📜 License - 100% FREE SOFTWARE
+## 📜 License - 100% FREE OPEN SOURCE SOFTWARE - NOBODY CAN SELL THIS
 
-This project is COMPLETELY FREE and OPEN SOURCE under the MIT License. 
+This project is COMPLETELY FREE and OPEN SOURCE under the GNU GPL v3 License.
 
-⚠️ IMPORTANT: This software is FREE and should NEVER be sold. If anyone tries to charge you for this software, they are SCAMMERS. ⚠️
+### STRICT RULES:
+1. ⛔ NOBODY can sell this software - EVER
+2. ⛔ NOBODY can make money from this software in any way
+3. ⛔ NOBODY can include this in any commercial/paid product
+4. ⛔ NOBODY can charge for installation, support, or training for this software
+5. ⛔ NOBODY can require payment for any features or functionality
+
+### Open Source Freedom:
+1. ✅ You CAN use this software for any personal or organizational purpose
+2. ✅ You CAN distribute this software to others (for free only)
+3. ✅ You CAN modify the source code (while maintaining copyright notices)
+4. ✅ You CAN contribute improvements back to the project
+5. ✅ You CAN create and share extensions or plugins (must also be free)
+
+⚠️ IMPORTANT: This software is FREE OPEN SOURCE and should NEVER be sold. If anyone tries to charge you for this software, they are SCAMMERS. ⚠️
+
+See LICENSE.md and FREE_SOFTWARE_NOTICE.md for complete details.
 
 ## 🧠 How It Works
 
