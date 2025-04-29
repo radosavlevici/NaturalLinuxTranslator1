@@ -16,16 +16,18 @@ If anyone has charged you money for this software, YOU HAVE BEEN SCAMMED.
 - This software is FREE for government use
 - This software should NEVER cost money
 
-## STRICT PROHIBITION ON MONETIZATION
+## ⚠️ ABSOLUTE PROHIBITION ON MAKING MONEY ⚠️
 
-The following rules apply to this software and are enforced by the GPL v3 license with additional terms:
+This software has a ZERO TOLERANCE POLICY for any monetization. The following strict rules apply and are enforced by the GPL v3 license with additional terms:
 
-1. ⛔ NOBODY can sell this software - EVER
-2. ⛔ NOBODY can make money from this software in any way
-3. ⛔ NOBODY can include this in any commercial/paid product
+1. ⛔ NOBODY can sell this software - EVER - UNDER ANY CIRCUMSTANCES
+2. ⛔ NOBODY can make money from this software in ANY WAY WHATSOEVER
+3. ⛔ NOBODY can include this in ANY commercial/paid product or service
 4. ⛔ NOBODY can charge for installation, support, or training for this software
-5. ⛔ NOBODY can create paid services based on this software
-6. ⛔ NOBODY can monetize this software through advertising or sponsorships
+5. ⛔ NOBODY can create paid services based on or using this software
+6. ⛔ NOBODY can monetize this software through advertising, sponsorships, or donations
+7. ⛔ ANY ATTEMPT to profit from this software in any form is STRICTLY PROHIBITED
+8. ⛔ NO EXCEPTIONS will be made to these rules under any circumstances
 
 ## OPEN SOURCE FREEDOMS
 
