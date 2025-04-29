@@ -149,102 +149,184 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show execution section
         executionSection.classList.remove('d-none');
         
-        // Send request to execute command
-        fetch('/execute', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ command: commandText }),
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => {
-                    throw new Error(data.error || 'Failed to execute command');
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Reset button state
-            executeButton.disabled = false;
-            executeButton.innerHTML = originalHtml;
+        // Create working directory input modal if it doesn't exist
+        let workingDir = null;
+        const workingDirModal = document.getElementById('workingDirModal');
+        
+        if (!workingDirModal) {
+            // Create modal for working directory
+            const modal = document.createElement('div');
+            modal.classList.add('modal', 'fade');
+            modal.id = 'workingDirModal';
+            modal.setAttribute('tabindex', '-1');
+            modal.setAttribute('aria-labelledby', 'workingDirModalLabel');
+            modal.setAttribute('aria-hidden', 'true');
             
-            // Combine stdout and stderr, prioritizing stderr
-            let output = '';
+            modal.innerHTML = `
+                <div class="modal-dialog">
+                    <div class="modal-content bg-dark">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="workingDirModalLabel">Specify Working Directory</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="workingDirInput" class="form-label">Working Directory (optional):</label>
+                                <input type="text" class="form-control" id="workingDirInput" placeholder="/path/to/directory">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="confirmWorkingDir">Execute Command</button>
+                        </div>
+                    </div>
+                </div>
+            `;
             
-            if (data.stderr && data.stderr.trim()) {
-                output = data.stderr;
-                executionStatus.textContent = 'Completed with errors';
-                executionStatus.className = 'badge bg-warning text-dark';
-            } else if (data.stdout) {
-                output = data.stdout;
-                executionStatus.textContent = 'Completed successfully';
-                executionStatus.className = 'badge bg-success';
-            } else if (data.error) {
-                output = data.error;
-                executionStatus.textContent = 'Error';
-                executionStatus.className = 'badge bg-danger';
-            } else {
-                output = 'Command executed with no output';
-                executionStatus.textContent = 'Completed';
-                executionStatus.className = 'badge bg-secondary';
-            }
+            document.body.appendChild(modal);
             
-            // Display execution results with improved formatting
-            executionOutput.textContent = output;
+            // Initialize the modal
+            const workingDirModalObj = new bootstrap.Modal(modal);
             
-            // Enhance the display of execution results
-            if (output.trim() === '') {
-                executionOutput.textContent = '(No output from command)';
-                executionOutput.classList.add('text-muted');
-            } else {
-                executionOutput.classList.remove('text-muted');
-            }
+            // Add event listener to the confirm button
+            document.getElementById('confirmWorkingDir').addEventListener('click', function() {
+                const inputWorkingDir = document.getElementById('workingDirInput').value.trim();
+                executeWithWorkingDir(commandText, inputWorkingDir);
+                workingDirModalObj.hide();
+            });
             
-            executionExitCode.textContent = data.exit_code !== undefined ? data.exit_code : 'N/A';
-            
-            // Color code exit code for better visibility
-            if (data.exit_code === 0) {
-                executionExitCode.classList.add('text-success');
-                executionExitCode.classList.remove('text-danger');
-            } else if (data.exit_code > 0) {
-                executionExitCode.classList.add('text-danger');
-                executionExitCode.classList.remove('text-success');
-            }
-            
-            // Show toast notification
-            const toast = document.getElementById('executeToast');
-            if (toast) {
-                // Update toast content based on execution result
-                const toastBody = toast.querySelector('.toast-body');
-                if (data.exit_code === 0) {
-                    toastBody.innerHTML = '<i class="fas fa-check-circle me-2"></i>Command executed successfully';
-                    toast.classList.remove('text-bg-danger');
-                    toast.classList.add('text-bg-dark');
+            // Show the modal for directory input
+            workingDirModalObj.show();
+        } else {
+            // If modal already exists, show it
+            const workingDirModalObj = new bootstrap.Modal(workingDirModal);
+            document.getElementById('confirmWorkingDir').addEventListener('click', function() {
+                const inputWorkingDir = document.getElementById('workingDirInput').value.trim();
+                executeWithWorkingDir(commandText, inputWorkingDir);
+                workingDirModalObj.hide();
+            });
+            workingDirModalObj.show();
+        }
+        
+        // Function to execute the command with a specific working directory
+        function executeWithWorkingDir(commandText, workingDir) {
+            // Send request to execute command
+            fetch('/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    command: commandText,
+                    working_dir: workingDir || null
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Failed to execute command');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Reset button state
+                executeButton.disabled = false;
+                executeButton.innerHTML = originalHtml;
+                
+                // Combine stdout and stderr, prioritizing stderr
+                let output = '';
+                
+                if (data.stderr && data.stderr.trim()) {
+                    output = data.stderr;
+                    executionStatus.textContent = 'Completed with errors';
+                    executionStatus.className = 'badge bg-warning text-dark';
+                } else if (data.stdout) {
+                    output = data.stdout;
+                    executionStatus.textContent = 'Completed successfully';
+                    executionStatus.className = 'badge bg-success';
+                } else if (data.error) {
+                    output = data.error;
+                    executionStatus.textContent = 'Error';
+                    executionStatus.className = 'badge bg-danger';
                 } else {
-                    toastBody.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>Command executed with exit code ' + data.exit_code;
-                    toast.classList.remove('text-bg-dark');
-                    toast.classList.add('text-bg-danger');
+                    output = 'Command executed with no output';
+                    executionStatus.textContent = 'Completed';
+                    executionStatus.className = 'badge bg-secondary';
                 }
                 
-                const toastInstance = new bootstrap.Toast(toast);
-                toastInstance.show();
-            }
-        })
-        .catch(error => {
-            // Reset button state
-            executeButton.disabled = false;
-            executeButton.innerHTML = originalHtml;
-            
-            // Show error in execution result
-            executionOutput.textContent = 'Error: ' + error.message;
-            executionStatus.textContent = 'Failed';
-            executionStatus.className = 'badge bg-danger';
-            executionExitCode.textContent = 'N/A';
-            
-            console.error('Failed to execute command: ', error);
-        });
+                // Create header with system and directory information
+                let headerInfo = '';
+                if (data.system_info) {
+                    headerInfo += `System: ${data.system_info}\n`;
+                }
+                if (data.current_directory) {
+                    headerInfo += `Working Directory: ${data.current_directory}\n`;
+                }
+                if (headerInfo) {
+                    headerInfo += '\n' + '-'.repeat(50) + '\n\n';
+                }
+                
+                // Display execution results with improved formatting
+                executionOutput.textContent = headerInfo + output;
+                
+                // Enhance the display of execution results
+                if (output.trim() === '') {
+                    executionOutput.textContent = headerInfo + '(No output from command)';
+                    executionOutput.classList.add('text-muted');
+                } else {
+                    executionOutput.classList.remove('text-muted');
+                }
+                
+                // Show exit code and meaning
+                if (data.exit_meaning) {
+                    executionExitCode.textContent = `${data.exit_code} (${data.exit_meaning})`;
+                } else {
+                    executionExitCode.textContent = data.exit_code !== undefined ? data.exit_code : 'N/A';
+                }
+                
+                // Color code exit code for better visibility
+                if (data.exit_code === 0) {
+                    executionExitCode.classList.add('text-success');
+                    executionExitCode.classList.remove('text-danger');
+                } else if (data.exit_code > 0) {
+                    executionExitCode.classList.add('text-danger');
+                    executionExitCode.classList.remove('text-success');
+                }
+                
+                // Show toast notification
+                const toast = document.getElementById('executeToast');
+                if (toast) {
+                    // Update toast content based on execution result
+                    const toastBody = toast.querySelector('.toast-body');
+                    if (data.exit_code === 0) {
+                        toastBody.innerHTML = '<i class="fas fa-check-circle me-2"></i>Command executed successfully';
+                        toast.classList.remove('text-bg-danger');
+                        toast.classList.add('text-bg-dark');
+                    } else {
+                        toastBody.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>Command executed with exit code ' + data.exit_code;
+                        toast.classList.remove('text-bg-dark');
+                        toast.classList.add('text-bg-danger');
+                    }
+                    
+                    const toastInstance = new bootstrap.Toast(toast);
+                    toastInstance.show();
+                }
+            })
+            .catch(error => {
+                // Reset button state
+                executeButton.disabled = false;
+                executeButton.innerHTML = originalHtml;
+                
+                // Show error in execution result
+                executionOutput.textContent = 'Error: ' + error.message;
+                executionStatus.textContent = 'Failed';
+                executionStatus.className = 'badge bg-danger';
+                executionExitCode.textContent = 'N/A';
+                
+                console.error('Failed to execute command: ', error);
+            });
+        }
     });
     }
     
