@@ -161,13 +161,13 @@ For commercial licensing, implement a license management system that provides:
 Consider offering reseller or affiliate programs:
 
 **Reseller Program:**
-- 20-30% commission on licenses sold
+- Distribution authorization
 - Sales and marketing materials
 - Technical training
 - Deal registration system
 
 **Affiliate Program:**
-- 10-15% commission on referrals
+- Referral tracking
 - Tracking links
 - Marketing materials
 - Performance dashboard
@@ -183,4 +183,4 @@ Phone: +447759313990
 
 ---
 
-*Note: All pricing is suggestive and can be adjusted based on market conditions and business strategy. Final licensing terms should be finalized after consulting with legal advisors.*
+*Note: All licensing terms should be finalized after consulting with legal advisors.*

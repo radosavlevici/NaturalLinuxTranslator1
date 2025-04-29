@@ -60,21 +60,21 @@ This document outlines a specific strategy for approaching IT support and manage
   - Command verification before execution
   - Performance metrics and improvement tracking
 
-### 3. Business Models for Support Companies
+### 3. Usage Models for Support Companies
 
-- **Per-Technician Licensing**:
-  - Monthly subscription based on number of support staff
-  - Tiered pricing based on company size
-  - Volume discounts for larger teams
+- **Per-Technician Usage**:
+  - Access based on number of support staff
+  - Tiered access based on company size
+  - Expanded access for larger teams
 
 - **White-Label Solution**:
   - Branded as part of the MSP's own toolkit
   - Customized to their specific support workflows
   - Integrated into their client portal
 
-- **Revenue Share Model**:
-  - Reseller arrangement with commission structure
-  - Client referral program with incentives
+- **Partnership Model**:
+  - Reseller arrangement with distribution rights
+  - Client referral program with recognition
   - Joint marketing initiatives
 
 ## Target Support Company Categories
