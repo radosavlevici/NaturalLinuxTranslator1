@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form-based Linux Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .nav a {
+            display: inline-block;
+            background-color: #3c3c3c;
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-radius: 3px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            background-color: #1a1a1a;
+            color: white;
+            border: 1px solid #444;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+        input[type="submit"] {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+        .result-box {
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 3px;
+        }
+        .command {
+            font-family: monospace;
+            white-space: pre-wrap;
+            background-color: #000;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+        .explanation {
+            margin-top: 15px;
+        }
+        .breakdown {
+            margin-top: 15px;
+        }
+        .breakdown ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .breakdown li {
+            margin-bottom: 5px;
+            padding-left: 15px;
+            border-left: 3px solid #0066cc;
+        }
+        .simulation {
+            margin-top: 15px;
+            background-color: #000;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .warning {
+            color: #ffcc00;
+            margin-top: 10px;
+            padding: 5px;
+            border-left: 3px solid #ffcc00;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Form-based Linux Translator</h1>
+        
+        <div class="nav">
+            <a href="/form_powershell">PowerShell Mode</a>
+            <a href="/directory">Directory</a>
+        </div>
+        
+        <form action="/form_translate_linux" method="post">
+            <label for="query">What do you want to do in Linux?</label>
+            <textarea id="query" name="query" placeholder="Example: list all files sorted by size"></textarea>
+            <input type="submit" value="Translate to Linux Command">
+        </form>
+        
+        {% if command %}
+        <div class="result-box">
+            <h3>Linux Command:</h3>
+            <div class="command">{{ command }}</div>
+            
+            {% if explanation %}
+            <div class="explanation">
+                <h3>Explanation:</h3>
+                <p>{{ explanation }}</p>
+            </div>
+            {% endif %}
+            
+            {% if breakdown %}
+            <div class="breakdown">
+                <h3>Command Breakdown:</h3>
+                <ul>
+                {% for key, value in breakdown.items() %}
+                    <li><strong>{{ key }}</strong>: {{ value }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            {% if simulation %}
+            <div class="simulation">
+                <h3>Simulation:</h3>
+                <pre>{{ simulation }}</pre>
+            </div>
+            {% endif %}
+            
+            {% if safety_warning %}
+            <div class="warning">
+                <h3>Warning:</h3>
+                <p>{{ safety_warning }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="footer">
+            &copy; 2024 Ervin Remus Radosavlevici. All Rights Reserved.<br>
+            Featuring proprietary DNA-based security technology
+        </div>
+    </div>
+</body>
+</html>

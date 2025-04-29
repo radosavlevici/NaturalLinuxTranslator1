@@ -67,6 +67,70 @@ def micro_powershell():
     Render the micro PowerShell translator with extremely simplified JavaScript
     """
     return render_template('micro_powershell.html')
+    
+@app.route('/form_powershell')
+def form_powershell():
+    """
+    Render the form-based PowerShell translator without any JavaScript
+    """
+    return render_template('form_powershell.html')
+
+@app.route('/form_linux')
+def form_linux():
+    """
+    Render the form-based Linux translator without any JavaScript
+    """
+    return render_template('form_linux.html')
+
+@app.route('/form_translate_powershell', methods=['POST'])
+def form_translate_powershell():
+    """
+    Process PowerShell translation form and render results
+    """
+    query = request.form.get('query', '')
+    if not query:
+        return render_template('form_powershell.html', 
+                               error="Query cannot be empty")
+    
+    # Generate a watermark based on query and timestamp
+    timestamp = time.time()
+    watermark = generate_watermark(query, timestamp)
+    
+    # Get PowerShell command from OpenAI
+    result = get_powershell_command(query)
+    
+    # Return the template with the results
+    return render_template('form_powershell.html',
+                          query=query,
+                          command=result.get('command', ''),
+                          explanation=result.get('explanation', ''),
+                          safety_warning=result.get('safety_warning', None))
+
+@app.route('/form_translate_linux', methods=['POST'])
+def form_translate_linux():
+    """
+    Process Linux translation form and render results
+    """
+    query = request.form.get('query', '')
+    if not query:
+        return render_template('form_linux.html', 
+                               error="Query cannot be empty")
+    
+    # Generate a watermark based on query and timestamp
+    timestamp = time.time()
+    watermark = generate_watermark(query, timestamp)
+    
+    # Get Linux command from OpenAI
+    result = get_linux_command(query)
+    
+    # Return the template with the results
+    return render_template('form_linux.html',
+                          query=query,
+                          command=result.get('command', ''),
+                          explanation=result.get('explanation', ''),
+                          breakdown=result.get('breakdown', {}),
+                          simulation=result.get('simulation', ''),
+                          safety_warning=result.get('safety_warning', None))
 
 @app.route('/powershell')
 def powershell():
