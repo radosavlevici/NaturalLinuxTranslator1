@@ -142,7 +142,7 @@ Commands are validated for safety before execution to prevent potentially danger
 
 ## 👤 Author
 
-Created by Ervin Remus Radosavlevici - Contact: ervin210@icloud.com | +447759313990
+Created by Command Translator Team - Contact: support@commandtranslator.com
 
 ## 📄 License Options
 
@@ -162,4 +162,4 @@ The GPL is a copyleft license that requires any modified versions of the softwar
 
 - OpenAI for providing the GPT-4o API
 - Contributors and testers who helped improve this tool
-- Ervin Remus Radosavlevici for the original concept and design
+- Command Translator Team for the original concept and design
