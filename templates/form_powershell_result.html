@@ -1,0 +1,213 @@
+{% extends "layout.html" %}
+
+{% block title %}PowerShell Command Result{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h2><i class="fab fa-windows"></i> PowerShell Command Result</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5>Your Request:</h5>
+                        <p class="lead">{{ query }}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5>Generated Command:</h5>
+                        <div class="command-output p-3">{{ command }}</div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remote-execution">
+                                <label class="form-check-label" for="remote-execution">
+                                    Execute on remote Windows system (if configured)
+                                </label>
+                            </div>
+                            <div id="connection-status" class="mt-1 small text-muted">
+                                <span id="connection-indicator">Checking connection status...</span>
+                                <button class="btn btn-sm btn-link" onclick="checkConnectionStatus()">Check Status</button>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a href="/form-powershell" class="btn btn-secondary">New Translation</a>
+                            <div>
+                                <button class="btn btn-info" onclick="copyToClipboard()">
+                                    <i class="fas fa-copy"></i> Copy Command
+                                </button>
+                                <button class="btn btn-success" onclick="executeCommand()">
+                                    <i class="fas fa-play"></i> Execute Command
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="execution-result" class="mt-4" style="display: none;">
+                        <h5>Execution Result:</h5>
+                        <div class="command-output p-3" id="execution-output"></div>
+                        <div class="alert alert-danger mt-2" id="execution-error" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card bg-dark mt-4">
+                <div class="card-header">
+                    <h3>About This Command</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> This command has been translated from your natural language request.
+                        Always review commands before execution, especially when working with system files or sensitive data.
+                    </div>
+                    
+                    <div class="mt-3">
+                        <h5>Usage Notes:</h5>
+                        <ul>
+                            <li>You can execute this command in Windows PowerShell or PowerShell Core.</li>
+                            <li>The command may need to be adjusted based on your specific environment.</li>
+                            <li>PowerShell syntax may vary slightly between versions.</li>
+                            <li>Use with caution when working with system files or performing administrative operations.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <p class="mb-0 text-muted small">Command Translator © 2025 | Copyright (c) 2024 Ervin Remus Radosavlevici</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Check connection status on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        checkConnectionStatus();
+    });
+    
+    function checkConnectionStatus() {
+        const indicator = document.getElementById('connection-indicator');
+        indicator.textContent = 'Checking connection status...';
+        
+        fetch('/api/connection-status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.powershell && data.powershell.enabled) {
+                    indicator.innerHTML = `<span class="text-success">✓</span> Windows Server: ${data.powershell.status}`;
+                    document.getElementById('remote-execution').disabled = false;
+                } else {
+                    indicator.innerHTML = `<span class="text-muted">Remote Windows execution not configured</span>`;
+                    document.getElementById('remote-execution').disabled = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error checking connection status:', error);
+                indicator.innerHTML = `<span class="text-danger">Failed to check connection status</span>`;
+                document.getElementById('remote-execution').disabled = true;
+            });
+    }
+    
+    function copyToClipboard() {
+        const commandText = `{{ command }}`;
+        navigator.clipboard.writeText(commandText).then(function() {
+            alert('Command copied to clipboard!');
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+            
+            // Fallback for older browsers
+            const textarea = document.createElement('textarea');
+            textarea.value = commandText;
+            textarea.style.position = 'fixed';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                alert('Command copied to clipboard!');
+            } catch (err) {
+                console.error('Could not copy text: ', err);
+                alert('Failed to copy. Please manually select and copy the command.');
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        });
+    }
+    
+    function executeCommand() {
+        const command = `{{ command }}`;
+        const resultDiv = document.getElementById('execution-result');
+        const outputDiv = document.getElementById('execution-output');
+        const errorDiv = document.getElementById('execution-error');
+        
+        // Show loading state
+        resultDiv.style.display = 'block';
+        outputDiv.innerHTML = 'Executing command...';
+        errorDiv.style.display = 'none';
+        
+        // Send the command to the server for execution
+        fetch('/execute', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'command': command,
+                'mode': 'powershell',
+                'workingDir': '.',
+                'remote': document.getElementById('remote-execution').checked
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                errorDiv.innerHTML = `<strong>Error:</strong> ${data.error}`;
+                errorDiv.style.display = 'block';
+                outputDiv.innerHTML = '';
+            } else {
+                let resultDisplay = data.output || 'Command executed successfully with no output.';
+                        
+                // Add execution info if available
+                if (data.execution_info && data.execution_info.environment) {
+                    resultDisplay = `--- EXECUTION ENVIRONMENT ---\n${data.execution_info.environment}\n\n--- COMMAND OUTPUT ---\n${resultDisplay}`;
+                }
+                
+                if (data.working_directory) {
+                    resultDisplay += `\n\n--- EXECUTION DETAILS ---\nWorking directory: ${data.working_directory}`;
+                }
+                
+                if (data.timestamp) {
+                    resultDisplay += `\nTimestamp: ${data.timestamp}`;
+                }
+                
+                if (data.execution_hash) {
+                    resultDisplay += `\nDNA Security Watermark: ${data.execution_hash}`;
+                    resultDisplay += `\nCopyright (c) 2024 Ervin Remus Radosavlevici`;
+                }
+                
+                if (data.execution_info && data.execution_info.system_info) {
+                    const sysInfo = data.execution_info.system_info;
+                    resultDisplay += `\n\n--- SYSTEM INFO ---\n${sysInfo.system} ${sysInfo.release} on ${sysInfo.machine}`;
+                }
+                
+                if (data.execution_info && data.execution_info.exit_code !== undefined) {
+                    resultDisplay += `\nExit code: ${data.execution_info.exit_code}`;
+                }
+                
+                outputDiv.innerHTML = resultDisplay;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            errorDiv.innerHTML = `<strong>Error:</strong> Failed to execute command. Please try again.`;
+            errorDiv.style.display = 'block';
+            outputDiv.innerHTML = '';
+        });
+    }
+</script>
+{% endblock %}

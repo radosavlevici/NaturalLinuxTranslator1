@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+
+{% block title %}PowerShell Command Translator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 text-center mb-4">
+            <h1>PowerShell Command Translator</h1>
+            <p class="lead">Transform natural language into PowerShell commands</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h2><i class="fab fa-windows"></i> Enter Your Request</h2>
+                </div>
+                <div class="card-body">
+                    <div id="remote-connection-status" class="alert alert-secondary mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="spinner-border spinner-border-sm me-2" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span>Checking remote PowerShell connection status...</span>
+                        </div>
+                    </div>
+                    
+                    <form method="post" action="/form-translate-powershell">
+                        <div class="mb-3">
+                            <label for="query" class="form-label">What would you like to do?</label>
+                            <textarea class="form-control bg-dark text-light" id="query" name="query" rows="4" placeholder="Describe what you want to do in plain English. For example: 'List all running processes ordered by memory usage'" required></textarea>
+                        </div>
+                        {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                        {% endif %}
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-info">Translate to PowerShell Command</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card bg-dark mt-4">
+                <div class="card-header">
+                    <h3>Examples</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <p><strong>System information:</strong></p>
+                                <p class="text-muted">"Get detailed system information"</p>
+                                <div class="command-output">Get-ComputerInfo</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <p><strong>File operations:</strong></p>
+                                <p class="text-muted">"Find all text files containing the word 'error'"</p>
+                                <div class="command-output">Get-ChildItem -Path . -Filter *.txt -Recurse | Select-String -Pattern "error" | Group-Object Path</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="/simple" class="btn btn-secondary">Back to Simple Interface</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        checkConnectionStatus();
+    });
+    
+    function checkConnectionStatus() {
+        const statusDiv = document.getElementById('remote-connection-status');
+        
+        fetch('/api/connection-status')
+            .then(response => response.json())
+            .then(data => {
+                if (data.powershell && data.powershell.enabled) {
+                    let statusHtml = '';
+                    
+                    if (data.powershell.status.startsWith('Error')) {
+                        statusDiv.className = 'alert alert-danger mb-3';
+                        statusHtml = `<i class="fas fa-exclamation-circle"></i> Remote PowerShell execution is configured but not available: <br>${data.powershell.status}`;
+                    } else {
+                        statusDiv.className = 'alert alert-success mb-3';
+                        statusHtml = `<i class="fas fa-check-circle"></i> Remote PowerShell execution is available: <br>${data.powershell.status}`;
+                    }
+                    
+                    statusDiv.innerHTML = statusHtml + 
+                        '<div class="mt-2 small">' +
+                        'You will be able to execute commands on this remote Windows system when translating. ' +
+                        '<a href="/remote-setup" class="alert-link">Configure Remote Servers</a>' +
+                        '</div>';
+                } else {
+                    statusDiv.className = 'alert alert-secondary mb-3';
+                    statusDiv.innerHTML = 
+                        '<i class="fas fa-info-circle"></i> Remote PowerShell execution is not configured. ' +
+                        '<div class="mt-2 small">' +
+                        'Commands will be executed locally. ' +
+                        '<a href="/remote-setup" class="alert-link">Configure Remote Servers</a> to execute on real Windows hardware.' +
+                        '</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error checking connection status:', error);
+                statusDiv.className = 'alert alert-warning mb-3';
+                statusDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Failed to check remote execution status. Commands will be executed locally.';
+            });
+    }
+</script>
+{% endblock %}
