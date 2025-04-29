@@ -74,12 +74,14 @@ def translate():
 def execute_command():
     """
     Execute a Linux command in a real environment and return the results
+    Enhanced to provide more context about the real Linux environment
     """
     try:
         from utils import validate_linux_command, log_command_request
         
         data = request.json
         command = data.get('command', '').strip()
+        working_dir = data.get('working_dir', None)
         
         if not command:
             return jsonify({"error": "No command provided"}), 400
@@ -93,7 +95,8 @@ def execute_command():
                 "error": f"Command execution denied: {reason}",
                 "stdout": "",
                 "stderr": f"⚠️ EXECUTION BLOCKED: This high-risk command was not executed for safety reasons.",
-                "risk_level": risk_level
+                "risk_level": risk_level,
+                "command": command
             }), 403
         
         # For safety, we'll only allow execution of commands that are deemed safe or low risk
@@ -102,36 +105,77 @@ def execute_command():
                 "error": f"Command execution denied: Risk level too high ({risk_level})",
                 "stdout": "",
                 "stderr": f"⚠️ EXECUTION BLOCKED: This command was not executed due to medium or high risk level.",
-                "risk_level": risk_level
+                "risk_level": risk_level,
+                "command": command
             }), 403
         
         # Log the command execution
         log_command_request(f"EXECUTION: {command}", command)
         
-        # Execute the command in a safe way - limiting shell features and with timeout
+        # Get current directory context
         try:
-            # Safe execution with timeout of 5 seconds and restricted to common commands
+            current_dir = os.getcwd()
+            if working_dir and os.path.isdir(working_dir):
+                current_dir = working_dir
+        except Exception:
+            current_dir = "/unknown"
+            
+        # Get system info for context
+        try:
+            system_info = subprocess.run(
+                "uname -a",
+                shell=True,
+                capture_output=True,
+                text=True,
+                timeout=2
+            ).stdout.strip()
+        except Exception:
+            system_info = "Unknown Linux system"
+        
+        # Execute the command in a safe way - with improved timeout and working directory support
+        try:
+            # Execute in specified directory if provided and valid
+            cwd = working_dir if working_dir and os.path.isdir(working_dir) else None
+            
+            # Safe execution with longer timeout (15 seconds) for real-world commands
             process = subprocess.run(
                 command,
                 shell=True,
                 capture_output=True,
                 text=True,
-                timeout=5  # 5 second timeout
+                timeout=15,  # Increased timeout for real Linux commands
+                cwd=cwd  # Set working directory if specified
             )
             
+            # Format output for better display
+            stdout = process.stdout.strip() if process.stdout else ""
+            stderr = process.stderr.strip() if process.stderr else ""
+            
+            # Get exit code meaning
+            exit_meaning = "Success" if process.returncode == 0 else f"Error code: {process.returncode}"
+            
             return jsonify({
-                "stdout": process.stdout,
-                "stderr": process.stderr,
+                "stdout": stdout,
+                "stderr": stderr,
                 "exit_code": process.returncode,
-                "risk_level": risk_level
+                "exit_meaning": exit_meaning,
+                "risk_level": risk_level,
+                "current_directory": current_dir,
+                "system_info": system_info,
+                "command": command,
+                "execution_successful": process.returncode == 0
             })
             
         except subprocess.TimeoutExpired:
             return jsonify({
-                "error": "Command execution timed out after 5 seconds",
+                "error": "Command execution timed out after 15 seconds",
                 "stdout": "",
-                "stderr": "Execution timed out",
-                "risk_level": risk_level
+                "stderr": "Execution timed out. This command takes too long to complete in the web interface.",
+                "risk_level": risk_level,
+                "current_directory": current_dir,
+                "system_info": system_info,
+                "command": command,
+                "execution_successful": False
             }), 408
             
     except Exception as e:
@@ -139,7 +183,9 @@ def execute_command():
         return jsonify({
             "error": f"Failed to execute command: {str(e)}",
             "stdout": "",
-            "stderr": f"Error: {str(e)}"
+            "stderr": f"Error: {str(e)}",
+            "command": command if 'command' in locals() else "unknown",
+            "execution_successful": False
         }), 500
 
 def get_linux_command(query):
