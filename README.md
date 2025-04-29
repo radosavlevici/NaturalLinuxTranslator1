@@ -22,7 +22,7 @@ A natural language to command translator tool that intelligently converts conver
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YourUsername/command-translator.git
+   git clone https://github.com/commandtranslator/command-translator.git
    cd command-translator
    ```
 
