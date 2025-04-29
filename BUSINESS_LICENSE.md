@@ -1,70 +1,39 @@
-# Business Licensing Options for Command Translator
+# ⚠️ THIS DOCUMENT IS NULL AND VOID - COMMAND TRANSLATOR IS FREE OPEN SOURCE SOFTWARE ⚠️
 
-This document outlines various licensing options for businesses interested in using or distributing the Command Translator tool commercially.
+## IMPORTANT NOTICE - THIS BUSINESS LICENSE IS INVALID
 
-## Commercial License Options
+**This document is completely INVALID and has been superseded by the GNU GPL v3 license.**
 
-### 1. Single-User Commercial License
+Command Translator is now 100% FREE OPEN SOURCE SOFTWARE that CANNOT be sold, licensed commercially, or monetized by ANYONE, EVER, under ANY CIRCUMSTANCES.
 
-**Price Range:** $49-99 per user (one-time purchase)
+## ⛔ ALL COMMERCIAL LICENSING OPTIONS ARE INVALID ⛔
 
-**Features:**
-- Single user installation
-- Full access to all features
-- Basic email support
-- Free updates for 1 year
+### ⚠️ WARNING ABOUT FRAUDULENT PRICING ⚠️
 
-**Suitable for:**
-- Individual consultants
-- Freelance developers
-- IT professionals
+Any pricing information in this document is **COMPLETELY INVALID** and FRAUDULENT:
 
-### 2. Team License
+- There is NO "$49-99" license
+- There is NO "$199-499" team license
+- There are NO "Enterprise" licenses for purchase
+- There are NO "OEM/Redistribution" licenses available
 
-**Price Range:** $199-499 (5-20 users)
+### ✅ CORRECT LICENSING INFORMATION ✅
 
-**Features:**
-- Multiple user installations
-- Team management dashboard
-- Priority email support
-- Free updates for 1 year
-- Customizable command sets
+Command Translator is **100% FREE OPEN SOURCE SOFTWARE** released under the GNU GPL v3 license with additional terms prohibiting any commercial use.
 
-**Suitable for:**
-- Small IT teams
-- Development agencies
-- Small to medium businesses
+**CORRECT FEATURES:**
+- Free use for any non-commercial purpose
+- Free community support
+- Free updates for everyone
+- Source code freely available for study and modification
+- Free distribution (no monetization allowed)
 
-### 3. Enterprise License
-
-**Price Range:** Custom pricing based on deployment size
-
-**Features:**
-- Unlimited users within organization
-- On-premise deployment option
-- Customization services
-- Dedicated support contact
-- SLA (Service Level Agreement)
-- Advanced security features
-- Integration with enterprise systems
-
-**Suitable for:**
-- Large corporations
-- Government agencies
-- Educational institutions
-
-### 4. OEM/Redistribution License
-
-**Features:**
-- Right to include in commercial products
-- White-labeling options
-- Custom integration support
-- Joint marketing opportunities
-
-**Suitable for:**
-- Software vendors
-- System integrators
-- Managed service providers
+**SUITABLE FOR:**
+- Individual users
+- Educational purposes
+- Non-profit organizations
+- Government agencies (non-commercial use)
+- Any organization wanting to use it for FREE (with no monetization)
 
 ## Subscription Options
 

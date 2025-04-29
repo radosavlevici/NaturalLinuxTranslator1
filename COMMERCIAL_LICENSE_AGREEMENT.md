@@ -1,138 +1,99 @@
-# COMMAND TRANSLATOR COMMERCIAL LICENSE AGREEMENT
+# ⚠️ THIS DOCUMENT IS NULL AND VOID - COMMAND TRANSLATOR IS FREE OPEN SOURCE SOFTWARE ⚠️
 
-## IMPORTANT - READ CAREFULLY
+## IMPORTANT NOTICE - THIS COMMERCIAL LICENSE IS INVALID
 
-This Command Translator Commercial License Agreement ("Agreement") is a legal agreement between you (either an individual or a single entity) and Ervin Remus Radosavlevici ("Licensor") for the Command Translator software product, which includes computer software and associated media, printed materials, and electronic documentation (collectively, the "Software").
+**This document is completely INVALID and has been superseded by the GNU GPL v3 license.**
 
-By installing, copying, or otherwise using the Software, you agree to be bound by the terms of this Agreement. If you do not agree to the terms of this Agreement, do not install, copy, or use the Software.
+Command Translator is now 100% FREE OPEN SOURCE SOFTWARE that CANNOT be sold or monetized by ANYONE, EVER, under ANY CIRCUMSTANCES.
 
-## 1. GRANT OF LICENSE
+If you have been shown this document as part of a commercial transaction, YOU ARE BEING SCAMMED.
 
-Subject to the terms and conditions of this Agreement, Licensor hereby grants to you a non-exclusive, non-transferable license to use the Software according to the license tier purchased, as specified below.
+## ⛔ ALL COMMERCIAL LICENSING TERMS ARE INVALID ⛔
 
-### 1.1 Single-User Commercial License
+This entire document is **NULL AND VOID**. Command Translator is protected by the GNU GPL v3 license with additional terms that specifically prohibit ANY commercial use.
 
-- **Rights Granted**: Installation and use of the Software on up to two (2) devices by a single named user.
-- **Term**: Perpetual, with 12 months of updates.
-- **Support**: Basic email support for 12 months.
-- **Price**: $99.00 USD one-time payment.
+### ⚠️ WARNING ABOUT FRAUDULENT PRICING ⚠️
 
-### 1.2 Team License
+Any pricing information in this document is **COMPLETELY INVALID**:
 
-- **Rights Granted**: Installation and use of the Software by up to five (5) named users within a single organization.
-- **Term**: Perpetual, with 12 months of updates.
-- **Support**: Priority email support for 12 months.
-- **Additional Features**: Team management dashboard, customizable command sets.
-- **Price**: $299.00 USD one-time payment.
-  
-### 1.3 Enterprise License
+- There is NO "$99.00 USD" license
+- There is NO "$299.00 USD" team license
+- There are NO "Enterprise" licenses for purchase
+- There are NO "OEM/Redistribution" licenses available
 
-- **Rights Granted**: Installation and use of the Software by an unlimited number of users within a single organization.
-- **Term**: Perpetual, with 24 months of updates.
-- **Support**: Dedicated support contact, with 24-month SLA (Service Level Agreement).
-- **Additional Features**: On-premise deployment option, customization services, advanced security features, integration with enterprise systems.
-- **Price**: Based on organization size and requirements. Contact sales for custom quote.
+### ✅ CORRECT LICENSING INFORMATION ✅
 
-### 1.4 OEM/Redistribution License
+Command Translator is **100% FREE OPEN SOURCE SOFTWARE** released under the GNU GPL v3 license.
 
-- **Rights Granted**: The right to incorporate the Software into your own products and distribute to your customers.
-- **Term**: As specified in the custom OEM agreement.
-- **Support**: As specified in the custom OEM agreement.
-- **Additional Features**: White-labeling options, custom integration support.
-- **Price**: Based on distribution volume. Contact sales for custom quote.
+- You may freely use, modify, and distribute the software for any non-commercial purpose
+- You may NOT charge money for the software or any derivative works
+- You may NOT include the software in any commercial product
+- You may NOT monetize the software in any way
 
-## 2. SUBSCRIPTION OPTIONS
+## ⛔ NO SUBSCRIPTIONS OR PAID SERVICES EXIST ⛔
 
-As an alternative to the perpetual licenses described in Section 1, Licensor offers the following subscription-based licenses:
+### IMPORTANT: ALL SUBSCRIPTION INFORMATION IS FRAUDULENT
 
-### 2.1 Basic License
+There are **NO** subscription options for Command Translator. This is completely FREE open source software.
 
-- **Rights Granted**: Installation and use of the Software on up to two (2) devices by a single named user.
-- **Term**: Perpetual license with no expiration.
-- **Support**: Basic email support.
+- There is NO "Basic License" - the software is completely free
+- There is NO "Professional License" - the software is completely free  
+- There is NO "Enterprise License" - the software is completely free
 
-### 2.2 Professional License
+### FREE COMMUNITY SUPPORT
 
-- **Rights Granted**: Installation and use of the Software by up to five (5) named users within a single organization.
-- **Term**: Perpetual license with no expiration.
-- **Support**: Priority email and chat support.
-- **Additional Features**: Team management dashboard, customizable command sets.
+As a 100% FREE OPEN SOURCE project, Command Translator operates on a community support model:
 
-### 2.3 Enterprise License
+- GitHub Issues for bug reporting and feature requests
+- Community forums for user questions and discussions
+- Documentation and guides freely available online
+- No paid support tiers or commercial services exist
 
-- **Rights Granted**: Installation and use of the Software by an unlimited number of users within a single organization.
-- **Term**: Perpetual license with no expiration.
-- **Support**: Dedicated support contact, with SLA (Service Level Agreement).
-- **Additional Features**: On-premise deployment option, customization services, advanced security features, integration with enterprise systems.
+### ⚠️ WARNING: NO PAID SERVICES EXIST ⚠️
 
-## 3. ADDITIONAL SERVICES
+- There are NO paid "Custom Command Set Development" services
+- There are NO paid "Integration Services" 
+- There are NO paid "Training Programs"
+- There are NO "Enhanced Support Packages"
 
-Licensor offers the following additional services:
+Anyone offering any paid services related to Command Translator is violating the license terms and is not authorized by the copyright holder.
 
-### 3.1 Custom Command Set Development
+## ⚠️ REMINDER: THIS ENTIRE DOCUMENT IS NULL AND VOID ⚠️
 
-- Development of industry-specific or company-specific command libraries tailored to the client's needs.
+### FREE OPEN SOURCE SOFTWARE UNDER GNU GPL v3
 
-### 3.2 Integration Services
+Command Translator is completely free and open source software under the GNU GPL v3 license with additional terms prohibiting any commercial use.
 
-- Professional services to integrate the Software with client's existing systems and workflows.
+### CORRECT COPYRIGHT AND OWNERSHIP INFORMATION
 
-### 3.3 Training Programs
+The copyright holder (Ervin Remus Radosavlevici) has released this software as free open source under the GNU GPL v3. This means:
 
-- Remote or on-site training sessions for users and administrators.
+1. You have the freedom to run the program for any non-commercial purpose
+2. You have the freedom to study how the program works and modify it
+3. You have the freedom to redistribute copies for free
+4. You have the freedom to distribute your modified versions to others (for free)
+5. All derivative works must also remain free and open source
 
-### 3.4 Enhanced Support Packages
+### ABSOLUTELY NO COMMERCIAL USE
 
-- **Standard**: Email and chat support with 24-hour response time.
-- **Premium**: Email, chat, and phone support with 4-hour response time.
-- **Enterprise**: Dedicated support manager with custom SLA.
+This software is provided FREE OF CHARGE and may not be sold, included in commercial products, or monetized in any way.
 
-## 4. OWNERSHIP AND COPYRIGHT
+### PLEASE REPORT SCAMS AND LICENSE VIOLATIONS
 
-The Software is owned by Licensor and is protected by copyright laws and international treaty provisions. You acknowledge that no title to the intellectual property in the Software is transferred to you. You further acknowledge that title and full ownership rights to the Software will remain the exclusive property of Licensor and you will not acquire any rights to the Software except as expressly set forth in this Agreement.
-
-## 5. RESTRICTIONS
-
-You may not:
-- Reverse engineer, decompile, or disassemble the Software, except and only to the extent that such activity is expressly permitted by applicable law.
-- Rent, lease, lend, sell, redistribute, sublicense, or transfer the Software.
-- Remove any proprietary notices or labels on the Software.
-- Use the Software to develop competing products.
-- Use the Software in any way not expressly permitted by this Agreement.
-
-## 6. LIMITED WARRANTY
-
-Licensor warrants that the Software will perform substantially in accordance with the accompanying materials for a period of ninety (90) days from the date of receipt. To the maximum extent permitted by applicable law, Licensor disclaims all other warranties, either express or implied, including, but not limited to implied warranties of merchantability and fitness for a particular purpose, with regard to the Software and the accompanying materials.
-
-## 7. LIMITATION OF LIABILITY
-
-To the maximum extent permitted by applicable law, in no event shall Licensor be liable for any special, incidental, indirect, or consequential damages whatsoever (including, without limitation, damages for loss of business profits, business interruption, loss of business information, or any other pecuniary loss) arising out of the use of or inability to use the Software, even if Licensor has been advised of the possibility of such damages. In any case, Licensor's entire liability under any provision of this Agreement shall be limited to the amount actually paid by you for the Software.
-
-## 8. TERM AND TERMINATION
-
-This Agreement is effective until terminated. You may terminate it at any time by destroying the Software and all copies thereof. This Agreement will also terminate if you fail to comply with any term or condition of this Agreement. Upon such termination, you agree to destroy the Software and all copies thereof.
-
-## 9. EXPORT RESTRICTIONS
-
-You agree that you will not export or re-export the Software to any country, person, entity, or end user subject to U.S. export restrictions.
-
-## 10. GOVERNING LAW
-
-This Agreement shall be governed by and construed in accordance with the laws of the United Kingdom, without giving effect to any principles of conflicts of law.
-
-## 11. ENTIRE AGREEMENT
-
-This Agreement constitutes the entire agreement between you and Licensor regarding the Software and supersedes all prior agreements and understandings, whether written or oral, relating to the subject matter of this Agreement.
-
-## 12. CONTACT INFORMATION
-
-If you have any questions about this Agreement, please contact:
+If anyone attempts to charge money for this software or offer "commercial licenses" or "subscriptions," please report them to the copyright holder immediately:
 
 **Ervin Remus Radosavlevici**  
 Email: ervin210@icloud.com  
 Phone: +447759313990
 
-By installing, copying, or otherwise using the Software, you acknowledge that you have read this Agreement, understand it, and agree to be bound by its terms and conditions.
+---
+
+## ✅ VALID LICENSE INFORMATION ✅
+
+Please refer to the following files for the valid licensing information:
+- LICENSE.md - Contains the proper GNU GPL v3 license with additional terms
+- FREE_SOFTWARE_NOTICE.md - Contains complete information about the free open source nature
+- README.md - Contains additional licensing details
 
 ---
 
