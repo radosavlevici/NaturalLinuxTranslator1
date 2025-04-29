@@ -1,6 +1,9 @@
 import os
 import subprocess
 import logging
+import socket
+import paramiko  # SSH client for remote Linux connections
+import json
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -98,6 +101,130 @@ def sanitize_input(text):
     
     # Limit length
     return text[:1000]
+
+# Remote connection configuration
+REMOTE_SERVERS = {
+    'linux': {
+        'enabled': False,
+        'host': os.environ.get('LINUX_SERVER_HOST', ''),
+        'port': int(os.environ.get('LINUX_SERVER_PORT', 22)),
+        'username': os.environ.get('LINUX_SERVER_USER', ''),
+        'password': os.environ.get('LINUX_SERVER_PASSWORD', ''),
+        'key_file': os.environ.get('LINUX_SERVER_KEY_FILE', '')
+    },
+    'powershell': {
+        'enabled': False,
+        'host': os.environ.get('PS_SERVER_HOST', ''),
+        'port': int(os.environ.get('PS_SERVER_PORT', 5985)),
+        'username': os.environ.get('PS_SERVER_USER', ''),
+        'password': os.environ.get('PS_SERVER_PASSWORD', ''),
+        'use_ssl': os.environ.get('PS_SERVER_USE_SSL', 'False').lower() == 'true'
+    }
+}
+
+# Update enabled status based on host configuration
+REMOTE_SERVERS['linux']['enabled'] = bool(REMOTE_SERVERS['linux']['host'])
+REMOTE_SERVERS['powershell']['enabled'] = bool(REMOTE_SERVERS['powershell']['host'])
+
+def execute_remote_linux_command(command, working_dir='.'):
+    """
+    Execute a command on a remote Linux server via SSH
+    Returns (output, error, exit_code)
+    Copyright (c) 2024 Ervin Remus Radosavlevici
+    """
+    if not REMOTE_SERVERS['linux']['enabled']:
+        return '', 'Remote Linux execution is not configured', 1
+    
+    try:
+        # Create SSH client
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        
+        # Connect to the remote server
+        if REMOTE_SERVERS['linux']['key_file']:
+            # Use key file authentication
+            ssh.connect(
+                REMOTE_SERVERS['linux']['host'],
+                port=REMOTE_SERVERS['linux']['port'],
+                username=REMOTE_SERVERS['linux']['username'],
+                key_filename=REMOTE_SERVERS['linux']['key_file'],
+                timeout=10
+            )
+        else:
+            # Use password authentication
+            ssh.connect(
+                REMOTE_SERVERS['linux']['host'],
+                port=REMOTE_SERVERS['linux']['port'],
+                username=REMOTE_SERVERS['linux']['username'],
+                password=REMOTE_SERVERS['linux']['password'],
+                timeout=10
+            )
+        
+        # Change to the specified working directory if provided
+        if working_dir and working_dir != '.':
+            cd_command = f'cd {working_dir} && '
+        else:
+            cd_command = ''
+        
+        # Execute the command
+        full_command = cd_command + command
+        stdin, stdout, stderr = ssh.exec_command(full_command, timeout=15)
+        
+        # Get the output and error
+        output = stdout.read().decode('utf-8')
+        error = stderr.read().decode('utf-8')
+        exit_code = stdout.channel.recv_exit_status()
+        
+        # Close the connection
+        ssh.close()
+        
+        return output, error, exit_code
+    except Exception as e:
+        logger.error(f"Error executing remote Linux command: {str(e)}")
+        return '', f"Error connecting to remote Linux server: {str(e)}", 1
+
+def execute_remote_powershell_command(command, working_dir='.'):
+    """
+    Execute a command on a remote Windows server via WinRM/PowerShell
+    Returns (output, error, exit_code)
+    Copyright (c) 2024 Ervin Remus Radosavlevici
+    """
+    if not REMOTE_SERVERS['powershell']['enabled']:
+        return '', 'Remote PowerShell execution is not configured', 1
+    
+    try:
+        # For PowerShell remoting, we need to use different approaches
+        # This is a simplified implementation for demonstration purposes
+        # In a production environment, you would use pywinrm or similar libraries
+        
+        # Fallback to using SSH if available (for PowerShell Core on Linux)
+        try:
+            import winrm
+            
+            # Create WinRM session
+            session = winrm.Session(
+                REMOTE_SERVERS['powershell']['host'],
+                auth=(REMOTE_SERVERS['powershell']['username'], REMOTE_SERVERS['powershell']['password']),
+                transport='ssl' if REMOTE_SERVERS['powershell']['use_ssl'] else 'ntlm',
+                server_cert_validation='ignore'
+            )
+            
+            # Change to the specified working directory if provided
+            if working_dir and working_dir != '.':
+                cd_command = f'Set-Location -Path "{working_dir}"; '
+            else:
+                cd_command = ''
+            
+            # Execute the command
+            full_command = cd_command + command
+            result = session.run_ps(full_command)
+            
+            return result.std_out.decode('utf-8'), result.std_err.decode('utf-8'), result.status_code
+        except ImportError:
+            return '', 'WinRM Python package not installed. Please install winrm package.', 1
+    except Exception as e:
+        logger.error(f"Error executing remote PowerShell command: {str(e)}")
+        return '', f"Error connecting to remote Windows server: {str(e)}", 1
 
 # Routes
 @app.route('/')
@@ -244,6 +371,7 @@ def profile():
 def execute_command():
     """Execute a command in a real environment and return the results
     Enhanced to provide more context about the real Linux/PowerShell environment
+    Support for direct connection to remote PowerShell and Linux systems
     Copyright (c) 2024 Ervin Remus Radosavlevici
     """
     command = request.form.get('command', '')
@@ -282,31 +410,61 @@ def execute_command():
     from datetime import datetime
     current_time = datetime.utcnow().isoformat() + "Z"
     
+    # Check if remote execution is requested
+    remote_execution = request.form.get('remote', 'false').lower() == 'true'
+    connection_info = {}
+    
     if mode == 'linux':
         if is_safe_linux_command(command):
             try:
-                # Get some environment info before execution
-                env_result = subprocess.run(
-                    "uname -a && whoami && pwd",
-                    shell=True,
-                    capture_output=True,
-                    text=True,
-                    timeout=2
-                )
-                execution_info["environment"] = env_result.stdout.strip()
-                
-                # Execute the command in a subprocess
-                result = subprocess.run(
-                    command,
-                    shell=True,
-                    cwd=working_dir,
-                    capture_output=True,
-                    text=True,
-                    timeout=10  # Increased timeout to 10 seconds
-                )
-                output = result.stdout
-                error = result.stderr
-                execution_info["exit_code"] = result.returncode
+                if remote_execution and REMOTE_SERVERS['linux']['enabled']:
+                    # Get remote execution info
+                    connection_info = {
+                        "host": REMOTE_SERVERS['linux']['host'],
+                        "port": REMOTE_SERVERS['linux']['port'],
+                        "username": REMOTE_SERVERS['linux']['username'],
+                        "using_key": bool(REMOTE_SERVERS['linux']['key_file']),
+                    }
+                    execution_info["connection"] = connection_info
+                    
+                    # Use remote Linux execution
+                    logger.info(f"Executing command on remote Linux server: {REMOTE_SERVERS['linux']['host']}")
+                    remote_output, remote_error, exit_code = execute_remote_linux_command(command, working_dir)
+                    output = remote_output
+                    error = remote_error
+                    execution_info["exit_code"] = exit_code
+                    execution_info["executed_on"] = "remote-linux"
+                    
+                    # Add environment info if available
+                    if not error:
+                        # Try to get environment info from remote system
+                        env_output, env_error, _ = execute_remote_linux_command("uname -a && whoami && pwd", working_dir)
+                        if not env_error:
+                            execution_info["environment"] = env_output.strip()
+                else:
+                    # Get some environment info before execution (local)
+                    env_result = subprocess.run(
+                        "uname -a && whoami && pwd",
+                        shell=True,
+                        capture_output=True,
+                        text=True,
+                        timeout=2
+                    )
+                    execution_info["environment"] = env_result.stdout.strip()
+                    execution_info["executed_on"] = "local"
+                    
+                    # Execute the command in a subprocess (local)
+                    result = subprocess.run(
+                        command,
+                        shell=True,
+                        cwd=working_dir,
+                        capture_output=True,
+                        text=True,
+                        timeout=10  # Increased timeout to 10 seconds
+                    )
+                    output = result.stdout
+                    error = result.stderr
+                    execution_info["exit_code"] = result.returncode
                 
                 # Log successful execution
                 logger.info(f"Linux command executed successfully: '{command}' by user '{username}'")
@@ -322,27 +480,54 @@ def execute_command():
     elif mode == 'powershell':
         if is_safe_powershell_command(command):
             try:
-                # Get some PowerShell environment info before execution
-                env_command = "Write-Output 'PowerShell Info:'; $PSVersionTable; Write-Output 'User:'; whoami; Write-Output 'Location:'; Get-Location"
-                env_result = subprocess.run(
-                    ["powershell", "-Command", env_command],
-                    capture_output=True,
-                    text=True,
-                    timeout=2
-                )
-                execution_info["environment"] = env_result.stdout.strip()
-                
-                # Execute the PowerShell command
-                result = subprocess.run(
-                    ["powershell", "-Command", command],
-                    cwd=working_dir,
-                    capture_output=True,
-                    text=True,
-                    timeout=10  # Increased timeout to 10 seconds
-                )
-                output = result.stdout
-                error = result.stderr
-                execution_info["exit_code"] = result.returncode
+                if remote_execution and REMOTE_SERVERS['powershell']['enabled']:
+                    # Get remote execution info
+                    connection_info = {
+                        "host": REMOTE_SERVERS['powershell']['host'],
+                        "port": REMOTE_SERVERS['powershell']['port'],
+                        "username": REMOTE_SERVERS['powershell']['username'],
+                        "using_ssl": REMOTE_SERVERS['powershell']['use_ssl'],
+                    }
+                    execution_info["connection"] = connection_info
+                    
+                    # Use remote PowerShell execution
+                    logger.info(f"Executing command on remote Windows server: {REMOTE_SERVERS['powershell']['host']}")
+                    remote_output, remote_error, exit_code = execute_remote_powershell_command(command, working_dir)
+                    output = remote_output
+                    error = remote_error
+                    execution_info["exit_code"] = exit_code
+                    execution_info["executed_on"] = "remote-powershell"
+                    
+                    # Add environment info if available
+                    if not error:
+                        # Try to get environment info from remote system
+                        env_command = "Write-Output 'PowerShell Info:'; $PSVersionTable; Write-Output 'User:'; whoami; Write-Output 'Location:'; Get-Location"
+                        env_output, env_error, _ = execute_remote_powershell_command(env_command, working_dir)
+                        if not env_error:
+                            execution_info["environment"] = env_output.strip()
+                else:
+                    # Get some PowerShell environment info before execution (local)
+                    env_command = "Write-Output 'PowerShell Info:'; $PSVersionTable; Write-Output 'User:'; whoami; Write-Output 'Location:'; Get-Location"
+                    env_result = subprocess.run(
+                        ["powershell", "-Command", env_command],
+                        capture_output=True,
+                        text=True,
+                        timeout=2
+                    )
+                    execution_info["environment"] = env_result.stdout.strip()
+                    execution_info["executed_on"] = "local"
+                    
+                    # Execute the PowerShell command (local)
+                    result = subprocess.run(
+                        ["powershell", "-Command", command],
+                        cwd=working_dir,
+                        capture_output=True,
+                        text=True,
+                        timeout=10  # Increased timeout to 10 seconds
+                    )
+                    output = result.stdout
+                    error = result.stderr
+                    execution_info["exit_code"] = result.returncode
                 
                 # Log successful execution
                 logger.info(f"PowerShell command executed successfully: '{command}' by user '{username}'")
