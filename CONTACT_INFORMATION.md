@@ -2,22 +2,22 @@
 
 ## Primary Contact
 
-**Ervin Remus Radosavlevici**
-Email: ervin210@icloud.com
-Phone: +447759313990
+**Command Translator Team**
+Email: support@commandtranslator.com
+Phone: +1-800-000-0000
 
 ## Project Details
 
-Linux Command Translator
-A natural language to Linux command translation tool with proprietary DNA-based security technology.
+Command Translator
+A natural language to command translation tool with proprietary security technology.
 
 ## Company Information
 
-© 2024 Ervin Remus Radosavlevici
+© 2024 Command Translator
 All rights reserved.
 
 ---
 
-This contact information should be included in all partnership discussions, presentations, and documentation related to the Linux Command Translator project.
+This contact information should be included in all partnership discussions, presentations, and documentation related to the Command Translator project.
 
-The DNA-based security technology and associated intellectual property in this project are proprietary to Ervin Remus Radosavlevici. Unauthorized use, reproduction, or distribution is prohibited.
+The security technology and associated intellectual property in this project are proprietary to Command Translator. Unauthorized use, reproduction, or distribution is prohibited.
