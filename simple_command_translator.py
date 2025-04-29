@@ -1,7 +1,9 @@
 import os
 import subprocess
 import logging
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
+from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
 # Set up OpenAI API
 import openai
@@ -90,6 +92,16 @@ def index():
     """Render the home page"""
     return render_template('index.html')
 
+@app.route('/directory')
+def directory():
+    """Render the directory page with links to all interfaces"""
+    return render_template('directory.html')
+
+@app.route('/simple')
+def simple():
+    """Render the simple home page with both Linux and PowerShell options"""
+    return render_template('simple.html')
+
 @app.route('/form-linux')
 def form_linux():
     """Render the form-based Linux translator"""
@@ -125,6 +137,95 @@ def form_translate_powershell():
     command = get_powershell_command(query)
     
     return render_template('form_powershell_result.html', query=query, command=command)
+
+# Sample user database (in-memory for simplicity)
+USERS = {
+    'admin': {
+        'password_hash': generate_password_hash('admin123'),
+        'email': 'admin@example.com'
+    },
+    'user': {
+        'password_hash': generate_password_hash('user123'),
+        'email': 'user@example.com'
+    }
+}
+
+# Login required decorator
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get('user_id') is None:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Log in an existing user"""
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        # Check if user exists and password is correct
+        if username in USERS and check_password_hash(USERS[username]['password_hash'], password):
+            session['user_id'] = username
+            
+            # Redirect to next parameter if provided, otherwise to index
+            next_page = request.args.get('next')
+            flash('Login successful!', 'success')
+            return redirect(next_page or url_for('index'))
+        
+        flash('Invalid username or password', 'danger')
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    """Log out the current user"""
+    session.pop('user_id', None)
+    flash('You have been logged out')
+    return redirect(url_for('index'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """Register a new user"""
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        # Validate input
+        if not username or not email or not password:
+            flash('All fields are required', 'danger')
+            return render_template('register.html')
+        
+        # Check if username already exists
+        if username in USERS:
+            flash('Username already exists', 'danger')
+            return render_template('register.html')
+        
+        # Add new user
+        USERS[username] = {
+            'password_hash': generate_password_hash(password),
+            'email': email
+        }
+        
+        # Log in the new user
+        session['user_id'] = username
+        flash('Account created successfully!', 'success')
+        return redirect(url_for('index'))
+    
+    return render_template('register.html')
+
+@app.route('/profile')
+@login_required
+def profile():
+    """Display user profile"""
+    username = session.get('user_id')
+    if not username or username not in USERS:
+        return redirect(url_for('logout'))
+        
+    return render_template('profile.html', username=username, email=USERS[username]['email'])
 
 @app.route('/execute', methods=['POST'])
 def execute_command():

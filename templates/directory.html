@@ -1,102 +1,101 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Command Translator Directory</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1e1e1e;
-            color: white;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #2d2d2d;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #58a6ff;
-        }
-        .section {
-            margin-bottom: 30px;
-            border: 1px solid #444;
-            border-radius: 10px;
-            padding: 20px;
-        }
-        h2 {
-            color: #58a6ff;
-            margin-top: 0;
-        }
-        p {
-            margin-bottom: 15px;
-        }
-        .links {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        a {
-            display: inline-block;
-            background-color: #0d6efd;
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        a:hover {
-            background-color: #0b5ed7;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 0.8em;
-            color: #aaa;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Command Translator Directory</h1>
-        
-        <div class="section">
-            <h2>Linux Mode</h2>
-            <p>Translate natural language to Linux commands with real execution capability.</p>
-            <div class="links">
-                <a href="/">Go to Linux Command Translator</a>
-            </div>
-        </div>
-        
-        <div class="section">
-            <h2>PowerShell Mode</h2>
-            <p>Translate natural language to PowerShell commands with simulated execution.</p>
-            <p><strong>Multiple interfaces available:</strong></p>
-            <div class="links">
-                <a href="/direct" style="background-color: #ff0000; font-weight: bold; font-size: 150%;">ULTRA-SIMPLE TRANSLATOR (NO JAVASCRIPT AT ALL)</a>
-                <a href="/simple" style="background-color: #ff5500; font-weight: bold; font-size: 120%;">Super Simple Translator (Works for Both)</a>
-                <a href="/form_powershell" style="background-color: #00cc00; font-weight: bold;">NEW: Form PowerShell (No JavaScript)</a>
-                <a href="/form_linux" style="background-color: #00cc00; font-weight: bold;">NEW: Form Linux (No JavaScript)</a>
-                <a href="/powershell">Standard PowerShell Interface</a>
-                <a href="/simple-powershell">Simple PowerShell Interface</a>
-                <a href="/powershell-basic">Basic PowerShell Interface</a>
-                <a href="/standalone">Standalone PowerShell Interface</a>
-                <a href="/micro">Micro PowerShell Interface (XHR Only)</a>
-                <a href="/powershell-link">PowerShell Link Page</a>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>Command Translator &copy; 2024 Ervin Remus Radosavlevici. All Rights Reserved.</p>
-            <p>Featuring proprietary DNA-based security technology</p>
+{% extends "layout.html" %}
+
+{% block title %}Directory - Command Translator{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center mb-5">
+            <h1>Interface Directory</h1>
+            <p class="lead">All available interfaces for the Command Translator</p>
         </div>
     </div>
-</body>
-</html>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card bg-dark mb-4">
+                <div class="card-header">
+                    <h3>Main Interfaces</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush bg-dark">
+                        <li class="list-group-item bg-dark">
+                            <a href="/" class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-home me-2"></i> Home</span>
+                                <span class="badge bg-primary">Main Page</span>
+                            </a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/simple" class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-th-large me-2"></i> Simple Interface</span>
+                                <span class="badge bg-secondary">Basic</span>
+                            </a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/form-linux" class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-terminal me-2"></i> Linux Form</span>
+                                <span class="badge bg-success">No JavaScript</span>
+                            </a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/form-powershell" class="d-flex justify-content-between align-items-center">
+                                <span><i class="fab fa-windows me-2"></i> PowerShell Form</span>
+                                <span class="badge bg-info">No JavaScript</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card bg-dark mb-4">
+                <div class="card-header">
+                    <h3>User Management</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush bg-dark">
+                        <li class="list-group-item bg-dark">
+                            <a href="/login" class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-sign-in-alt me-2"></i> Login</span>
+                                <span class="badge bg-secondary">Authentication</span>
+                            </a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/register" class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-user-plus me-2"></i> Register</span>
+                                <span class="badge bg-secondary">New Account</span>
+                            </a>
+                        </li>
+                        <li class="list-group-item bg-dark">
+                            <a href="/profile" class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-user me-2"></i> Profile</span>
+                                <span class="badge bg-primary">User Data</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card bg-dark">
+                <div class="card-header">
+                    <h3>Additional Information</h3>
+                </div>
+                <div class="card-body">
+                    <p>This directory provides easy access to all interfaces of the Command Translator application.</p>
+                    <p>Default login credentials:</p>
+                    <ul>
+                        <li><strong>Username:</strong> admin</li>
+                        <li><strong>Password:</strong> admin123</li>
+                    </ul>
+                    <p>Alternate credentials:</p>
+                    <ul>
+                        <li><strong>Username:</strong> user</li>
+                        <li><strong>Password:</strong> user123</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
