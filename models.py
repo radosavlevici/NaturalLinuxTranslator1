@@ -1,12 +1,7 @@
 from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
 
-# Import db from app's new location
-try:
-    from simple_command_translator import db
-except ImportError:
-    # Keep compatibility with main.py
-    from flask_sqlalchemy import SQLAlchemy
-    db = SQLAlchemy()
+db = SQLAlchemy()
 
 class User(db.Model):
     """User model for authentication and personalization"""
@@ -40,15 +35,11 @@ class CommandHistory(db.Model):
     execution_success = db.Column(db.Boolean, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     ip_address = db.Column(db.String(45), nullable=True)  # IPv6 support
-    remote_execution = db.Column(db.Boolean, default=False)  # Flag for remote execution
     
     # Security and tracking fields
     command_hash = db.Column(db.String(64), nullable=True)
     watermark = db.Column(db.String(64), nullable=True)
     risk_level = db.Column(db.Integer, default=0)  # 0-3 risk scale
-    
-    # Remote session info
-    remote_session_id = db.Column(db.Integer, db.ForeignKey('remote_session.id'), nullable=True)
     
     def __repr__(self):
         return f'<CommandHistory {self.id}: {self.command[:20]}...>'
@@ -154,33 +145,3 @@ user_license = db.Table('user_license',
     db.Column('license_id', db.Integer, db.ForeignKey('license.id'), primary_key=True),
     db.Column('assigned_at', db.DateTime, default=datetime.utcnow)
 )
-
-
-class RemoteSession(db.Model):
-    """
-    Records remote execution sessions with detailed tracking
-    Copyright (c) 2024 Ervin Remus Radosavlevici
-    """
-    __tablename__ = 'remote_session'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-    session_type = db.Column(db.String(20), nullable=False)  # 'linux' or 'powershell'
-    host = db.Column(db.String(255), nullable=False)
-    port = db.Column(db.Integer, nullable=False)
-    username = db.Column(db.String(100), nullable=False)
-    start_time = db.Column(db.DateTime, default=datetime.utcnow)
-    end_time = db.Column(db.DateTime, nullable=True)
-    ip_address = db.Column(db.String(45), nullable=True)  # Client IP
-    
-    # Security fields
-    session_hash = db.Column(db.String(64), nullable=False)  # DNA-based security hash
-    session_watermark = db.Column(db.String(100), nullable=True)
-    audit_log = db.Column(db.Text, nullable=True)  # JSON log of session activities
-    
-    # Relationships
-    commands = db.relationship('CommandHistory', backref='remote_session', lazy='dynamic')
-    user = db.relationship('User', backref='remote_sessions')
-    
-    def __repr__(self):
-        return f'<RemoteSession {self.id}: {self.host}:{self.port} ({self.session_type})>'

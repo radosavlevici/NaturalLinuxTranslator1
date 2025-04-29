@@ -7,11 +7,14 @@ import json
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from flask_sqlalchemy import SQLAlchemy
 
 # Set up OpenAI API
 import openai
 openai.api_key = os.environ.get("OPENAI_API_KEY")
+
+# Initialize Flask app
+app = Flask(__name__)
+app.secret_key = os.environ.get("SESSION_SECRET", os.urandom(24).hex())
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, 
@@ -195,12 +198,8 @@ def execute_remote_powershell_command(command, working_dir='.'):
         # In a production environment, you would use pywinrm or similar libraries
         
         # Fallback to using SSH if available (for PowerShell Core on Linux)
-        winrm_available = False
         try:
             import winrm
-            winrm_available = True
-        except ImportError:
-            # WinRM package not installed, will return error below
             
             # Create WinRM session
             session = winrm.Session(
@@ -227,37 +226,33 @@ def execute_remote_powershell_command(command, working_dir='.'):
         logger.error(f"Error executing remote PowerShell command: {str(e)}")
         return '', f"Error connecting to remote Windows server: {str(e)}", 1
 
-# Function to configure all routes on an app instance
-def configure_routes(app, db):
-    """Configure all routes for the Flask application"""
-    
-    # Routes
-    @app.route('/')
-    def index():
-        """Render the home page"""
-        return render_template('index.html')
+# Routes
+@app.route('/')
+def index():
+    """Render the home page"""
+    return render_template('index.html')
 
-    @app.route('/directory')
-    def directory():
-        """Render the directory page with links to all interfaces"""
-        return render_template('directory.html')
+@app.route('/directory')
+def directory():
+    """Render the directory page with links to all interfaces"""
+    return render_template('directory.html')
 
-    @app.route('/simple')
-    def simple():
-        """Render the simple home page with both Linux and PowerShell options"""
-        return render_template('simple.html')
+@app.route('/simple')
+def simple():
+    """Render the simple home page with both Linux and PowerShell options"""
+    return render_template('simple.html')
 
-    @app.route('/remote-setup')
-    def remote_setup():
-        """Render the remote server setup page"""
-        # Check if user is logged in
-        if session.get('user_id') is None:
-            flash('Please log in to access this page', 'warning')
-            return redirect(url_for('login', next=request.url))
-            
-        return render_template('remote_setup.html', 
-                            linux_config=REMOTE_SERVERS['linux'],
-                            powershell_config=REMOTE_SERVERS['powershell'])
+@app.route('/remote-setup')
+def remote_setup():
+    """Render the remote server setup page"""
+    # Check if user is logged in
+    if session.get('user_id') is None:
+        flash('Please log in to access this page', 'warning')
+        return redirect(url_for('login', next=request.url))
+        
+    return render_template('remote_setup.html', 
+                           linux_config=REMOTE_SERVERS['linux'],
+                           powershell_config=REMOTE_SERVERS['powershell'])
 
 @app.route('/remote-setup/save', methods=['POST'])
 def save_remote_setup():
@@ -693,22 +688,6 @@ def execute_command():
     remote_execution = request.form.get('remote', 'false').lower() == 'true'
     connection_info = {}
     
-    # Initialize remote session vars
-    remote_session = None
-    remote_session_id = None
-    
-    # Create a DNA-based watermark for the session
-    from utils import create_dna_signature
-    from hashlib import sha256
-    
-    # Import the models
-    from models import db, RemoteSession, CommandHistory
-    
-    # Create session hash for tracking
-    session_hash = sha256(f"{username}:{mode}:{datetime.utcnow().isoformat()}".encode()).hexdigest()
-    dna_watermark = create_dna_signature(f"session:{username}:{mode}:{datetime.utcnow().isoformat()}")
-    client_ip = request.remote_addr
-    
     if mode == 'linux':
         if is_safe_linux_command(command):
             try:
@@ -721,26 +700,6 @@ def execute_command():
                         "using_key": bool(REMOTE_SERVERS['linux']['key_file']),
                     }
                     execution_info["connection"] = connection_info
-                    
-                    # Create a remote session record in the database
-                    user_id = None
-                    if 'user_id' in session:
-                        user_id = session.get('user_id')
-                    
-                    # Create a new remote session in the database
-                    remote_session = RemoteSession(
-                        user_id=user_id,
-                        session_type='linux',
-                        host=REMOTE_SERVERS['linux']['host'],
-                        port=REMOTE_SERVERS['linux']['port'],
-                        username=REMOTE_SERVERS['linux']['username'],
-                        ip_address=client_ip,
-                        session_hash=session_hash,
-                        session_watermark=dna_watermark
-                    )
-                    db.session.add(remote_session)
-                    db.session.commit()
-                    remote_session_id = remote_session.id
                     
                     # Use remote Linux execution
                     logger.info(f"Executing command on remote Linux server: {REMOTE_SERVERS['linux']['host']}")
@@ -804,26 +763,6 @@ def execute_command():
                         "using_ssl": REMOTE_SERVERS['powershell']['use_ssl'],
                     }
                     execution_info["connection"] = connection_info
-                    
-                    # Create a remote session record in the database
-                    user_id = None
-                    if 'user_id' in session:
-                        user_id = session.get('user_id')
-                    
-                    # Create a new remote session in the database
-                    remote_session = RemoteSession(
-                        user_id=user_id,
-                        session_type='powershell',
-                        host=REMOTE_SERVERS['powershell']['host'],
-                        port=REMOTE_SERVERS['powershell']['port'],
-                        username=REMOTE_SERVERS['powershell']['username'],
-                        ip_address=client_ip,
-                        session_hash=session_hash,
-                        session_watermark=dna_watermark
-                    )
-                    db.session.add(remote_session)
-                    db.session.commit()
-                    remote_session_id = remote_session.id
                     
                     # Use remote PowerShell execution
                     logger.info(f"Executing command on remote Windows server: {REMOTE_SERVERS['powershell']['host']}")
@@ -893,43 +832,6 @@ def execute_command():
     # Final execution hash combines both for traceability
     execution_hash = f"{base_hash}:{dna_marker[:8]}"
     
-    # Record command in history if logged in
-    user_id = None
-    if 'user_id' in session:
-        user_id = session.get('user_id')
-        
-    # Create command history entry in database
-    try:
-        history_entry = CommandHistory(
-            user_id=user_id,
-            query=request.form.get('query', 'Direct execution'),
-            command=command,
-            command_type=mode,
-            executed=True,
-            execution_output=output if not error else error,
-            execution_success=(not error),
-            ip_address=client_ip,
-            remote_execution=remote_execution,
-            command_hash=base_hash,
-            watermark=dna_marker,
-            remote_session_id=remote_session_id
-        )
-        db.session.add(history_entry)
-        db.session.commit()
-    except Exception as e:
-        logger.error(f"Error recording command history: {str(e)}")
-    
-    # Close remote session if applicable
-    if remote_execution and remote_session_id:
-        try:
-            # Update the remote session with end time
-            remote_session = RemoteSession.query.get(remote_session_id)
-            if remote_session:
-                remote_session.end_time = datetime.utcnow()
-                db.session.commit()
-        except Exception as e:
-            logger.error(f"Error closing remote session: {str(e)}")
-    
     return jsonify({
         "output": output,
         "error": error,
@@ -993,73 +895,6 @@ def get_powershell_command(query):
     except Exception as e:
         logger.error(f"Error generating PowerShell command: {str(e)}")
         return f"Error generating PowerShell command. Please try again later. ({str(e)[:50]}...)"
-
-@app.route('/remote-sessions')
-@login_required
-def remote_sessions():
-    """Display and filter remote sessions"""
-    # Import model inside function to avoid circular imports
-    from models import RemoteSession
-    
-    # Get filters from query parameters
-    session_type = request.args.get('session_type', '')
-    host = request.args.get('host', '')
-    date = request.args.get('date', '')
-    
-    # Build base query
-    query = RemoteSession.query
-    
-    # Apply filters
-    if session_type:
-        query = query.filter(RemoteSession.session_type == session_type)
-    if host:
-        query = query.filter(RemoteSession.host.like(f'%{host}%'))
-    if date:
-        import datetime
-        filter_date = datetime.datetime.strptime(date, '%Y-%m-%d')
-        next_day = filter_date + datetime.timedelta(days=1)
-        query = query.filter(RemoteSession.start_time >= filter_date, 
-                             RemoteSession.start_time < next_day)
-    
-    # Get the user's sessions only
-    user_id = session.get('user_id')
-    query = query.filter(RemoteSession.user_id == user_id)
-    
-    # Order by most recent first
-    query = query.order_by(RemoteSession.start_time.desc())
-    
-    # Pagination
-    page = request.args.get('page', 1, type=int)
-    per_page = 10
-    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
-    sessions = pagination.items
-    
-    return render_template('remote_sessions.html', sessions=sessions, pagination=pagination, request=request)
-
-
-@app.route('/remote-session-details/<int:session_id>')
-@login_required
-def remote_session_details(session_id):
-    """Display details of a specific remote session"""
-    from models import RemoteSession, CommandHistory
-    import datetime
-    
-    # Get the session
-    remote_session = RemoteSession.query.get_or_404(session_id)
-    
-    # Security check: ensure the user owns this session
-    if remote_session.user_id != session.get('user_id'):
-        flash('You do not have permission to view this session.', 'danger')
-        return redirect(url_for('remote_sessions'))
-    
-    # Get commands for this session
-    commands = CommandHistory.query.filter_by(remote_session_id=session_id).order_by(CommandHistory.created_at).all()
-    
-    # Get current time for duration calculation
-    now = datetime.datetime.utcnow()
-    
-    return render_template('remote_session_details.html', session=remote_session, commands=commands, now=now)
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
