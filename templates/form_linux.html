@@ -3,60 +3,61 @@
 {% block title %}Linux Command Translator{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-4">
     <div class="row">
         <div class="col-md-12 text-center mb-4">
             <h1>Linux Command Translator</h1>
-            <p class="lead">Describe what you want to do, and I'll generate the Linux command for you</p>
+            <p class="lead">Transform natural language into Linux shell commands</p>
         </div>
     </div>
-
+    
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <div class="card bg-dark">
+                <div class="card-header">
+                    <h2><i class="fas fa-terminal"></i> Enter Your Request</h2>
+                </div>
                 <div class="card-body">
-                    <form action="/form-translate-linux" method="post">
+                    <form method="post" action="/form-translate-linux">
                         <div class="mb-3">
                             <label for="query" class="form-label">What would you like to do?</label>
-                            <textarea class="form-control bg-dark text-light" id="query" name="query" rows="3" placeholder="Example: List all files in the current directory sorted by size" required></textarea>
+                            <textarea class="form-control bg-dark text-light" id="query" name="query" rows="4" placeholder="Describe what you want to do in plain English. For example: 'Find all PDF files created in the last week'" required></textarea>
                         </div>
                         {% if error %}
                         <div class="alert alert-danger">{{ error }}</div>
                         {% endif %}
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Generate Linux Command</button>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Translate to Linux Command</button>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="row mt-5">
-        <div class="col-md-8 offset-md-2">
-            <div class="card bg-dark">
+            
+            <div class="card bg-dark mt-4">
                 <div class="card-header">
-                    <h4>Example Queries</h4>
+                    <h3>Examples</h3>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group list-group-flush bg-dark">
-                        <li class="list-group-item bg-dark text-light">Find all text files modified in the last 7 days</li>
-                        <li class="list-group-item bg-dark text-light">Show disk usage for each directory, sorted by size</li>
-                        <li class="list-group-item bg-dark text-light">Count the number of lines in all Python files recursively</li>
-                        <li class="list-group-item bg-dark text-light">Find all processes using more than 100MB of memory</li>
-                        <li class="list-group-item bg-dark text-light">Copy all jpg files from downloads to pictures folder</li>
-                    </ul>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <p><strong>Find files by name:</strong></p>
+                                <p class="text-muted">"Find all .jpg images in the current directory"</p>
+                                <div class="command-output">find . -name "*.jpg"</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <p><strong>Process text:</strong></p>
+                                <p class="text-muted">"Count the number of lines in a file"</p>
+                                <div class="command-output">wc -l filename.txt</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-3">
-        <div class="col-md-8 offset-md-2">
-            <div class="alert alert-info">
-                <h5>About Linux Command Translation</h5>
-                <p>This tool uses advanced AI to convert natural language descriptions into executable Linux commands. It supports a wide range of command-line tasks including file operations, system monitoring, text processing, and more.</p>
-                <p>For security reasons, some high-risk commands may be restricted from execution, but all commands will be translated.</p>
+                <div class="card-footer text-center">
+                    <a href="/simple" class="btn btn-secondary">Back to Simple Interface</a>
+                </div>
             </div>
         </div>
     </div>
